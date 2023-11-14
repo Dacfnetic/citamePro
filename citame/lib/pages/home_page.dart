@@ -2,10 +2,12 @@ import 'package:citame/Widgets/home_row.dart';
 import 'package:citame/pages/profile_page.dart';
 import 'package:citame/providers/business_provider.dart';
 import 'package:citame/providers/categories_provider.dart';
+import 'package:citame/providers/geolocator_provider.dart';
 import 'package:citame/providers/navbar_provider.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:google_fonts/google_fonts.dart';
 
 class HomePage extends ConsumerWidget {
@@ -17,6 +19,7 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     List<HomeRow> categorias = ref.watch(categoriesProvider);
+    ref.read(geoProvider.notifier).obtener();
 
     CategoristListNotifier categoriesController =
         ref.read(categoriesProvider.notifier);

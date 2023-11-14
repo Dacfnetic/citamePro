@@ -28,9 +28,17 @@ class BusinessListNotifier extends StateNotifier<List<BusinessCard>> {
     }
   }
 
-  void filtrar2(catg) {
-    List<BusinessCard> catgFiltrada =
-        negocios.where((item) => item.categoria == catg).toList();
+  void agregarNegocio(nombre, categoria, latitud, longitud, rating, imagen) {
+    negocios = [
+      ...negocios,
+      BusinessCard(
+          nombre: nombre,
+          categoria: categoria,
+          latitud: latitud,
+          longitud: longitud,
+          rating: rating,
+          imagen: imagen)
+    ];
   }
 }
 
@@ -40,62 +48,9 @@ List<BusinessCard> negocios = [
   BusinessCard(
       nombre: 'Barberia Nixon',
       categoria: 'Barberias',
-      distancia: 32, //TODO: Calcular respecto a la ubicación del usuario
+      latitud: 14.802359,
+      longitud: -89.549477,
       rating: 4.25, //TODO: Calcular haciendo el promedio de las revies.
       imagen:
           'https://source.unsplash.com/random/1280x720?beach&9'), //TODO: Cargar desde la base de datos
-  BusinessCard(
-      nombre: 'Brothers',
-      categoria: 'Barberias',
-      distancia: 32,
-      rating: 4.25,
-      imagen: 'https://source.unsplash.com/random/1280x720?beach&9'),
-  BusinessCard(
-      nombre: 'Otra',
-      categoria: 'Barberias',
-      distancia: 32,
-      rating: 4.25,
-      imagen: 'https://source.unsplash.com/random/1280x720?beach&9'),
-  BusinessCard(
-      nombre: 'Tijeras',
-      categoria: 'Barberias',
-      distancia: 32,
-      rating: 4.25,
-      imagen: 'https://source.unsplash.com/random/1280x720?beach&9'),
-  BusinessCard(
-      nombre: 'Pelo',
-      categoria: 'Barberias',
-      distancia: 32,
-      rating: 4.25,
-      imagen: 'https://source.unsplash.com/random/1280x720?beach&9'),
-  BusinessCard(
-      nombre: 'Gel',
-      categoria: 'Barberias',
-      distancia: 32,
-      rating: 4.25,
-      imagen: 'https://source.unsplash.com/random/1280x720?beach&9'),
-  BusinessCard(
-      nombre: 'Sapo',
-      categoria: 'Barberias',
-      distancia: 32,
-      rating: 4.25,
-      imagen: 'https://source.unsplash.com/random/1280x720?beach&9'),
-  BusinessCard(
-      nombre: 'Caca',
-      categoria: 'Barberias',
-      distancia: 32,
-      rating: 4.25,
-      imagen: 'https://source.unsplash.com/random/1280x720?beach&9'),
-  BusinessCard(
-      nombre: 'Dart',
-      categoria: 'Barberias',
-      distancia: 32,
-      rating: 4.25,
-      imagen: 'https://source.unsplash.com/random/1280x720?beach&9'),
-  BusinessCard(
-      nombre: 'Flutter',
-      categoria: 'Barberias',
-      distancia: 32,
-      rating: 4.25,
-      imagen: 'https://source.unsplash.com/random/1280x720?beach&9'),
 ];
