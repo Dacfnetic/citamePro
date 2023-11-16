@@ -1,10 +1,13 @@
 import 'dart:ui';
+import 'package:citame/Widgets/business_card.dart';
 import 'package:citame/pages/map_page.dart';
 import 'package:citame/providers/business_provider.dart';
+import 'package:citame/providers/marker_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class BusinessRegisterPage extends ConsumerWidget {
   BusinessRegisterPage({
@@ -24,6 +27,8 @@ class BusinessRegisterPage extends ConsumerWidget {
   final GlobalKey<FormState> signUpKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    Marker negocio = ref.watch(markerProvider);
+
     return Scaffold(
       body: Form(
         key: signUpKey,
@@ -196,7 +201,7 @@ class BusinessRegisterPage extends ConsumerWidget {
                 validator: (String? value) {
                   if (value == null || value.isEmpty) {
                     return 'Por favor escribe un número de contacto';
-                  } else if (value.length == 8) {
+                  } else if (value.length != 8) {
                     return 'La contraseña debe tener 8 carácteres';
                   }
                   return null;
@@ -256,7 +261,8 @@ class BusinessRegisterPage extends ConsumerWidget {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(12)),
                     ),
-                    label: Text('Dirección geográfica'),
+                    label: Text(
+                        'Dirección geográfica ${negocio.position.latitude}, ${negocio.position.longitude}'),
                   ),
                 ),
               ),
@@ -290,10 +296,10 @@ class BusinessRegisterPage extends ConsumerWidget {
                     ref.read(businessProvider.notifier).agregarNegocio(
                         businessNameController.text,
                         businessCategorieController.text,
-                        0,
-                        0,
-                        5,
-                        'S');
+                        negocio.position.latitude,
+                        negocio.position.longitude,
+                        5.0,
+                        'https://source.unsplash.com/random/1280x720?beach&9');
                     Navigator.pop(context);
                   }
                 },

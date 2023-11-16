@@ -62,12 +62,11 @@ class GeoNotifier extends StateNotifier<List<double>> {
   }) {
     double diferencia = longitudA - longitudB;
     if (diferencia < 0) diferencia *= -1;
-    double distancia =
-        cos((90 - latitudA) * toRad) * cos((90 - latitudB) * toRad) +
-            sin((90 - latitudA) * toRad) *
-                sin((90 - latitudB) * toRad) *
-                cos(diferencia * toRad);
-    return acos(distancia) * 60;
+    double distancia = (sin(latitudA * toRad) * sin(latitudB * toRad)) +
+        (cos(latitudA * toRad) *
+            cos(latitudB * toRad) *
+            cos(diferencia * toRad));
+    return acos(distancia) * toDeg * 60;
   }
 
   double distanciaEnKilometros({

@@ -19,7 +19,7 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     List<HomeRow> categorias = ref.watch(categoriesProvider);
-    ref.read(geoProvider.notifier).obtener();
+    ref.watch(geoProvider.notifier).obtener();
 
     CategoristListNotifier categoriesController =
         ref.read(categoriesProvider.notifier);

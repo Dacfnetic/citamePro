@@ -1,6 +1,7 @@
 import 'package:citame/Widgets/business_card.dart';
 import 'package:citame/pages/profile_page.dart';
 import 'package:citame/providers/business_provider.dart';
+import 'package:citame/providers/geolocator_provider.dart';
 import 'package:citame/providers/navbar_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,6 +19,7 @@ class BusinessSearchPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     List<BusinessCard> negocios = ref.watch(businessProvider);
+    ref.watch(geoProvider.notifier).obtener();
 
     BusinessListNotifier businessController =
         ref.read(businessProvider.notifier);
@@ -32,6 +34,8 @@ class BusinessSearchPage extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                Text(ref.read(geoProvider)[0].toString()),
+                Text(ref.read(geoProvider)[1].toString()),
                 Container(
                   width: double.infinity,
                   height: 60,

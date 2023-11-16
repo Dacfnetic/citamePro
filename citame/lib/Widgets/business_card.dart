@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:citame/providers/geolocator_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -24,14 +26,11 @@ class BusinessCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     List<double> coordenadas = ref.watch(geoProvider);
-    String distancia = ref
-        .read(geoProvider.notifier)
-        .distanciaEnMillas(
-            latitudA: latitud,
-            longitudA: longitud,
-            latitudB: coordenadas[0],
-            longitudB: coordenadas[1])
-        .toStringAsFixed(2);
+    double distancia = ref.read(geoProvider.notifier).distanciaEnMillas(
+        latitudA: latitud,
+        longitudA: longitud,
+        latitudB: coordenadas[0],
+        longitudB: coordenadas[1]);
 
     return Column(
       mainAxisSize: MainAxisSize.max,
@@ -66,7 +65,17 @@ class BusinessCard extends ConsumerWidget {
           children: [
             Expanded(
               child: Text(
-                '$distancia miles away',
+                '${distancia.toStringAsFixed(2)} miles away',
+                style: GoogleFonts.plusJakartaSans(
+                  color: Color(0xFF606A85),
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            Expanded(
+              child: Text(
+                '${(distancia * 1.609).toStringAsFixed(2)} kilometers away',
                 style: GoogleFonts.plusJakartaSans(
                   color: Color(0xFF606A85),
                   fontSize: 14,
