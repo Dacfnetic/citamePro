@@ -1,4 +1,5 @@
 import 'package:citame/Widgets/home_row.dart';
+import 'package:citame/pages/chats_page.dart';
 import 'package:citame/pages/profile_page.dart';
 import 'package:citame/providers/business_provider.dart';
 import 'package:citame/providers/categories_provider.dart';
@@ -134,6 +135,16 @@ class HomePage extends ConsumerWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) => const ProfilePage(),
+                  ));
+              ref.read(businessProvider.notifier).inicializar();
+              ref.read(categoriesProvider.notifier).inicializar();
+              searchBarController.text = "";
+            }
+            if (value == 1) {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ChatsPage(),
                   ));
               ref.read(businessProvider.notifier).inicializar();
               ref.read(categoriesProvider.notifier).inicializar();

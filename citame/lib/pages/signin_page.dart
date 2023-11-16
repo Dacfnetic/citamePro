@@ -3,6 +3,7 @@ import 'package:citame/pages/business_registration_page.dart';
 import 'package:citame/pages/home_page.dart';
 import 'package:citame/pages/login_page.dart';
 import 'package:citame/providers/provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -42,6 +43,8 @@ class SignInPage extends ConsumerWidget {
           FacebookAuthProvider.credential(loginResult.accessToken!.token);
       return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
     }
+
+    final FirebaseFirestore fireStore = FirebaseFirestore.instance;
 
     return Scaffold(
       body: SafeArea(
@@ -111,6 +114,15 @@ class SignInPage extends ConsumerWidget {
                           try {
                             final UserCredential userCredential =
                                 await signInWithGoogle();
+                            print('object');
+                            fireStore
+                                .collection('users')
+                                .doc(userCredential.user!.uid)
+                                .set({
+                              'uid': userCredential.user!.uid,
+                              'email': userCredential.user!.email,
+                              'displayName': userCredential.user!.displayName,
+                            }, SetOptions(merge: true));
                             if (context.mounted) {
                               Navigator.push(
                                   context,
@@ -152,6 +164,14 @@ class SignInPage extends ConsumerWidget {
                           try {
                             final UserCredential userCredential =
                                 await signInWithFacebook();
+                            fireStore
+                                .collection('users')
+                                .doc(userCredential.user!.uid)
+                                .set({
+                              'uid': userCredential.user!.uid,
+                              'email': userCredential.user!.email,
+                              'displayName': userCredential.user!.displayName,
+                            }, SetOptions(merge: true));
                             if (context.mounted) {
                               Navigator.push(
                                   context,
