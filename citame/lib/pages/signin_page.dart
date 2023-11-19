@@ -1,4 +1,7 @@
+import 'dart:convert';
+import 'package:citame/models/user_model.dart';
 import 'package:citame/firebase_options.dart';
+import 'package:http/http.dart' as http;
 import 'package:citame/pages/business_registration_page.dart';
 import 'package:citame/pages/home_page.dart';
 import 'package:citame/pages/login_page.dart';
@@ -18,6 +21,7 @@ class SignInPage extends ConsumerWidget {
   });
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    const String serverUrl = 'http://192.168.0.6:4000';
     Future<UserCredential> signInWithGoogle() async {
       final GoogleSignInAccount? googleUser = await GoogleSignIn(
               clientId: (DefaultFirebaseOptions.currentPlatform ==
@@ -42,6 +46,29 @@ class SignInPage extends ConsumerWidget {
       final OAuthCredential facebookAuthCredential =
           FacebookAuthProvider.credential(loginResult.accessToken!.token);
       return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+    }
+
+    Future<Usuario> addUser(String googleId, String? userName,
+        String? emailUser, String? avatar) async {
+      final response =
+          await http.post(Uri.parse('$serverUrl/api/user-model/create'),
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: jsonEncode({
+                'googleId': googleId,
+                'UserName': userName,
+                'EmailUser': emailUser,
+                'avatar': avatar,
+              }));
+
+      if (response.statusCode == 201) {
+        final dynamic json = jsonDecode(response.body);
+        final Usuario user = Usuario.fromJson(json);
+        return user;
+      } else {
+        throw Exception('Failed to add item');
+      }
     }
 
     final FirebaseFirestore fireStore = FirebaseFirestore.instance;
@@ -115,14 +142,22 @@ class SignInPage extends ConsumerWidget {
                             final UserCredential userCredential =
                                 await signInWithGoogle();
                             print('object');
-                            fireStore
+                            if (context.mounted) {
+                              addUser(
+                                  userCredential.user!.uid,
+                                  userCredential.user!.displayName,
+                                  userCredential.user!.email,
+                                  userCredential.user!.photoURL);
+                            }
+
+                            /*fireStore
                                 .collection('users')
                                 .doc(userCredential.user!.uid)
                                 .set({
                               'uid': userCredential.user!.uid,
                               'email': userCredential.user!.email,
                               'displayName': userCredential.user!.displayName,
-                            }, SetOptions(merge: true));
+                            }, SetOptions(merge: true));*/
                             if (context.mounted) {
                               Navigator.push(
                                   context,
@@ -132,8 +167,18 @@ class SignInPage extends ConsumerWidget {
                             }
                           } catch (e) {
                             if (context.mounted) {
-                              print(e);
-                              StatusAlert.show(
+                              print('este');
+                              print('este');
+                              print('este');
+                              print('este');
+                              print('este');
+                              print(e.toString());
+                              print('este');
+                              print('este');
+                              print('este');
+                              print('este');
+                              print('este');
+                              /*StatusAlert.show(
                                 context,
                                 duration: const Duration(seconds: 2),
                                 title: 'User Authentication',
@@ -142,7 +187,7 @@ class SignInPage extends ConsumerWidget {
                                   icon: Icons.close,
                                   color: Colors.red,
                                 ),
-                              );
+                              );*/
                             }
                           }
                         },

@@ -27,6 +27,7 @@ dependencies:
   google_sign_in: ^6.1.6
   http: ^1.1.0
   status_alert: ^1.0.1
+  web_socket_channel: ^2.4.0
   
 
 dev_dependencies:
