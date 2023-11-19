@@ -1,4 +1,4 @@
-import 'package:citame/models/message.dart';
+import 'package:citame/models/message_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

@@ -52,9 +52,12 @@ class MyApp extends ConsumerWidget {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return HomePage();
+            //return BusinessRegisterPage();
           }
 
           return const SignInPage();
+          //return BusinessRegisterPage();
+          // return ProfileInsidePage();
         },
       ),
       debugShowCheckedModeBanner: false,

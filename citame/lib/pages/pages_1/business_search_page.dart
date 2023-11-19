@@ -1,5 +1,5 @@
 import 'package:citame/Widgets/business_card.dart';
-import 'package:citame/pages/profile_page.dart';
+import 'package:citame/pages/pages_1/profile_page.dart';
 import 'package:citame/providers/business_provider.dart';
 import 'package:citame/providers/geolocator_provider.dart';
 import 'package:citame/providers/navbar_provider.dart';

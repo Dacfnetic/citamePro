@@ -17,7 +17,6 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
-    final FirebaseFirestore fireStore = FirebaseFirestore.instance;
     final TextEditingController messageController = TextEditingController();
     final ChatService chatService = ChatService();
     final FirebaseAuth auth = FirebaseAuth.instance;
@@ -59,9 +58,6 @@ class _ChatPageState extends State<ChatPage> {
       var textAlignment = (data['senderId'] == auth.currentUser!.uid)
           ? TextAlign.left
           : TextAlign.right;
-      var cross = (data['senderId'] == auth.currentUser!.uid)
-          ? CrossAxisAlignment.end
-          : CrossAxisAlignment.start;
       var colores = (data['senderId'] == auth.currentUser!.uid)
           ? Colors.amber
           : Colors.purple;

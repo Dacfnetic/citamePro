@@ -17,18 +17,40 @@ router.get('/api/negocios', async (req,res)=>{
 });
 
 //Ruta para crear negocio
-router.get('/api/negocios-model/create', async (req,res)=>{
+router.post('/api/negocio-model/create', async (req,res)=>{
 
-        await Negocio.create({
-            
-            nombreNegocio: 'BBC',
-            categoria: 'Belleza',
-            direccionFisica: '7av 3calle',
-            avatar: 'img.jpg'
+    const businessName = req.body.businessName;
+    const category = req.body.category;
+    const email = req.body.email;
+    const contactNumber = req.body.contactNumber;
+    const direction = req.body.direction;
+    const latitude = req.body.latitude;
+    const longitude = req.body.longitude;
+    const description = req.body.description;
 
-        });
+    await Negocio.create({
+        businessName: businessName,
+        category: category,
+        email: email,
+        contactNumber: contactNumber,
+        direction: direction,
+        latitude: latitude,
+        longitude: longitude,
+        description: description,
+    });
 
-    res.json({message:'Negocio Creado exitosamente'});
+    res.status(201).send({
+        "status_code":201,
+        "businessName": businessName,
+        "category": category,
+        "email": email,
+        "contactNumber": contactNumber,
+        "direction": direction,
+        "latitude": latitude,
+        "longitude": longitude,
+        "description": description,
+    }
+)
 
 });
 

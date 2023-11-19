@@ -1,25 +1,16 @@
 import 'package:citame/Widgets/profile_row.dart';
-import 'package:citame/pages/business_registration_page.dart';
+import 'package:citame/pages/pages_1/pages_2/business_registration_page.dart';
 import 'package:citame/pages/signin_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class ProfilePage extends ConsumerWidget {
-  const ProfilePage({super.key});
+class ProfileInsidePage extends ConsumerWidget {
+  const ProfileInsidePage({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Profile',
-          style: GoogleFonts.plusJakartaSans(
-            color: Color(0xff14181b),
-            fontSize: 16,
-            fontWeight: FontWeight.normal,
-          ),
-        ),
-      ),
+      appBar: AppBar(),
       body: SafeArea(
         child: Container(
           color: Color.fromRGBO(240, 240, 240, 1),
@@ -60,7 +51,8 @@ class ProfilePage extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Dexter',
+                          //TODO: Adquirir nombre del perfil
+                          'Mike Thomson',
                           textAlign: TextAlign.left,
                           style: GoogleFonts.plusJakartaSans(
                             color: Color(0xff14181b),
@@ -69,7 +61,8 @@ class ProfilePage extends ConsumerWidget {
                           ),
                         ),
                         Text(
-                          'labdexter@gmail.com',
+                          //TODO: Adquirir horario del perfil
+                          'Horario disponible 9am-7.30pm',
                           textAlign: TextAlign.left,
                           style: GoogleFonts.plusJakartaSans(
                             color: Color(0xff57636c),

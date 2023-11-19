@@ -1,23 +1,27 @@
-import 'package:citame/providers/password_provider.dart';
+import 'package:citame/pages/pages_1/pages_2/business_registration_page.dart';
+import 'package:citame/providers/business_provider.dart';
+import 'package:citame/providers/categories_provider.dart';
+import 'package:citame/providers/maybe_not_password_provider.dart';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 
-class UserRegisterPage extends ConsumerWidget {
-  UserRegisterPage({
+class LoginPage extends ConsumerWidget {
+  LoginPage({
     super.key,
   });
-  final TextEditingController firstNameController = TextEditingController();
-  final TextEditingController lastNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController passwordCheckController = TextEditingController();
-  final GlobalKey<FormState> signUpKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    FirebaseAuth auth = FirebaseAuth.instance;
+
+    final GlobalKey<FormState> signUpKey = GlobalKey<FormState>();
     RegExp emailValid = RegExp(
         r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
 
@@ -35,7 +39,7 @@ class UserRegisterPage extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Crear una cuenta',
+                        'Inicie sesión',
                         style: GoogleFonts.plusJakartaSans(
                           color: Color(0xff101213),
                           fontSize: 36,
@@ -48,48 +52,6 @@ class UserRegisterPage extends ConsumerWidget {
                           color: Color(0xff57636c),
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 12,
-                      ),
-                      TextFormField(
-                        maxLines: 1,
-                        controller: firstNameController,
-                        validator: (String? value) {
-                          if (value == null || value.isEmpty) {
-                            return 'No puedes dejar este campo vacío';
-                          }
-                          return null;
-                        },
-                        decoration: InputDecoration(
-                          contentPadding:
-                              EdgeInsets.symmetric(vertical: 0, horizontal: 8),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(12)),
-                          ),
-                          label: Text('Nombre'),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 12,
-                      ),
-                      TextFormField(
-                        maxLines: 1,
-                        controller: lastNameController,
-                        validator: (String? value) {
-                          if (value == null || value.isEmpty) {
-                            return 'No puedes dejar este campo vacío';
-                          }
-                          return null;
-                        },
-                        decoration: InputDecoration(
-                          contentPadding:
-                              EdgeInsets.symmetric(vertical: 0, horizontal: 8),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(12)),
-                          ),
-                          label: Text('Apellido'),
                         ),
                       ),
                       SizedBox(
@@ -156,43 +118,53 @@ class UserRegisterPage extends ConsumerWidget {
                       SizedBox(
                         height: 12,
                       ),
-                      TextFormField(
-                        maxLines: 1,
-                        controller: passwordCheckController,
-                        validator: (String? value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Por favor escribe una contraseña';
-                          } else if (value != passwordController.text) {
-                            return 'Las contraseñas deben coincidir';
-                          }
-                          return null;
-                        },
-                        obscureText: !ref.watch(passProvider2),
-                        decoration: InputDecoration(
-                          suffixIcon: InkWell(
-                            onTap: () =>
-                                ref.read(passProvider2.notifier).changeState(),
-                            focusNode: FocusNode(skipTraversal: true),
-                            child: Icon(
-                              ref.watch(passProvider2)
-                                  ? Icons.visibility_outlined
-                                  : Icons.visibility_off_outlined,
-                              color: Color(0xFF57636C),
-                              size: 24,
-                            ),
+                    ],
+                  ),
+                  Container(
+                    height: 44,
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(1)),
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                        textStyle: MaterialStatePropertyAll(
+                          GoogleFonts.plusJakartaSans(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
                           ),
-                          contentPadding:
-                              EdgeInsets.symmetric(vertical: 0, horizontal: 8),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(12)),
-                          ),
-                          label: Text('Confirmar contraseña'),
+                        ),
+                        foregroundColor: MaterialStatePropertyAll(Colors.white),
+                        backgroundColor: MaterialStatePropertyAll(
+                          Color(0xff4b39ef),
                         ),
                       ),
-                      SizedBox(
-                        height: 12,
-                      ),
-                    ],
+                      onPressed: () async {
+                        if (signUpKey.currentState!.validate()) {
+                          try {
+                            await auth.signInWithEmailAndPassword(
+                              email: emailController.text,
+                              password: passwordController.text,
+                            );
+                            ref.read(businessProvider.notifier).inicializar();
+                            ref.read(categoriesProvider.notifier).inicializar();
+                            if (context.mounted) {
+                              Navigator.pop(context);
+                            }
+                          } catch (e) {
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    'Capaz y ese usuario no existe o te equivocaste de contraseña ${e.toString()}',
+                                  ),
+                                ),
+                              );
+                            }
+                          }
+                        }
+                      },
+                      child: Text('Iniciar sesión'),
+                    ),
                   ),
                   SizedBox(
                     height: 48,
@@ -200,13 +172,18 @@ class UserRegisterPage extends ConsumerWidget {
                   Text.rich(TextSpan(
                     children: [
                       TextSpan(
-                        text: '¿Ya tienes una cuenta? ',
+                        text: '¿No tienes una cuenta? ',
                       ),
                       TextSpan(
-                        text: 'Iniciar sesión',
+                        text: 'Registrarse',
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
                             Navigator.pop(context);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => BusinessRegisterPage(),
+                                ));
                           },
                         style: TextStyle(color: Colors.blue),
                       ),

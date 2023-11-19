@@ -1,11 +1,10 @@
 import 'dart:convert';
 import 'package:citame/models/user_model.dart';
 import 'package:citame/firebase_options.dart';
+//import 'package:citame/pages/pages_1/pages_2/business_registration_page.dart';
+//import 'package:citame/pages/pages_1/maybe_not_login_page.dart';
 import 'package:http/http.dart' as http;
-import 'package:citame/pages/business_registration_page.dart';
 import 'package:citame/pages/home_page.dart';
-import 'package:citame/pages/login_page.dart';
-import 'package:citame/providers/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +21,7 @@ class SignInPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     const String serverUrl = 'http://192.168.0.6:4000';
+
     Future<UserCredential> signInWithGoogle() async {
       final GoogleSignInAccount? googleUser = await GoogleSignIn(
               clientId: (DefaultFirebaseOptions.currentPlatform ==
@@ -96,7 +96,7 @@ class SignInPage extends ConsumerWidget {
               Expanded(
                 child: Column(
                   children: [
-                    Container(
+                    /*Container(
                       margin: EdgeInsets.all(20),
                       width: MediaQuery.of(context).size.width,
                       height: 40,
@@ -109,7 +109,6 @@ class SignInPage extends ConsumerWidget {
                         icon: Icon(Icons.email),
                         label: Text("Iniciar sesión con correo eléctronico"),
                         onPressed: () {
-                          ref.read(loginProvider.notifier).changeState();
                           Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -124,7 +123,7 @@ class SignInPage extends ConsumerWidget {
                           .textTheme
                           .bodySmall
                           ?.copyWith(color: Colors.grey),
-                    ),
+                    ),*/
                     Container(
                       margin: EdgeInsets.fromLTRB(20, 20, 20, 10),
                       width: MediaQuery.of(context).size.width,
@@ -241,7 +240,7 @@ class SignInPage extends ConsumerWidget {
                   ],
                 ),
               ),
-              Container(
+              /*Container(
                 margin: EdgeInsets.all(20),
                 child: TextButton(
                   onPressed: () {
@@ -253,7 +252,7 @@ class SignInPage extends ConsumerWidget {
                   },
                   child: Text('No tenes cuenta perro, registrate aca'),
                 ),
-              ),
+              ),*/
             ],
           ),
         ),

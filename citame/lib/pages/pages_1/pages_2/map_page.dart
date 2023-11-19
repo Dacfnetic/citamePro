@@ -20,7 +20,7 @@ class MapPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     List<double> coordenadas = ref.read(geoProvider);
-    CameraPosition _kGooglePlex = CameraPosition(
+    CameraPosition kGooglePlex = CameraPosition(
       target: LatLng(coordenadas[0], coordenadas[1]),
       zoom: 18,
     );
@@ -32,7 +32,7 @@ class MapPage extends ConsumerWidget {
           ref.read(markerProvider.notifier).changeState(newPos);
         },
         mapType: MapType.hybrid,
-        initialCameraPosition: _kGooglePlex,
+        initialCameraPosition: kGooglePlex,
         onMapCreated: (GoogleMapController controller) {
           _controller.complete(controller);
         },

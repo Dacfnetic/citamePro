@@ -1,7 +1,4 @@
-import 'package:citame/Widgets/profile_row.dart';
-import 'package:citame/pages/business_registration_page.dart';
-import 'package:citame/pages/chat_page.dart';
-import 'package:citame/pages/signin_page.dart';
+import 'package:citame/pages/pages_1/pages_2/chat_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -14,8 +11,6 @@ class ChatsPage extends ConsumerWidget {
   const ChatsPage({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final FirebaseFirestore fireStore = FirebaseFirestore.instance;
-
     return Scaffold(
       appBar: AppBar(
         title: Text(

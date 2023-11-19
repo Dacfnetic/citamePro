@@ -1,5 +1,4 @@
 import 'package:citame/Widgets/home_row.dart';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final categoriesProvider =

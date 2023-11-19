@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:citame/providers/geolocator_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

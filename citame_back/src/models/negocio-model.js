@@ -3,10 +3,14 @@ const {Schema, model} = require('mongoose')
 //Datos que se guardan en la BD
 const negocioSchema = new Schema({
 
-    nombreNegocio: String,
-    categoria: String,
-    direccionFisica: String,
-    avatar: String
+    businessName: String,
+    category: String,
+    email: String,
+    contactNumber: String,
+    direction: String,
+    latitude: String,
+    longitude: String,
+    description: String,
 
 });
 

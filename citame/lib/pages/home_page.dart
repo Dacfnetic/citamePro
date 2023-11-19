@@ -1,11 +1,9 @@
 import 'package:citame/Widgets/home_row.dart';
-import 'package:citame/pages/chats_page.dart';
-import 'package:citame/pages/profile_page.dart';
+import 'package:citame/pages/pages_1/profile_page.dart';
 import 'package:citame/providers/business_provider.dart';
 import 'package:citame/providers/categories_provider.dart';
 import 'package:citame/providers/geolocator_provider.dart';
 import 'package:citame/providers/navbar_provider.dart';
-import 'package:citame/services/api.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -147,7 +145,6 @@ class HomePage extends ConsumerWidget {
                   MaterialPageRoute(
                     builder: (context) => const ChatsPage(),
                   ));*/
-              Api.getAdvice(context, '/');
               ref.read(businessProvider.notifier).inicializar();
               ref.read(categoriesProvider.notifier).inicializar();
               searchBarController.text = "";

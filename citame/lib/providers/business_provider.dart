@@ -65,7 +65,7 @@ List<BusinessCard> negocios = [
       categoria: 'Barberias',
       latitud: 14.802359,
       longitud: -89.549477,
-      rating: 4.25, //TODO: Calcular haciendo el promedio de las revies.
+      rating: 4.25, //TODO: Calcular haciendo el promedio de las reviews.
       imagen:
           'https://source.unsplash.com/random/1280x720?beach&9'), //TODO: Cargar desde la base de datos
 ];
