@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 class ProfilePage extends ConsumerWidget {
   const ProfilePage({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
@@ -98,13 +99,20 @@ class ProfilePage extends ConsumerWidget {
                 description: 'Favoritos',
                 icon: Icons.favorite,
                 page: Placeholder(),
-                exit: false,
+                method: 2,
               ),
               ProfileRow(
                 description: 'Información personal',
                 icon: Icons.person,
                 page: Placeholder(),
-                exit: false,
+                method: 2,
+              ),
+              ProfileRow(
+                description: 'Ver mis negocios',
+                icon: Icons.store,
+                //TODO: Implementar para ver mis negocios
+                page: Placeholder(),
+                method: 1,
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 16, 0, 0),
@@ -122,13 +130,13 @@ class ProfilePage extends ConsumerWidget {
                 description: 'Pagos',
                 icon: Icons.payment,
                 page: Placeholder(),
-                exit: false,
+                method: 2,
               ),
               ProfileRow(
                 description: 'Donaciones',
                 icon: Icons.handshake,
                 page: Placeholder(),
-                exit: false,
+                method: 2,
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 16, 0, 0),
@@ -146,7 +154,7 @@ class ProfilePage extends ConsumerWidget {
                 description: 'Invitar amigos',
                 icon: Icons.card_giftcard,
                 page: Placeholder(),
-                exit: false,
+                method: 2,
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 16, 0, 0),
@@ -164,29 +172,27 @@ class ProfilePage extends ConsumerWidget {
                 description: 'Notificaciones',
                 icon: Icons.notifications,
                 page: Placeholder(),
-                exit: false,
+                method: 2,
               ),
               ProfileRow(
                 description: 'Registrar mi negocio',
                 icon: Icons.store,
                 page: BusinessRegisterPage(),
-                exit: false,
+                method: 2,
               ),
               ProfileRow(
                 description: 'Cerrar sesión en otros dispositivos',
                 icon: Icons.logout,
                 page: SignInPage(),
-                exit: true,
+                method: 0,
               ),
               ProfileRow(
                 description: 'Cerrar sesión',
                 icon: Icons.logout,
                 page: SignInPage(),
-                exit: true,
+                method: 0,
               ),
-              SizedBox(
-                height: 12,
-              )
+              SizedBox(height: 12)
             ],
           ),
         ),

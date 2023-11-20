@@ -16,6 +16,14 @@ router.get('/api/negocios', async (req,res)=>{
     res.json( {negocios} );
 });
 
+//Ruta para cargar la lista de negocios del usuario
+router.get('/api/user_businesses', async (req,res)=>{
+
+    //Buscar todos los negocios dentro de la base de datos
+    const negocios = await Negocio.find();
+    res.json( negocios );
+});
+
 //Ruta para crear negocio
 router.post('/api/negocio-model/create', async (req,res)=>{
 

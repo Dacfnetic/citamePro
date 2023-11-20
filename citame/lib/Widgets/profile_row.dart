@@ -1,26 +1,50 @@
+import 'dart:convert';
+import 'package:citame/Widgets/business_card.dart';
+import 'package:citame/models/business_model.dart';
+import 'package:citame/pages/pages_1/pages_2/my_businessess_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
 
 class ProfileRow extends ConsumerWidget {
   final String description;
   final IconData icon;
   final Widget page;
-  final bool exit;
+  final int method;
   const ProfileRow({
     Key? key,
     required this.description,
     required this.icon,
     required this.page,
-    required this.exit,
+    required this.method,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    const String serverUrl = 'http://192.168.0.6:4000';
+    Future<List<Business>> getMyBusinesses() async {
+      final response =
+          await http.get(Uri.parse('$serverUrl/api/user_businesses'));
+      if (response.statusCode == 200) {
+        final List<dynamic> businessList = jsonDecode(response.body);
+        final List<Business> businesses = businessList.map((business) {
+          Business negocio = Business.fromJson(business);
+          return negocio;
+        }).toList();
+        return businesses;
+      } else {
+        print(response);
+        throw Exception('Failed to get items');
+      }
+    }
+
+    List<Business> userBusiness;
+    List<BusinessCard> negocios;
     return TextButton(
       onPressed: () async {
-        if (exit) {
+        if (method == 0) {
           try {
             String? metodo =
                 FirebaseAuth.instance.currentUser?.providerData[0].providerId;
@@ -35,12 +59,41 @@ class ProfileRow extends ConsumerWidget {
             print(e.toString());
           }
         }
-        if (context.mounted) {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => page,
+        if (method == 1) {
+          try {
+            //TODO: Implementar para crear cartas de negocios
+            userBusiness = await getMyBusinesses();
+            negocios = userBusiness.map((e) {
+              return (BusinessCard(
+                nombre: e.businessName,
+                categoria: e.category,
+                latitud: double.parse(e.latitude),
+                longitud: double.parse(e.longitude),
+                rating: 5.0,
+                imagen: 'https://source.unsplash.com/random/1280x720?beach&9',
               ));
+            }).toList();
+            if (context.mounted) {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MyBusinessesPage(
+                      negocios: negocios,
+                    ),
+                  ));
+            }
+          } catch (e) {
+            print(e.toString());
+          }
+        }
+        if (method == 2) {
+          if (context.mounted) {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => page,
+                ));
+          }
         }
       },
       child: Container(
