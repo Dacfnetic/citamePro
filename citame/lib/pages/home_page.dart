@@ -1,10 +1,14 @@
+import 'dart:convert';
+
 import 'package:citame/Widgets/home_row.dart';
+import 'package:citame/models/user_model.dart';
 import 'package:citame/pages/pages_1/profile_page.dart';
 import 'package:citame/providers/business_provider.dart';
 import 'package:citame/providers/categories_provider.dart';
 import 'package:citame/providers/geolocator_provider.dart';
 import 'package:citame/providers/navbar_provider.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -18,6 +22,26 @@ class HomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    const String serverUrl = 'http://192.168.0.6:4000';
+    FirebaseAuth auth = FirebaseAuth.instance;
+
+    Future<Usuario> getProfilePhoto() async {
+      final response = await http.get(Uri.parse('$serverUrl/api/user'),
+          headers: {'googleId': auth.currentUser!.uid});
+      if (response.statusCode == 200) {
+        final List<dynamic> usuarios = jsonDecode(response.body);
+        final Usuario usuario = Usuario(
+            googleId: usuarios[0]['googleId'],
+            userName: usuarios[0]['UserName'],
+            userEmail: usuarios[0]['EmailUser'],
+            avatar: usuarios[0]['avatar']);
+        return usuario;
+      } else {
+        print(response);
+        throw Exception('Failed to get items');
+      }
+    }
+
     List<HomeRow> categorias = ref.watch(categoriesProvider);
     ref.watch(geoProvider.notifier).obtener();
 
@@ -127,14 +151,17 @@ class HomePage extends ConsumerWidget {
           backgroundColor: Colors.white,
           indicatorColor: Colors.white,
           selectedIndex: 0,
-          onDestinationSelected: (value) {
+          onDestinationSelected: (value) async {
+            Usuario currentUser = await getProfilePhoto();
             ref.read(navbarProvider.notifier).changeState(value);
             if (value == 2) {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const ProfilePage(),
-                  ));
+              if (context.mounted) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProfilePage(user: currentUser),
+                    ));
+              }
               ref.read(businessProvider.notifier).inicializar();
               ref.read(categoriesProvider.notifier).inicializar();
               searchBarController.text = "";

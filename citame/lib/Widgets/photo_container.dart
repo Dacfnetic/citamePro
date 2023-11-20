@@ -30,7 +30,9 @@ class EspacioParaSubirFotoDeNegocio extends StatelessWidget {
             ),
           ),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              //TODO: Anthony va a ver como incluir la foto del negocio
+            },
             child: Text('Subir imagen'),
           )
         ],

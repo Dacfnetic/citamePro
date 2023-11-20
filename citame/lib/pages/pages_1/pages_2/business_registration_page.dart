@@ -142,12 +142,13 @@ class BusinessRegisterPage extends ConsumerWidget {
               SizedBox(height: 12),
               Cuadro(control: description, texto: 'Descripción'),
               SizedBox(height: 12),
-              //TODO:El siguiente botón es para registrar el negocio
+
               ElevatedButton(
                 onPressed: () async {
                   try {
                     if (signUpKey.currentState!.validate()) {
                       await addBusiness(
+                        //TODO: Agregar imagen del negocio e identificador de usuario
                         businessName.text,
                         category.text,
                         email.text,

@@ -1,4 +1,5 @@
 import 'package:citame/Widgets/profile_row.dart';
+import 'package:citame/models/user_model.dart';
 import 'package:citame/pages/pages_1/pages_2/business_registration_page.dart';
 import 'package:citame/pages/signin_page.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +7,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ProfilePage extends ConsumerWidget {
-  const ProfilePage({super.key});
+  const ProfilePage({super.key, required this.user});
+  final Usuario user;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -40,18 +42,17 @@ class ProfilePage extends ConsumerWidget {
                       margin: EdgeInsets.all(16),
                       alignment: Alignment.centerLeft,
                       decoration: BoxDecoration(
-                          color: Color(0x4d39d2c0),
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: Color(0xff39d2c0),
-                            width: 2,
-                          )
-
-                          /*image: DecorationImage(
-                          image: AssetImage('lib/assets/Splashscreen.jpg'),
+                        color: Color(0x4d39d2c0),
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Color(0xff39d2c0),
+                          width: 2,
+                        ),
+                        image: DecorationImage(
+                          image: NetworkImage(user.avatar),
                           fit: BoxFit.fill,
-                        ),*/
-                          ),
+                        ),
+                      ),
                       child: SizedBox(
                         height: 90,
                         width: 90,
@@ -61,7 +62,7 @@ class ProfilePage extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Dexter',
+                          user.userName,
                           textAlign: TextAlign.left,
                           style: GoogleFonts.plusJakartaSans(
                             color: Color(0xff14181b),
@@ -70,7 +71,7 @@ class ProfilePage extends ConsumerWidget {
                           ),
                         ),
                         Text(
-                          'labdexter@gmail.com',
+                          user.userEmail,
                           textAlign: TextAlign.left,
                           style: GoogleFonts.plusJakartaSans(
                             color: Color(0xff57636c),

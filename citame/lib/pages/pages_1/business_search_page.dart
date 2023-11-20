@@ -1,5 +1,4 @@
 import 'package:citame/Widgets/business_card.dart';
-import 'package:citame/pages/pages_1/profile_page.dart';
 import 'package:citame/providers/business_provider.dart';
 import 'package:citame/providers/geolocator_provider.dart';
 import 'package:citame/providers/navbar_provider.dart';
@@ -131,14 +130,14 @@ class BusinessSearchPage extends ConsumerWidget {
           selectedIndex: 0,
           onDestinationSelected: (value) {
             ref.read(navbarProvider.notifier).changeState(value);
-            if (value == 2) {
+            /* if (value == 2) {
               Navigator.pop(context);
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const ProfilePage(),
+                    builder: (context) => ProfilePage(),
                   ));
-            }
+            }*/
             if (value == 0) {
               Navigator.pop(context);
             }

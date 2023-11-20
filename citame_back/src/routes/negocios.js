@@ -1,4 +1,4 @@
-const { Router } = require('express');
+const { Router, json } = require('express');
 
 //Objeto donde definimos rutas del servidor
 const router = Router();
@@ -14,6 +14,21 @@ router.get('/api/negocios', async (req,res)=>{
     //Buscar todos los negocios dentro de la base de datos
     const negocios = await Negocio.find();
     res.json( {negocios} );
+});
+
+//Ruta para cargar la lista de negocios del usuario
+router.get('/api/user', async (req,res)=>{
+
+    //Buscar todos los negocios dentro de la base de datos
+    const usuarios = await Usuario.find();
+    console.log(usuarios);
+    //console.log(JSON(req.headers));
+    //console.log(JSON(req.headers.googleId));
+    console.log(req.get('googleId'));
+
+    const usuario = usuarios.filter((e)=>e.googleId==req.get('googleId'));
+    console.log(usuario);
+    res.json( usuario );
 });
 
 //Ruta para cargar la lista de negocios del usuario
