@@ -26,6 +26,7 @@ dependencies:
   google_maps_flutter: ^2.5.0
   google_sign_in: ^6.1.6
   http: ^1.1.0
+  image_picker: ^1.0.4
   status_alert: ^1.0.1
   web_socket_channel: ^2.4.0
   
