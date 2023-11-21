@@ -33,40 +33,32 @@ const Usuario = require('../models/user-model');
 
             //Usuario existe o no
             Usuario.findOne({EmailUser: email_user })
-                .then((docs)=>{
-                    console.log("Result :",docs);
-                    return docs;
+                .then(async (docs)=>{
+                    if(docs == null){
+                        console.log('Creando usuario');
+                        await Usuario.create({
+                        
+                            googleId: google_Id,
+                            UserName: user_name,
+                            EmailUser: email_user,
+                            avatar: _avatar
+        
+                        });
+                    }
+                    res.status(201).send({
+                        "status_code":201,
+                        'googleId': google_Id,
+                        'UserName': user_name,
+                        'EmailUser': email_user,
+                        'avatar': _avatar,
+                        })  
+     
                 })
                 .catch((err)=>{
                     console.log(err);
                 });
-            console.log(userFind)
 
-            if(userFind == null){
-
-                console.log("Usuario creado")
-                   //UserCreate
-                await Usuario.create({
-                        
-                    googleId: google_Id,
-                    UserName: user_name,
-                    EmailUser: email_user,
-                    avatar: _avatar
-
-                });
                 
-            }
-
-              //Usuario 
-                console.log("No entro a crear")
-                res.status(201).send({
-                    "status_code":201,
-                    'googleId': google_Id,
-                    'UserName': user_name,
-                    'EmailUser': email_user,
-                    'avatar': _avatar,
-                    })  
- 
 
         });
 
