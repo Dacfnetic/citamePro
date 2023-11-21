@@ -1,6 +1,6 @@
 const app = require('./app')
 const port = 4000;
-const { connect } = require('./database')
+const { connect } = require('./config/database')
 
 async function main(){
 

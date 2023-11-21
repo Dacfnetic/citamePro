@@ -5,5 +5,5 @@ final ipProvider = StateNotifierProvider<IpNotifier, String>((ref) {
 });
 
 class IpNotifier extends StateNotifier<String> {
-  IpNotifier() : super('http://192.168.0.6:4000');
+  IpNotifier() : super('http://192.168.0.103:4000');
 }
