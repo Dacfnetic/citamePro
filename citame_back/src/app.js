@@ -10,5 +10,6 @@ app.use(morgan('dev'));
 app.use(cors());
 
 app.use(require('./routes/negocios'));
+app.use(require('./controllers/user-controller'))
 
 module.exports = app;

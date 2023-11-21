@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 
 class ProfileRow extends ConsumerWidget {
@@ -49,12 +50,12 @@ class ProfileRow extends ConsumerWidget {
           try {
             String? metodo =
                 FirebaseAuth.instance.currentUser?.providerData[0].providerId;
-            await FirebaseAuth.instance.signOut();
+                await GoogleSignIn().disconnect();
+                await FirebaseAuth.instance.signOut();
             if (context.mounted) {
               Navigator.pop(context);
-              if (metodo == "google.com") {
-                Navigator.pop(context);
-              }
+              Navigator.pop(context);
+              
             }
           } catch (e) {
             print(e.toString());
