@@ -6,6 +6,7 @@ import 'package:citame/pages/pages_1/profile_page.dart';
 import 'package:citame/providers/business_provider.dart';
 import 'package:citame/providers/categories_provider.dart';
 import 'package:citame/providers/geolocator_provider.dart';
+import 'package:citame/providers/ip_provider.dart';
 import 'package:citame/providers/navbar_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
@@ -22,12 +23,13 @@ class HomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    const String serverUrl = 'http://192.168.0.6:4000';
+    String serverUrl = ref.read(ipProvider);
     FirebaseAuth auth = FirebaseAuth.instance;
 
     Future<Usuario> getProfilePhoto() async {
       final response = await http.get(Uri.parse('$serverUrl/api/user'),
           headers: {'googleId': auth.currentUser!.uid});
+
       if (response.statusCode == 200) {
         final List<dynamic> usuarios = jsonDecode(response.body);
         final Usuario usuario = Usuario(

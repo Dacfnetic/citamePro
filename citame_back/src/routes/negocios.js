@@ -21,13 +21,7 @@ router.get('/api/user', async (req,res)=>{
 
     //Buscar todos los negocios dentro de la base de datos
     const usuarios = await Usuario.find();
-    console.log(usuarios);
-    //console.log(JSON(req.headers));
-    //console.log(JSON(req.headers.googleId));
-    console.log(req.get('googleId'));
-
     const usuario = usuarios.filter((e)=>e.googleId==req.get('googleId'));
-    console.log(usuario);
     res.json( usuario );
 });
 

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:citame/Widgets/business_card.dart';
 import 'package:citame/models/business_model.dart';
 import 'package:citame/pages/pages_1/pages_2/my_businessess_page.dart';
+import 'package:citame/providers/ip_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,7 +24,7 @@ class ProfileRow extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    const String serverUrl = 'http://192.168.0.6:4000';
+    String serverUrl = ref.read(ipProvider);
     Future<List<Business>> getMyBusinesses() async {
       final response =
           await http.get(Uri.parse('$serverUrl/api/user_businesses'));

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:citame/models/user_model.dart';
 import 'package:citame/firebase_options.dart';
+import 'package:citame/providers/ip_provider.dart';
 //import 'package:citame/pages/pages_1/pages_2/business_registration_page.dart';
 //import 'package:citame/pages/pages_1/maybe_not_login_page.dart';
 import 'package:http/http.dart' as http;
@@ -20,7 +21,7 @@ class SignInPage extends ConsumerWidget {
   });
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    const String serverUrl = 'http://192.168.0.6:4000';
+    String serverUrl = ref.read(ipProvider);
 
     Future<UserCredential> signInWithGoogle() async {
       final GoogleSignInAccount? googleUser = await GoogleSignIn(

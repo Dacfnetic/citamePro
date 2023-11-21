@@ -4,6 +4,7 @@ import 'package:citame/Widgets/photo_container.dart';
 import 'package:citame/Widgets/photo_with_text.dart';
 import 'package:citame/models/business_model.dart';
 import 'package:citame/pages/pages_1/pages_2/map_page.dart';
+import 'package:citame/providers/ip_provider.dart';
 import 'package:citame/providers/marker_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -26,7 +27,7 @@ class BusinessRegisterPage extends ConsumerWidget {
   final GlobalKey<FormState> signUpKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    const String serverUrl = 'http://192.168.0.6:4000';
+    String serverUrl = ref.read(ipProvider);
 
     Future<Business> addBusiness(
       String businessName,
@@ -53,7 +54,6 @@ class BusinessRegisterPage extends ConsumerWidget {
                 "longitude": longitude,
                 "description": description,
               }));
-
       if (response.statusCode == 201) {
         final dynamic json = jsonDecode(response.body);
         final Business business = Business.fromJson(json);
