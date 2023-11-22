@@ -62,7 +62,9 @@ const Usuario = require('../models/user-model');
 
         });
 
-        
+
+
+
 
         
     } catch (error) {
@@ -76,4 +78,7 @@ const Usuario = require('../models/user-model');
     }
 
 
+
+
+    
 module.exports = router
