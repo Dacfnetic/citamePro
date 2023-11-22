@@ -16,15 +16,7 @@ router.get('/api/negocios', async (req,res)=>{
     res.json( {negocios} );
 });
 
-//Ruta para cargar la lista de negocios del usuario
-/*
-router.get('/api/user', async (req,res)=>{
 
-    //Buscar todos los negocios dentro de la base de datos
-    const usuarios = await Usuario.find();
-    const usuario = usuarios.filter((e)=>e.googleId==req.get('googleId'));
-    res.json( usuario );
-});*/
 
 //Ruta para cargar la lista de negocios del usuario
 router.get('/api/user_businesses', async (req,res)=>{
