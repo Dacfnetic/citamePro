@@ -26,9 +26,12 @@ class ProfileRow extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     String serverUrl = ref.read(ipProvider);
+    FirebaseAuth auth = FirebaseAuth.instance;
+
     Future<List<Business>> getMyBusinesses() async {
-      final response =
-          await http.get(Uri.parse('$serverUrl/api/user_businesses'));
+      var email = auth.currentUser!.email;
+      final response = await http
+          .get(Uri.parse('$serverUrl/api/a'), headers: {'email': email!});
       if (response.statusCode == 200) {
         final List<dynamic> businessList = jsonDecode(response.body);
         final List<Business> businesses = businessList.map((business) {
@@ -48,14 +51,12 @@ class ProfileRow extends ConsumerWidget {
       onPressed: () async {
         if (method == 0) {
           try {
-            String? metodo =
-                FirebaseAuth.instance.currentUser?.providerData[0].providerId;
-                await GoogleSignIn().disconnect();
-                await FirebaseAuth.instance.signOut();
+            /*String? metodo =
+                FirebaseAuth.instance.currentUser?.providerData[0].providerId;*/
+            await GoogleSignIn().disconnect();
+            await FirebaseAuth.instance.signOut();
             if (context.mounted) {
-              Navigator.pop(context);
-              Navigator.pop(context);
-              
+              Navigator.of(context).popUntil((route) => route.isFirst);
             }
           } catch (e) {
             print(e.toString());

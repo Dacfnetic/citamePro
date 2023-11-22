@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'package:citame/Widgets/cuadro.dart';
 import 'package:citame/Widgets/photo_container.dart';
 import 'package:citame/Widgets/photo_with_text.dart';
-import 'package:citame/models/business_model.dart';
 import 'package:citame/pages/pages_1/pages_2/map_page.dart';
 import 'package:citame/providers/ip_provider.dart';
 import 'package:citame/providers/marker_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -28,11 +28,13 @@ class BusinessRegisterPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     String serverUrl = ref.read(ipProvider);
-
-    Future<Business> addBusiness(
+    FirebaseAuth auth = FirebaseAuth.instance;
+    Future<String> addBusiness(
       String businessName,
       String? category,
       String? email,
+      //String? createdBy,
+      List<String> workers,
       String? contactNumber,
       String? direction,
       String? latitude,
@@ -48,6 +50,8 @@ class BusinessRegisterPage extends ConsumerWidget {
                 "businessName": businessName,
                 "category": category,
                 "email": email,
+                //"createdBy": createdBy,
+                "workers": workers,
                 "contactNumber": contactNumber,
                 "direction": direction,
                 "latitude": latitude,
@@ -55,9 +59,9 @@ class BusinessRegisterPage extends ConsumerWidget {
                 "description": description,
               }));
       if (response.statusCode == 201) {
-        final dynamic json = jsonDecode(response.body);
-        final Business business = Business.fromJson(json);
-        return business;
+        //final dynamic json = jsonDecode(response.body);
+        ///final Business business = Business.fromJson(json);
+        return "Todo ok";
       } else {
         print(response);
         throw Exception('Failed to add item');
@@ -151,7 +155,9 @@ class BusinessRegisterPage extends ConsumerWidget {
                         //TODO: Agregar imagen del negocio e identificador de usuario
                         businessName.text,
                         category.text,
-                        email.text,
+                        auth.currentUser!.email,
+                        //auth.currentUser!.uid,
+                        [],
                         cel.text,
                         physicalDirection.text,
                         negocio.position.latitude.toString(),
