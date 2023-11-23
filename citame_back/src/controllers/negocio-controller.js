@@ -1,13 +1,14 @@
 const { Router, json } = require('express');
+const Multer = require('multer');
 
-//Objeto donde definimos rutas del servidor
+//---Objeto donde definimos rutas del servidor---//
 const router = Router();
 
-//Solicitud para obtener el modelo de negocio
+//---Solicitud para obtener el modelo de negocio---//
 
 const Negocio = require('../models/negocio-model');
 
-//Ruta para cargar la lista de negocios
+//---Ruta para cargar la lista de negocios---//
 router.get('/api/negocios', async (req,res)=>{
 
     //Buscar todos los negocios dentro de la base de datos
@@ -15,7 +16,7 @@ router.get('/api/negocios', async (req,res)=>{
     res.json( negocios );
 });
 
-//Ruta para ver negocios del usuario que inicio sesion
+//---Ruta para ver negocios del usuario que inicio sesion---//
 
 router.get('/api/negocios-user/userId', async (req,res)=>{
 
@@ -46,3 +47,51 @@ router.get('/api/negocios-user/userId', async (req,res)=>{
 
 });
 
+//---Imagenes del Servidor---//
+
+//Metodo para almacenar las imagenes
+const imgStorage = Multer.diskStorage({
+
+    destination: function (req,file,cb){
+        cb(null,'subidas/'); //Directorio donde se guardan las imagenes
+    },
+
+    filename: function(req,file,cb){
+        cb(null,file.originalname);
+    }
+
+
+});
+
+const imgSubida = Multer({ storage: imgStorage });
+
+//---Ruta para las imagenes del servidor---//
+router.post('/api/subida', imgSubida.single('image') , async (req,res)=>{
+
+    try {
+        
+        const patImg = req.file.path;
+
+        //Save en mongo
+
+        const newImage = new Negocio({  imgPath: patImg });
+        await newImage.save();
+        res.json({ message:'Imagen Guardada en MongoDB exitosamente.'} );
+
+
+
+    } catch (error) {
+        console.log(error);
+        return res.json({
+            succes:false,
+            msg:'Error al subir'
+        });
+        
+    }
+
+
+
+
+});
+
+module.exports = router;
