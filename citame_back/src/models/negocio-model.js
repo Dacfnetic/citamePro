@@ -13,6 +13,7 @@ const negocioSchema = new Schema({
     latitude: {type: String, required: true},
     longitude: {type: String, required: true},
     description: {type: String, required: true},
+    imgPath:{type:String}
 
 });
 
