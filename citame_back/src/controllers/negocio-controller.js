@@ -4,8 +4,9 @@ const Multer = require('multer');
 //---Objeto donde definimos rutas del servidor---//
 const router = Router();
 
-//---Solicitud para obtener el modelo de negocio---//
 
+//Solicitud para obtener el modelo de negocio
+const Usuario = require('../models/user-model');
 const Negocio = require('../models/negocio-model');
 
 //---Ruta para cargar la lista de negocios---//
@@ -17,6 +18,7 @@ router.get('/api/negocios', async (req,res)=>{
 });
 
 //---Ruta para ver negocios del usuario que inicio sesion---//
+
 
 router.get('/api/negocios-user/userId', async (req,res)=>{
 
