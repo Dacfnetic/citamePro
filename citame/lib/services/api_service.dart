@@ -8,7 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 
-String serverUrl = 'http://192.168.0.7:4000';
+String serverUrl = 'https:cambio.citame.store';
 FirebaseAuth auth = FirebaseAuth.instance;
 
 abstract class API {

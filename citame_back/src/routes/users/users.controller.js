@@ -8,7 +8,7 @@ async function getUser(req,res){
         const actualUser = allUsers.filter((nUser)=>nUser.googleId==req.get('googleId'));
         return res.status(200).json( actualUser );
     }catch(e){
-        return res.status(404).json('Errosillo');
+        return res.status(404).json('Errorsillo');
     }  
 }
 //Función para crear usuario
