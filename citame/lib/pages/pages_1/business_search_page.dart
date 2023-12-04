@@ -1,10 +1,11 @@
+import 'package:citame/Widgets/bottom_bar.dart';
 import 'package:citame/Widgets/business_card.dart';
 import 'package:citame/providers/business_provider.dart';
 import 'package:citame/providers/geolocator_provider.dart';
 import 'package:citame/providers/navbar_provider.dart';
+import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class BusinessSearchPage extends ConsumerWidget {
   final String categoria;
@@ -69,17 +70,10 @@ class BusinessSearchPage extends ConsumerWidget {
                               child: TextField(
                                 onChanged: (value) => {
                                   businessController.filtrar(value),
-                                  /* ref
-                                      .read(searchBarProvider.notifier)
-                                      .actualizar(value),*/
                                 },
                                 controller: searchBarController,
                                 decoration: InputDecoration(
-                                  labelStyle: GoogleFonts.plusJakartaSans(
-                                    color: Color(0xFF606A85),
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                                  labelStyle: API.estiloJ14gris,
                                   enabledBorder: InputBorder.none,
                                   focusedBorder: InputBorder.none,
                                   errorBorder: InputBorder.none,
@@ -87,11 +81,7 @@ class BusinessSearchPage extends ConsumerWidget {
                                   filled: true,
                                   fillColor: Colors.white,
                                 ),
-                                style: GoogleFonts.plusJakartaSans(
-                                  color: Color(0xFF15161E),
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                                style: API.estiloJ14negro,
                               ),
                             ),
                           ),
@@ -100,66 +90,17 @@ class BusinessSearchPage extends ConsumerWidget {
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 12,
-                ),
-                Text(
-                  categoria,
-                  style: GoogleFonts.plusJakartaSans(
-                    color: Color(0xFF14181B),
-                    fontSize: 24,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                SizedBox(
-                  height: 12,
-                ),
-                Expanded(
-                  child: ListView(
-                    children: negocios,
-                  ),
-                )
+                SizedBox(height: 12),
+                Text(categoria, style: API.estiloJ24negro),
+                SizedBox(height: 12),
+                Expanded(child: ListView(children: negocios)),
               ],
             ),
           ),
         ),
       ),
-      bottomNavigationBar: NavigationBar(
-          backgroundColor: Colors.white,
-          indicatorColor: Colors.white,
-          selectedIndex: 0,
-          onDestinationSelected: (value) {
-            ref.read(navbarProvider.notifier).changeState(value);
-            /* if (value == 2) {
-              Navigator.pop(context);
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ProfilePage(),
-                  ));
-            }*/
-            if (value == 0) {
-              Navigator.pop(context);
-            }
-          },
-          elevation: 0,
-          destinations: const <Widget>[
-            NavigationDestination(
-              selectedIcon: Icon(Icons.home_outlined),
-              icon: Icon(Icons.home_outlined),
-              label: '',
-            ),
-            NavigationDestination(
-              selectedIcon: Icon(Icons.sticky_note_2),
-              icon: Icon(Icons.sticky_note_2_outlined),
-              label: '',
-            ),
-            NavigationDestination(
-              selectedIcon: Icon(Icons.person_2),
-              icon: Icon(Icons.person_2_outlined),
-              label: '',
-            ),
-          ]),
+      bottomNavigationBar:
+          BarraInferior(searchBarController: searchBarController, tip: 1),
     );
   }
 }
