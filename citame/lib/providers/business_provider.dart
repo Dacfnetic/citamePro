@@ -57,15 +57,6 @@ class BusinessListNotifier extends StateNotifier<List<BusinessCard>> {
 
 LatLng businessPosition = LatLng(0, 0);
 
-//TODO: Cargar negocios desde el backend
-
 List<BusinessCard> negocios = [
-  BusinessCard(
-      nombre: 'Barberia Nixon',
-      categoria: 'Barberias',
-      latitud: 14.802359,
-      longitud: -89.549477,
-      rating: 4.25, //TODO: Calcular haciendo el promedio de las reviews.
-      imagen:
-          'https://source.unsplash.com/random/1280x720?beach&9'), //TODO: Cargar desde la base de datos
+  //TODO: Cargar desde la base de datos
 ];

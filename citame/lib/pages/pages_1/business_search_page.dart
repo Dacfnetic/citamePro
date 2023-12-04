@@ -19,7 +19,6 @@ class BusinessSearchPage extends ConsumerWidget {
   final List<BusinessCard> negocios;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    List<BusinessCard> negocios = ref.watch(businessProvider);
     ref.watch(geoProvider.notifier).obtener();
 
     BusinessListNotifier businessController =

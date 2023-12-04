@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:citame/providers/geolocator_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -36,8 +37,8 @@ class BusinessCard extends ConsumerWidget {
       children: [
         ClipRRect(
           borderRadius: BorderRadius.circular(16),
-          child: Image.network(
-            imagen,
+          child: Image.file(
+            File(imagen),
             width: double.infinity,
             height: 230,
             fit: BoxFit.cover,

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:citame/Widgets/business_card.dart';
 import 'package:citame/models/business_model.dart';
 import 'package:citame/pages/pages_1/business_search_page.dart';
@@ -37,7 +39,6 @@ class HomeRow extends ConsumerWidget {
           ref.read(categoriesProvider.notifier).inicializar();
           try {
             allBusiness = await API.getAllBusiness();
-            negocios = [];
             negocios = allBusiness.map((e) {
               return (BusinessCard(
                 nombre: e.businessName,
@@ -45,7 +46,7 @@ class HomeRow extends ConsumerWidget {
                 latitud: double.parse(e.latitude),
                 longitud: double.parse(e.longitude),
                 rating: 5.0,
-                imagen: 'https://source.unsplash.com/random/1280x720?beach&9',
+                imagen: e.imgPath,
               ));
             }).toList();
             if (context.mounted) {

@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
 import 'package:citame/firebase_options.dart';
 import 'package:citame/models/business_model.dart';
 import 'package:citame/models/user_model.dart';
@@ -85,7 +87,9 @@ abstract class API {
     String? latitude,
     String? longitude,
     String? description,
+    String imgPath,
   ) async {
+    String imagen = await API.convertTo64(imgPath);
     final response =
         await http.post(Uri.parse('$serverUrl/api/business/create'),
             headers: {'Content-Type': 'application/json'},
@@ -100,6 +104,7 @@ abstract class API {
               "latitude": latitude,
               "longitude": longitude,
               "description": description,
+              "imgPath": imagen,
             }));
     if (response.statusCode == 201) return "Negocio creado";
     if (response.statusCode == 202) return "El negocio ya existe";
@@ -123,12 +128,28 @@ abstract class API {
     return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
+  static Future<String> convertTo64(String imagepath) async {
+    File imagefile = File(imagepath); //convert Path to File
+    Uint8List imagebytes = await imagefile.readAsBytes(); //convert to bytes
+    String base64string =
+        base64.encode(imagebytes); //convert bytes to base64 string
+    print(base64string);
+    return base64string;
+  }
+
+  static Future<Uint8List> decode64(String base64string) async {
+    Uint8List decodedbytes = base64.decode(base64string);
+    return decodedbytes;
+  }
+
   static var estiloJ24negro = GoogleFonts.plusJakartaSans(
       color: Color(0xFF14181B), fontSize: 24, fontWeight: FontWeight.w500);
   static var estiloJ14negro = GoogleFonts.plusJakartaSans(
       color: Color(0xFF15161E), fontSize: 14, fontWeight: FontWeight.w500);
   static var estiloJ14gris = GoogleFonts.plusJakartaSans(
-      color: Color(0xFF606A85), fontSize: 14, fontWeight: FontWeight.w500);
+      color: Color.fromRGBO(96, 106, 133, 1),
+      fontSize: 14,
+      fontWeight: FontWeight.w500);
   static var estiloJ16negro = GoogleFonts.plusJakartaSans(
       color: Color(0xFF14181B), fontSize: 16, fontWeight: FontWeight.normal);
 }

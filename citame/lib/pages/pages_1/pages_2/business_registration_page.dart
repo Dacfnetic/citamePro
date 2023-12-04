@@ -2,6 +2,7 @@ import 'package:citame/Widgets/cuadro.dart';
 import 'package:citame/Widgets/photo_container.dart';
 import 'package:citame/Widgets/photo_with_text.dart';
 import 'package:citame/pages/pages_1/pages_2/map_page.dart';
+import 'package:citame/providers/img_provider.dart';
 import 'package:citame/providers/marker_provider.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -123,6 +124,7 @@ class BusinessRegisterPage extends ConsumerWidget {
                         negocio.position.latitude.toString(),
                         negocio.position.longitude.toString(),
                         description.text,
+                        ref.read(imgProvider),
                       );
                       if (context.mounted) {
                         Navigator.pop(context);

@@ -9,6 +9,7 @@ class Business {
   final String latitude;
   final String longitude;
   final String description;
+  final String imgPath;
 
   Business({
     required this.businessName,
@@ -21,6 +22,7 @@ class Business {
     required this.latitude,
     required this.longitude,
     required this.description,
+    required this.imgPath,
   });
 
   factory Business.fromJson(Map<String, dynamic> json) {
@@ -35,6 +37,7 @@ class Business {
       latitude: json['latitude'],
       longitude: json['longitude'],
       description: json['description'],
+      imgPath: json['imgPath'],
     );
   }
 }

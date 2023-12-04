@@ -50,7 +50,7 @@ async function postBusiness(req,res){
                     latitude: req.body.latitude,
                     longitude: req.body.longitude,
                     description: req.body.description,
-                    //imgPath:
+                    imgPath: req.body.imgPath,
                 });
                 return res.status(201).send("Negocio creado");
         });

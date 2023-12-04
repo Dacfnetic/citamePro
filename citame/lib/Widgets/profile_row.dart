@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:citame/Widgets/business_card.dart';
 import 'package:citame/models/business_model.dart';
 import 'package:citame/pages/pages_1/pages_2/my_businessess_page.dart';
@@ -50,7 +52,7 @@ class ProfileRow extends ConsumerWidget {
                 latitud: double.parse(e.latitude),
                 longitud: double.parse(e.longitude),
                 rating: 5.0,
-                imagen: 'https://source.unsplash.com/random/1280x720?beach&9',
+                imagen: e.imgPath,
               ));
             }).toList();
             if (context.mounted) {

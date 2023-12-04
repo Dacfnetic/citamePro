@@ -1,31 +1,24 @@
 import 'dart:io';
-
+import 'package:citame/providers/img_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
-class EspacioParaSubirFotoDeNegocio extends StatefulWidget {
-  const EspacioParaSubirFotoDeNegocio({
+class EspacioParaSubirFotoDeNegocio extends ConsumerWidget {
+  EspacioParaSubirFotoDeNegocio({
     super.key,
   });
 
   @override
-  State<EspacioParaSubirFotoDeNegocio> createState() =>
-      _EspacioParaSubirFotoDeNegocioState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    String ruta = ref.watch(imgProvider);
 
-class _EspacioParaSubirFotoDeNegocioState
-    extends State<EspacioParaSubirFotoDeNegocio> {
-  File? selectedImage;
-  @override
-  Widget build(BuildContext context) {
     Future pickImageFromGallery() async {
       final returnedImage =
           await ImagePicker().pickImage(source: ImageSource.gallery);
       if (returnedImage != null) {
         final camino = returnedImage.path;
-        setState(() {
-          selectedImage = File(camino);
-        });
+        ref.watch(imgProvider.notifier).changeState(camino);
       }
     }
 
@@ -34,9 +27,7 @@ class _EspacioParaSubirFotoDeNegocioState
           await ImagePicker().pickImage(source: ImageSource.camera);
       if (returnedImage != null) {
         final camino = returnedImage.path;
-        setState(() {
-          selectedImage = File(camino);
-        });
+        ref.watch(imgProvider.notifier).changeState(camino);
       }
     }
 
@@ -60,9 +51,9 @@ class _EspacioParaSubirFotoDeNegocioState
               ),*/
                 ClipRRect(
               borderRadius: BorderRadius.circular(16),
-              child: selectedImage != null
+              child: ruta != ''
                   ? Image.file(
-                      selectedImage!,
+                      File(ruta),
                       width: double.infinity,
                       height: 230,
                       fit: BoxFit.cover,
