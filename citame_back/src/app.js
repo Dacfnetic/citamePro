@@ -1,15 +1,15 @@
+//Importación de paquetes requeridos
 const express = require('express');
-const morgan = require('morgan');
-const app = express();
 const cors = require('cors');
-
+//Importación de enrutadores
+const usersRouter = require('./routes/users/users.router.js');
+const businessRouter = require('./routes/business/business.router.js');
+//Creación de aplicación express
+const app = express();
 //Informacion del servidor
-app.use(express.json());
-app.use(morgan('dev'));
-
 app.use(cors());
-
-app.use(require('./routes/negocios'));
-app.use(require('./controllers/user-controller'))
-
+app.use(express.json());
+app.use(usersRouter);
+app.use(businessRouter);
+//Exportación de aplicación express
 module.exports = app;

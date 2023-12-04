@@ -50,14 +50,8 @@ class MyApp extends ConsumerWidget {
       home: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return HomePage();
-            //return BusinessRegisterPage();
-          }
-
+          if (snapshot.hasData) return HomePage();
           return const SignInPage();
-          //return BusinessRegisterPage();
-          // return ProfileInsidePage();
         },
       ),
       debugShowCheckedModeBanner: false,

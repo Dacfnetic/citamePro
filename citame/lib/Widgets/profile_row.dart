@@ -1,14 +1,12 @@
-import 'dart:convert';
 import 'package:citame/Widgets/business_card.dart';
 import 'package:citame/models/business_model.dart';
 import 'package:citame/pages/pages_1/pages_2/my_businessess_page.dart';
-import 'package:citame/providers/ip_provider.dart';
+import 'package:citame/services/api_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:http/http.dart' as http;
 
 class ProfileRow extends ConsumerWidget {
   final String description;
@@ -25,26 +23,6 @@ class ProfileRow extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    String serverUrl = ref.read(ipProvider);
-    FirebaseAuth auth = FirebaseAuth.instance;
-
-    Future<List<Business>> getMyBusinesses() async {
-      var email = auth.currentUser!.email;
-      final response = await http
-          .get(Uri.parse('$serverUrl/api/a'), headers: {'email': email!});
-      if (response.statusCode == 200) {
-        final List<dynamic> businessList = jsonDecode(response.body);
-        final List<Business> businesses = businessList.map((business) {
-          Business negocio = Business.fromJson(business);
-          return negocio;
-        }).toList();
-        return businesses;
-      } else {
-        print(response);
-        throw Exception('Failed to get items');
-      }
-    }
-
     List<Business> userBusiness;
     List<BusinessCard> negocios;
     return TextButton(
@@ -64,8 +42,7 @@ class ProfileRow extends ConsumerWidget {
         }
         if (method == 1) {
           try {
-            //TODO: Implementar para crear cartas de negocios
-            userBusiness = await getMyBusinesses();
+            userBusiness = await API.getOwnerBusiness();
             negocios = userBusiness.map((e) {
               return (BusinessCard(
                 nombre: e.businessName,

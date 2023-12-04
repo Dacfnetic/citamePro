@@ -1,15 +1,13 @@
-import 'dart:convert';
 import 'package:citame/Widgets/cuadro.dart';
 import 'package:citame/Widgets/photo_container.dart';
 import 'package:citame/Widgets/photo_with_text.dart';
 import 'package:citame/pages/pages_1/pages_2/map_page.dart';
-import 'package:citame/providers/ip_provider.dart';
 import 'package:citame/providers/marker_provider.dart';
+import 'package:citame/services/api_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart' as http;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class BusinessRegisterPage extends ConsumerWidget {
@@ -27,46 +25,7 @@ class BusinessRegisterPage extends ConsumerWidget {
   final GlobalKey<FormState> signUpKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    String serverUrl = ref.read(ipProvider);
     FirebaseAuth auth = FirebaseAuth.instance;
-    Future<String> addBusiness(
-      String businessName,
-      String? category,
-      String? email,
-      //String? createdBy,
-      List<String> workers,
-      String? contactNumber,
-      String? direction,
-      String? latitude,
-      String? longitude,
-      String? description,
-    ) async {
-      final response =
-          await http.post(Uri.parse('$serverUrl/api/negocio-model/create'),
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: jsonEncode({
-                "businessName": businessName,
-                "category": category,
-                "email": email,
-                //"createdBy": createdBy,
-                "workers": workers,
-                "contactNumber": contactNumber,
-                "direction": direction,
-                "latitude": latitude,
-                "longitude": longitude,
-                "description": description,
-              }));
-      if (response.statusCode == 201) {
-        //final dynamic json = jsonDecode(response.body);
-        ///final Business business = Business.fromJson(json);
-        return "Todo ok";
-      } else {
-        print(response);
-        throw Exception('Failed to add item');
-      }
-    }
 
     Marker negocio = ref.watch(markerProvider);
     const String mensaje =
@@ -151,7 +110,8 @@ class BusinessRegisterPage extends ConsumerWidget {
                 onPressed: () async {
                   try {
                     if (signUpKey.currentState!.validate()) {
-                      await addBusiness(
+                      //var resultado = '';
+                      await API.postBusiness(
                         //TODO: Agregar imagen del negocio e identificador de usuario
                         businessName.text,
                         category.text,
