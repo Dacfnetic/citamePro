@@ -8,7 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 
-String serverUrl = 'https:cambio.citame.store';
+String serverUrl = 'https://ubuntu.citame.store';
 FirebaseAuth auth = FirebaseAuth.instance;
 
 abstract class API {
@@ -31,6 +31,22 @@ abstract class API {
     var email = auth.currentUser!.email;
     final response = await http.get(
         Uri.parse('$serverUrl/api/business/get/owner'),
+        headers: {'email': email!});
+    if (response.statusCode == 200) {
+      final List<dynamic> businessList = jsonDecode(response.body);
+      final List<Business> businesses = businessList.map((business) {
+        Business negocio = Business.fromJson(business);
+        return negocio;
+      }).toList();
+      return businesses;
+    }
+    throw Exception('Failed to get items');
+  }
+
+  static Future<List<Business>> getAllBusiness() async {
+    var email = auth.currentUser!.email;
+    final response = await http.get(
+        Uri.parse('$serverUrl/api/business/get/all'),
         headers: {'email': email!});
     if (response.statusCode == 200) {
       final List<dynamic> businessList = jsonDecode(response.body);
@@ -113,4 +129,6 @@ abstract class API {
       color: Color(0xFF15161E), fontSize: 14, fontWeight: FontWeight.w500);
   static var estiloJ14gris = GoogleFonts.plusJakartaSans(
       color: Color(0xFF606A85), fontSize: 14, fontWeight: FontWeight.w500);
+  static var estiloJ16negro = GoogleFonts.plusJakartaSans(
+      color: Color(0xFF14181B), fontSize: 16, fontWeight: FontWeight.normal);
 }

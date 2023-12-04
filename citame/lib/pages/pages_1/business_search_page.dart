@@ -2,7 +2,6 @@ import 'package:citame/Widgets/bottom_bar.dart';
 import 'package:citame/Widgets/business_card.dart';
 import 'package:citame/providers/business_provider.dart';
 import 'package:citame/providers/geolocator_provider.dart';
-import 'package:citame/providers/navbar_provider.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,9 +12,11 @@ class BusinessSearchPage extends ConsumerWidget {
   BusinessSearchPage({
     Key? key,
     required this.categoria,
+    required this.negocios,
   }) : super(key: key);
-  final TextEditingController searchBarController = TextEditingController();
 
+  final TextEditingController searchBarController = TextEditingController();
+  final List<BusinessCard> negocios;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     List<BusinessCard> negocios = ref.watch(businessProvider);

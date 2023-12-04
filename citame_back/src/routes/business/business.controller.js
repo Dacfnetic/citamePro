@@ -4,8 +4,13 @@ const business = require('../../models/business.model.js');
 
 async function getAllBusiness(req,res){
     try{
-        const allBusiness = await business.find();
-        return res.status(200).json( allBusiness );
+        usuario.findOne({emailUser: req.get('email')})
+            .then(async(docs)=>{
+                if(docs.emailUser == req.get('email')){
+                    const allBusiness = await business.find();
+                    return res.status(200).json(allBusiness);
+                }
+            }).catch(e=>console.log(e));
     }catch(e){
         return res.status(404).json('Errosillo');
     }  

@@ -1,6 +1,10 @@
+import 'package:citame/Widgets/business_card.dart';
+import 'package:citame/models/business_model.dart';
 import 'package:citame/pages/pages_1/business_search_page.dart';
 import 'package:citame/providers/business_provider.dart';
 import 'package:citame/providers/categories_provider.dart';
+import 'package:citame/services/api_service.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -17,6 +21,8 @@ class HomeRow extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    List<Business> allBusiness;
+    List<BusinessCard> negocios;
     //List<HomeRow> categorias = ref.watch(categoriesProvider);
     return Container(
       margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
@@ -26,15 +32,35 @@ class HomeRow extends ConsumerWidget {
         borderRadius: BorderRadius.circular(12),
       ),
       child: TextButton(
-        onPressed: () {
+        onPressed: () async {
           ref.read(businessProvider.notifier).inicializar();
           ref.read(categoriesProvider.notifier).inicializar();
-
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => BusinessSearchPage(categoria: categoria),
+          try {
+            allBusiness = await API.getAllBusiness();
+            negocios = [];
+            negocios = allBusiness.map((e) {
+              return (BusinessCard(
+                nombre: e.businessName,
+                categoria: e.category,
+                latitud: double.parse(e.latitude),
+                longitud: double.parse(e.longitude),
+                rating: 5.0,
+                imagen: 'https://source.unsplash.com/random/1280x720?beach&9',
               ));
+            }).toList();
+            if (context.mounted) {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BusinessSearchPage(
+                      categoria: categoria,
+                      negocios: negocios,
+                    ),
+                  ));
+            }
+          } catch (e) {
+            print(e);
+          }
         },
         child: Padding(
           padding: EdgeInsetsDirectional.fromSTEB(8, 8, 12, 8),
@@ -55,11 +81,7 @@ class HomeRow extends ConsumerWidget {
                 padding: EdgeInsetsDirectional.fromSTEB(16, 0, 0, 0),
                 child: Text(
                   categoria,
-                  style: GoogleFonts.plusJakartaSans(
-                    color: Color(0xFF14181B),
-                    fontSize: 16,
-                    fontWeight: FontWeight.normal,
-                  ),
+                  style: API.estiloJ16negro,
                 ),
               ),
             ],
