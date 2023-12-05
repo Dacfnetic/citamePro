@@ -51,7 +51,7 @@ class ProfileRow extends ConsumerWidget {
                   builder: (context) => MyBusinessesPage(),
                 ));
           }
-
+          ref.read(ownBusinessProvider.notifier).cargar();
           //}
           //} catch (e) {
           //  print(e.toString());

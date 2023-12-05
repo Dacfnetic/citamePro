@@ -40,7 +40,7 @@ async function verifyOwnerBusiness(req,res){
                     const ownerBusiness = await business.find({ createdBy: docs._id });
                     listaDeNombres = ownerBusiness.map((busi)=> busi.businessName);
                     listaDeNombresOrdenada = listaDeNombres.sort(function(a, b){return b - a});
-                    listaRecibidaOrdenada = reg.get('nombres').sort(function(a, b){return b - a});
+                    listaRecibidaOrdenada = req.get('nombres').sort(function(a, b){return b - a});
                     if(listaRecibidaOrdenada==listaDeNombresOrdenada){
                         return res.status(200).send('1');
                     }
