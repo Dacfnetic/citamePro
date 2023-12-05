@@ -1,6 +1,7 @@
 //Importación de paquetes requeridos
 const express = require('express');
 const cors = require('cors');
+const bodyParser = require('body-parser');
 //Importación de enrutadores
 const usersRouter = require('./routes/users/users.router.js');
 const businessRouter = require('./routes/business/business.router.js');
