@@ -21,11 +21,8 @@ async function getOwnerBusiness(req,res){
             .then(async(docs)=>{
                 if(docs.emailUser == req.get('email')){
                     const ownerBusiness = await business.find({ createdBy: docs._id });
-                    //TODO: Comprobar si hay nuevos
-                    listaDeNombres = ownerBusiness.map((busi)=> busi.businessName);
-                    listaDeNombresOrdenada = listaDeNombres.sort(function(a, b){return b - a});
-                    listaRecibidaOrdenada = reg.get('nombres').sort(function(a, b){return b - a});
-                    if(listaRecibidaOrdenada==listaDeNombresOrdenada){
+                    
+                    if(req.get('estado')=='1'){
                         return res.status(201).send('1');
                     }
                     return res.status(200).json(ownerBusiness);
