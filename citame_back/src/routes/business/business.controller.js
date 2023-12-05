@@ -39,6 +39,10 @@ async function postBusiness(req,res){
         if(existe) return res.status(202).send('El negocio ya existe');
         await usuario.findOne({emailUser: req.body.email})
             .then(async (docs)=>{
+
+                const img64 = req.body.imgPath;// x64
+                const imgReady = '';
+
                 await business.create({
                     businessName: req.body.businessName,
                     category: req.body.category,
