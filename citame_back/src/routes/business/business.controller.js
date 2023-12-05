@@ -21,11 +21,11 @@ async function getOwnerBusiness(req,res){
             .then(async(docs)=>{
                 if(docs.emailUser == req.get('email')){
                     const ownerBusiness = await business.find({ createdBy: docs._id });
-                    
-                    if(req.get('estado')=='1'){
-                        return res.status(201).send('1');
+                    const comprob =req.get('estado');
+                    if(comprob=='1'){
+                        return res.status(200).send('1');
                     }
-                    return res.status(200).json(ownerBusiness);
+                    return res.status(201).json(ownerBusiness);
                 }
             }).catch(e=>console.log(e));
     }catch(e){
@@ -40,8 +40,9 @@ async function verifyOwnerBusiness(req,res){
                     const ownerBusiness = await business.find({ createdBy: docs._id });
                     listaDeNombres = ownerBusiness.map((busi)=> busi.businessName);
                     listaDeNombresOrdenada = listaDeNombres.sort(function(a, b){return b - a});
-                    listaRecibidaOrdenada = req.get('nombres').sort(function(a, b){return b - a});
-                    if(listaRecibidaOrdenada==listaDeNombresOrdenada){
+                    nombresRecibidos = req.body.businessName;
+                    listaRecibidaOrdenada = nombresRecibidos.sort(function(a, b){return b - a});
+                    if(JSON.stringify(listaRecibidaOrdenada)===JSON.stringify(listaDeNombresOrdenada)){
                         return res.status(200).send('1');
                     }
                     return res.status(201).send('0');

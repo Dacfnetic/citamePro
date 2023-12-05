@@ -3,6 +3,7 @@ import 'package:citame/pages/pages_1/profile_page.dart';
 import 'package:citame/providers/business_provider.dart';
 import 'package:citame/providers/categories_provider.dart';
 import 'package:citame/providers/navbar_provider.dart';
+import 'package:citame/providers/user_provider.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -24,16 +25,16 @@ class BarraInferior extends ConsumerWidget {
         indicatorColor: Colors.white,
         selectedIndex: 0,
         onDestinationSelected: (value) async {
-          Usuario currentUser = await API.getUser();
           ref.read(navbarProvider.notifier).changeState(value);
           if (value == 2) {
             if (context.mounted) {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ProfilePage(user: currentUser),
+                    builder: (context) => ProfilePage(),
                   ));
             }
+            ref.read(userProvider.notifier).cargar();
             ref.read(businessProvider.notifier).inicializar();
             ref.read(categoriesProvider.notifier).inicializar();
             searchBarController.text = "";

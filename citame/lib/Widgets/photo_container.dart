@@ -20,7 +20,7 @@ class EspacioParaSubirFotoDeNegocio extends ConsumerWidget {
 
       var comprimida = await FlutterImageCompress.compressAndGetFile(
           returnedImage!.path, '${returnedImage.path}compressed.jpg',
-          minHeight: 640, minWidth: 480, quality: 10);
+          minHeight: 640, minWidth: 480, quality: 80);
 
       if (comprimida != null) {
         final camino = comprimida.path;
@@ -33,7 +33,7 @@ class EspacioParaSubirFotoDeNegocio extends ConsumerWidget {
           await ImagePicker().pickImage(source: ImageSource.camera);
       var comprimida = await FlutterImageCompress.compressAndGetFile(
           returnedImage!.path, '${returnedImage.path}compressed.jpg',
-          minHeight: 640, minWidth: 480, quality: 10);
+          minHeight: 640, minWidth: 480, quality: 80);
 
       if (comprimida != null) {
         final camino = comprimida.path;

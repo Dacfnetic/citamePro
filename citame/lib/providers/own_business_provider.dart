@@ -43,7 +43,7 @@ class BusinessListNotifier extends StateNotifier<List<BusinessCard>> {
     List<Business> ownBusiness;
     List<BusinessCard> negocios;
     ownBusiness = await API.getOwnerBusiness();
-    if (ownBusiness != []) {
+    if (ownBusiness.length != 0) {
       negocios = ownBusiness.map((e) {
         return (BusinessCard(
           nombre: e.businessName,

@@ -57,15 +57,18 @@ abstract class API {
     final response = await http.get(
         Uri.parse('$serverUrl/api/business/get/owner'),
         headers: {'email': email!, 'estado': estado!});
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
       final List<dynamic> businessList = jsonDecode(response.body);
       final List<Business> businesses = businessList.map((business) {
         Business negocio = Business.fromJson(business);
         return negocio;
       }).toList();
+      final List<String> nombres =
+          businesses.map((neg) => neg.businessName).toList();
+      prefs.setStringList('ownerBusiness', nombres);
       return businesses;
     }
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       List<Business> vacia = [];
       return vacia;
     }
@@ -77,6 +80,7 @@ abstract class API {
     if (prefs.getStringList('ownerBusiness') == null) {
       prefs.setStringList('ownerBusiness', []);
     }
+
     var nombres = prefs.getStringList('ownerBusiness');
     var email = prefs.getString('emailUser');
     final response = await http.post(
@@ -86,8 +90,17 @@ abstract class API {
           "businessName": nombres,
           "email": email,
         }));
-    if (response.statusCode == 200) prefs.setString('ownerBusinessStatus', '1');
-    if (response.statusCode == 201) prefs.setString('ownerBusinessStatus', '0');
+    if (response.statusCode == 201) {
+      //No son iguales
+      prefs.setString('ownerBusinessStatus', '0');
+      //prefs.setStringList('ownerBusiness', []);
+      return;
+    }
+    if (response.statusCode == 200) {
+      prefs.setString('ownerBusinessStatus', '1');
+
+      return;
+    }
     throw Exception('Failed to get items');
   }
 
