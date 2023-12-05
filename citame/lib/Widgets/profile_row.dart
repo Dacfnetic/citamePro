@@ -34,6 +34,7 @@ class ProfileRow extends ConsumerWidget {
             SharedPreferences prefs = await SharedPreferences.getInstance();
 
             await prefs.clear();
+            ref.read(ownBusinessProvider.notifier).limpiar();
             await GoogleSignIn().disconnect();
             await FirebaseAuth.instance.signOut();
             if (context.mounted) {

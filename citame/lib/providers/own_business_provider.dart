@@ -39,6 +39,10 @@ class BusinessListNotifier extends StateNotifier<List<BusinessCard>> {
     return businessPosition.latitude;
   }
 
+  void limpiar() {
+    state = [];
+  }
+
   void cargar() async {
     List<Business> ownBusiness;
     List<BusinessCard> negocios;

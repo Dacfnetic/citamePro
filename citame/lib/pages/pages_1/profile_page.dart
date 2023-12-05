@@ -3,6 +3,7 @@ import 'package:citame/models/user_model.dart';
 import 'package:citame/pages/pages_1/pages_2/business_registration_page.dart';
 import 'package:citame/pages/signin_page.dart';
 import 'package:citame/providers/user_provider.dart';
+import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -17,14 +18,7 @@ class ProfilePage extends ConsumerWidget {
     Usuario user = ref.watch(userProvider);
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Profile',
-          style: GoogleFonts.plusJakartaSans(
-            color: Color(0xff14181b),
-            fontSize: 16,
-            fontWeight: FontWeight.normal,
-          ),
-        ),
+        title: Text('Profile', style: API.estiloJ16negro),
       ),
       body: SafeArea(
         child: Container(
@@ -64,24 +58,12 @@ class ProfilePage extends ConsumerWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          user.userName,
-                          textAlign: TextAlign.left,
-                          style: GoogleFonts.plusJakartaSans(
-                            color: Color(0xff14181b),
-                            fontSize: 24,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        Text(
-                          user.userEmail,
-                          textAlign: TextAlign.left,
-                          style: GoogleFonts.plusJakartaSans(
-                            color: Color(0xff57636c),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
+                        Text(user.userName,
+                            textAlign: TextAlign.left,
+                            style: API.estiloJ24negro),
+                        Text(user.userEmail,
+                            textAlign: TextAlign.left,
+                            style: API.estiloJ14gris),
                       ],
                     ),
                   ],
