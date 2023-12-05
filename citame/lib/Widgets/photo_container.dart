@@ -13,7 +13,7 @@ class EspacioParaSubirFotoDeNegocio extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     String ruta = ref.watch(imgProvider);
-    print('${File(ruta).lengthSync()} bytes');
+
     Future pickImageFromGallery() async {
       final returnedImage =
           await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -33,7 +33,7 @@ class EspacioParaSubirFotoDeNegocio extends ConsumerWidget {
           await ImagePicker().pickImage(source: ImageSource.camera);
       var comprimida = await FlutterImageCompress.compressAndGetFile(
           returnedImage!.path, '${returnedImage.path}compressed.jpg',
-          minHeight: 640, minWidth: 480, quality: 50);
+          minHeight: 640, minWidth: 480, quality: 10);
 
       if (comprimida != null) {
         final camino = comprimida.path;

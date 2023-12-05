@@ -21,7 +21,33 @@ async function getOwnerBusiness(req,res){
             .then(async(docs)=>{
                 if(docs.emailUser == req.get('email')){
                     const ownerBusiness = await business.find({ createdBy: docs._id });
+                    //TODO: Comprobar si hay nuevos
+                    listaDeNombres = ownerBusiness.map((busi)=> busi.businessName);
+                    listaDeNombresOrdenada = listaDeNombres.sort(function(a, b){return b - a});
+                    listaRecibidaOrdenada = reg.get('nombres').sort(function(a, b){return b - a});
+                    if(listaRecibidaOrdenada==listaDeNombresOrdenada){
+                        return res.status(201).send('1');
+                    }
                     return res.status(200).json(ownerBusiness);
+                }
+            }).catch(e=>console.log(e));
+    }catch(e){
+        return res.status(404).json('Errosillo');
+    }  
+}
+async function verifyOwnerBusiness(req,res){
+    try{
+        usuario.findOne({emailUser: req.body.email})
+            .then(async(docs)=>{
+                if(docs.emailUser == req.body.email){
+                    const ownerBusiness = await business.find({ createdBy: docs._id });
+                    listaDeNombres = ownerBusiness.map((busi)=> busi.businessName);
+                    listaDeNombresOrdenada = listaDeNombres.sort(function(a, b){return b - a});
+                    listaRecibidaOrdenada = reg.get('nombres').sort(function(a, b){return b - a});
+                    if(listaRecibidaOrdenada==listaDeNombresOrdenada){
+                        return res.status(200).send('1');
+                    }
+                    return res.status(201).send('0');
                 }
             }).catch(e=>console.log(e));
     }catch(e){
@@ -67,5 +93,6 @@ async function postBusiness(req,res){
 module.exports = {
     getAllBusiness,
     getOwnerBusiness,
-    postBusiness
+    postBusiness,
+    verifyOwnerBusiness
 }

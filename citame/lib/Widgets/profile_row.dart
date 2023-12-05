@@ -1,6 +1,7 @@
 import 'package:citame/Widgets/business_card.dart';
 import 'package:citame/models/business_model.dart';
 import 'package:citame/pages/pages_1/pages_2/my_businessess_page.dart';
+import 'package:citame/providers/own_business_provider.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -41,30 +42,20 @@ class ProfileRow extends ConsumerWidget {
           }
         }
         if (method == 1) {
-          try {
-            userBusiness = await API.getOwnerBusiness();
-            negocios = userBusiness.map((e) {
-              return (BusinessCard(
-                nombre: e.businessName,
-                categoria: e.category,
-                latitud: double.parse(e.latitude),
-                longitud: double.parse(e.longitude),
-                rating: 5.0,
-                imagen: e.imgPath,
-              ));
-            }).toList();
-            if (context.mounted) {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => MyBusinessesPage(
-                      negocios: negocios,
-                    ),
-                  ));
-            }
-          } catch (e) {
-            print(e.toString());
+          //try {
+
+          if (context.mounted) {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MyBusinessesPage(),
+                ));
           }
+
+          //}
+          //} catch (e) {
+          //  print(e.toString());
+          //}
         }
         if (method == 2) {
           if (context.mounted) {

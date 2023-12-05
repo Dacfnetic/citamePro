@@ -7,6 +7,7 @@ import 'package:citame/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
@@ -49,10 +50,13 @@ abstract class API {
   }
 
   static Future<List<Business>> getOwnerBusiness() async {
-    var email = auth.currentUser!.email;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await verifyOwnerBusiness();
+    var estado = prefs.getString('ownerBusinessStatus');
+    var email = prefs.getString('emailUser');
     final response = await http.get(
         Uri.parse('$serverUrl/api/business/get/owner'),
-        headers: {'email': email!});
+        headers: {'email': email!, 'estado': estado!});
     if (response.statusCode == 200) {
       final List<dynamic> businessList = jsonDecode(response.body);
       final List<Business> businesses = businessList.map((business) {
@@ -61,23 +65,53 @@ abstract class API {
       }).toList();
       return businesses;
     }
+    if (response.statusCode == 201) {
+      List<Business> vacia = [];
+      return vacia;
+    }
+    throw Exception('Failed to get items');
+  }
+
+  static Future<void> verifyOwnerBusiness() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getStringList('ownerBusiness') == null) {
+      prefs.setStringList('ownerBusiness', []);
+    }
+    var nombres = prefs.getStringList('ownerBusiness');
+    var email = prefs.getString('emailUser');
+    final response = await http.post(
+        Uri.parse('$serverUrl/api/business/verify/owner/business'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          "businessName": nombres,
+          "email": email,
+        }));
+    if (response.statusCode == 200) prefs.setString('ownerBusinessStatus', '1');
+    if (response.statusCode == 201) prefs.setString('ownerBusinessStatus', '0');
     throw Exception('Failed to get items');
   }
 
   static Future<List<Business>> getAllBusiness() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var email = prefs.getString('emailUser');
+
     final response = await http.get(
-        Uri.parse('$serverUrl/api/business/get/all'),
-        headers: {'email': email!});
+      Uri.parse('$serverUrl/api/business/get/all'),
+      headers: {
+        'email': email!,
+      },
+    );
+
     if (response.statusCode == 200) {
       final List<dynamic> businessList = jsonDecode(response.body);
       final List<Business> businesses = businessList.map((business) {
         Business negocio = Business.fromJson(business);
         return negocio;
       }).toList();
+
       return businesses;
     }
+
     throw Exception('Failed to get items');
   }
 
