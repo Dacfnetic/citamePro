@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileRow extends ConsumerWidget {
   final String description;
@@ -24,14 +25,15 @@ class ProfileRow extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    List<Business> userBusiness;
-    List<BusinessCard> negocios;
     return TextButton(
       onPressed: () async {
         if (method == 0) {
           try {
             /*String? metodo =
                 FirebaseAuth.instance.currentUser?.providerData[0].providerId;*/
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+
+            await prefs.clear();
             await GoogleSignIn().disconnect();
             await FirebaseAuth.instance.signOut();
             if (context.mounted) {

@@ -61,7 +61,7 @@ class SignInPage extends ConsumerWidget {
                                   builder: (context) => HomePage(),
                                 ));
                           }
-                          ref.read(ownBusinessProvider.notifier).cargar();
+                          //ref.read(ownBusinessProvider.notifier).cargar();
                         } catch (e) {
                           print(e.toString());
                         }
