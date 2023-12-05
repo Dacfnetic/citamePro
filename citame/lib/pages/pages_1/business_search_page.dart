@@ -1,5 +1,6 @@
 import 'package:citame/Widgets/bottom_bar.dart';
 import 'package:citame/Widgets/business_card.dart';
+import 'package:citame/models/business_model.dart';
 import 'package:citame/providers/business_provider.dart';
 import 'package:citame/providers/geolocator_provider.dart';
 import 'package:citame/services/api_service.dart';
@@ -12,11 +13,9 @@ class BusinessSearchPage extends ConsumerWidget {
   BusinessSearchPage({
     Key? key,
     required this.categoria,
-    required this.negocios,
   }) : super(key: key);
 
   final TextEditingController searchBarController = TextEditingController();
-  final List<BusinessCard> negocios;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(geoProvider.notifier).obtener();
@@ -93,7 +92,8 @@ class BusinessSearchPage extends ConsumerWidget {
                 SizedBox(height: 12),
                 Text(categoria, style: API.estiloJ24negro),
                 SizedBox(height: 12),
-                Expanded(child: ListView(children: negocios)),
+                Expanded(
+                    child: ListView(children: ref.watch(businessProvider))),
               ],
             ),
           ),

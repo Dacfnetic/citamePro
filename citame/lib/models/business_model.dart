@@ -9,7 +9,7 @@ class Business {
   final String latitude;
   final String longitude;
   final String description;
-  final String imgPath;
+  final List<int> imgPath;
 
   Business({
     required this.businessName,
@@ -37,7 +37,7 @@ class Business {
       latitude: json['latitude'],
       longitude: json['longitude'],
       description: json['description'],
-      imgPath: json['imgPath'],
+      imgPath: json['imgPath'].cast<int>(),
     );
   }
 }

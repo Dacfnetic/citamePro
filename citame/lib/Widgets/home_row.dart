@@ -19,8 +19,8 @@ class HomeRow extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    List<Business> allBusiness;
-    List<BusinessCard> negocios;
+    //List<Business> allBusiness;
+    //List<BusinessCard> negocios;
     //List<HomeRow> categorias = ref.watch(categoriesProvider);
     return Container(
       margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
@@ -30,10 +30,10 @@ class HomeRow extends ConsumerWidget {
         borderRadius: BorderRadius.circular(12),
       ),
       child: TextButton(
-        onPressed: () async {
+        onPressed: () /*async*/ {
           ref.read(businessProvider.notifier).inicializar();
           ref.read(categoriesProvider.notifier).inicializar();
-          try {
+          /*/try {
             allBusiness = await API.getAllBusiness();
             negocios = allBusiness.map((e) {
               return (BusinessCard(
@@ -44,20 +44,22 @@ class HomeRow extends ConsumerWidget {
                 rating: 5.0,
                 imagen: e.imgPath,
               ));
-            }).toList();
-            if (context.mounted) {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BusinessSearchPage(
-                      categoria: categoria,
-                      negocios: negocios,
-                    ),
-                  ));
-            }
-          } catch (e) {
+            }).toList();*/
+          //if (context.mounted) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BusinessSearchPage(
+                  categoria: categoria,
+
+                  //
+                ),
+              ));
+          ref.read(businessProvider.notifier).cargar();
+          // }
+          /*} catch (e) {
             print(e);
-          }
+          }*/
         },
         child: Padding(
           padding: EdgeInsetsDirectional.fromSTEB(8, 8, 12, 8),

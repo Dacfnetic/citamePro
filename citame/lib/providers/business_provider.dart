@@ -1,4 +1,6 @@
 import 'package:citame/Widgets/business_card.dart';
+import 'package:citame/models/business_model.dart';
+import 'package:citame/services/api_service.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -41,18 +43,36 @@ class BusinessListNotifier extends StateNotifier<List<BusinessCard>> {
     return businessPosition.latitude;
   }
 
-  void agregarNegocio(nombre, categoria, latitud, longitud, rating, imagen) {
-    negocios = [
-      ...negocios,
-      BusinessCard(
-          nombre: nombre,
-          categoria: categoria,
-          latitud: latitud,
-          longitud: longitud,
-          rating: rating,
-          imagen: imagen)
-    ];
+  void cargar() async {
+    List<Business> allBusiness;
+    List<BusinessCard> negocios;
+
+    allBusiness = await API.getAllBusiness();
+    negocios = allBusiness.map((e) {
+      return (BusinessCard(
+        nombre: e.businessName,
+        categoria: e.category,
+        latitud: double.parse(e.latitude),
+        longitud: double.parse(e.longitude),
+        rating: 5.0,
+        imagen: e.imgPath,
+      ));
+    }).toList();
+    state = negocios;
   }
+}
+
+void agregarNegocio(nombre, categoria, latitud, longitud, rating, imagen) {
+  negocios = [
+    ...negocios,
+    BusinessCard(
+        nombre: nombre,
+        categoria: categoria,
+        latitud: latitud,
+        longitud: longitud,
+        rating: rating,
+        imagen: imagen)
+  ];
 }
 
 LatLng businessPosition = LatLng(0, 0);

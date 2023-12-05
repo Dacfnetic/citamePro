@@ -6,9 +6,11 @@ import 'package:citame/models/business_model.dart';
 import 'package:citame/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 String serverUrl = 'https://ubuntu.citame.store';
 FirebaseAuth auth = FirebaseAuth.instance;
@@ -16,6 +18,23 @@ FirebaseAuth auth = FirebaseAuth.instance;
 abstract class API {
   static Future<String> postUser(String googleId, String? userName,
       String? emailUser, String? avatar) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getString('googleId') == null ||
+        prefs.getString('googleId') != googleId) {
+      prefs.setString('googleId', googleId);
+    }
+    if (prefs.getString('userName') == null ||
+        prefs.getString('userName') != userName) {
+      prefs.setString('userName', userName!);
+    }
+    if (prefs.getString('emailUser') == null ||
+        prefs.getString('emailUser') != emailUser) {
+      prefs.setString('emailUser', emailUser!);
+    }
+    if (prefs.getString('avatar') == null ||
+        prefs.getString('avatar') != avatar) {
+      prefs.setString('avatar', avatar!);
+    }
     final response = await http.post(Uri.parse('$serverUrl/api/user/create'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
@@ -46,7 +65,8 @@ abstract class API {
   }
 
   static Future<List<Business>> getAllBusiness() async {
-    var email = auth.currentUser!.email;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var email = prefs.getString('emailUser');
     final response = await http.get(
         Uri.parse('$serverUrl/api/business/get/all'),
         headers: {'email': email!});
@@ -62,15 +82,15 @@ abstract class API {
   }
 
   static Future<Usuario> getUser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     final response = await http.get(Uri.parse('$serverUrl/api/user/get'),
-        headers: {'googleId': auth.currentUser!.uid});
+        headers: {'googleId': prefs.getString('googleId')!});
     if (response.statusCode == 200) {
-      final List<dynamic> usuarios = jsonDecode(response.body);
       final Usuario usuario = Usuario(
-          googleId: usuarios[0]['googleId'],
-          userName: usuarios[0]['userName'],
-          userEmail: usuarios[0]['emailUser'],
-          avatar: usuarios[0]['avatar']);
+          googleId: prefs.getString('googleId')!,
+          userName: prefs.getString('userName')!,
+          userEmail: prefs.getString('emailUser')!,
+          avatar: prefs.getString('avatar')!);
       return usuario;
     }
     throw Exception('Failed to get items');

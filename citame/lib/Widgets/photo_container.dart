@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:citame/providers/img_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -12,12 +13,17 @@ class EspacioParaSubirFotoDeNegocio extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     String ruta = ref.watch(imgProvider);
-
+    print('${File(ruta).lengthSync()} bytes');
     Future pickImageFromGallery() async {
       final returnedImage =
           await ImagePicker().pickImage(source: ImageSource.gallery);
-      if (returnedImage != null) {
-        final camino = returnedImage.path;
+
+      var comprimida = await FlutterImageCompress.compressAndGetFile(
+          returnedImage!.path, '${returnedImage.path}compressed.jpg',
+          minHeight: 640, minWidth: 480, quality: 10);
+
+      if (comprimida != null) {
+        final camino = comprimida.path;
         ref.watch(imgProvider.notifier).changeState(camino);
       }
     }
@@ -25,8 +31,12 @@ class EspacioParaSubirFotoDeNegocio extends ConsumerWidget {
     Future pickImageFromCamera() async {
       final returnedImage =
           await ImagePicker().pickImage(source: ImageSource.camera);
-      if (returnedImage != null) {
-        final camino = returnedImage.path;
+      var comprimida = await FlutterImageCompress.compressAndGetFile(
+          returnedImage!.path, '${returnedImage.path}compressed.jpg',
+          minHeight: 640, minWidth: 480, quality: 50);
+
+      if (comprimida != null) {
+        final camino = comprimida.path;
         ref.watch(imgProvider.notifier).changeState(camino);
       }
     }
