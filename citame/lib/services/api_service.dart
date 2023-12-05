@@ -137,7 +137,7 @@ abstract class API {
     return base64string;
   }
 
-  static Future<Uint8List> decode64(String base64string) async {
+  static Uint8List decode64(String base64string) {
     Uint8List decodedbytes = base64.decode(base64string);
     return decodedbytes;
   }

@@ -1,5 +1,7 @@
+import 'dart:ffi';
 import 'dart:io';
 import 'package:citame/providers/geolocator_provider.dart';
+import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -30,6 +32,7 @@ class BusinessCard extends ConsumerWidget {
         longitudA: longitud,
         latitudB: coordenadas[0],
         longitudB: coordenadas[1]);
+    var lista = API.decode64(imagen);
 
     return Column(
       mainAxisSize: MainAxisSize.max,
@@ -37,8 +40,8 @@ class BusinessCard extends ConsumerWidget {
       children: [
         ClipRRect(
           borderRadius: BorderRadius.circular(16),
-          child: Image.file(
-            File(imagen),
+          child: Image.memory(
+            lista,
             width: double.infinity,
             height: 230,
             fit: BoxFit.cover,
