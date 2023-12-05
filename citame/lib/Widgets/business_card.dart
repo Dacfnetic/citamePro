@@ -1,5 +1,3 @@
-import 'dart:ffi';
-import 'dart:io';
 import 'package:citame/providers/geolocator_provider.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';

@@ -55,6 +55,7 @@ async function postBusiness(req,res){
                 return res.status(201).send("Negocio creado");
         });
     }catch(e){
+        console.log(e);
         return res.status(404).json('Errosillo');
     }  
 }

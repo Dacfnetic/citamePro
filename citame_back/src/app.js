@@ -8,7 +8,8 @@ const businessRouter = require('./routes/business/business.router.js');
 const app = express();
 //Informacion del servidor
 app.use(cors());
-app.use(express.json());
+app.use(bodyParser.json({ limit: "50mb" }));
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 }));
 app.use(usersRouter);
 app.use(businessRouter);
 //Exportación de aplicación express
