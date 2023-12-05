@@ -89,7 +89,8 @@ abstract class API {
     String? description,
     String imgPath,
   ) async {
-    String imagen = await API.convertTo64(imgPath);
+    String imgConv = await API.convertTo64(imgPath);
+    Uint8List imagen = API.decode64(imgConv);
     final response =
         await http.post(Uri.parse('$serverUrl/api/business/create'),
             headers: {'Content-Type': 'application/json'},
