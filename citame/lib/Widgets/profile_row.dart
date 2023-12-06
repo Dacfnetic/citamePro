@@ -49,39 +49,12 @@ class ProfileRow extends ConsumerWidget {
           //try {
 
           if (context.mounted) {
-            if (prefs.getStringList('ownerBusiness') == null) {
-              prefs.setStringList('ownerBusiness', []);
-            }
-            if (prefs.getStringList('ownerBusiness')!.length != 0) {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => MyBusinessesPage(),
-                  ));
-              ref.read(ownBusinessProvider.notifier).cargar();
-            } else {
-              showDialog(
-                  context: context,
-                  builder: (_) => AlertDialog(
-                        elevation: 24,
-                        title: Text('Advertencia'),
-                        content: Text(
-                            'No eres dueño ni empleado de ningún negocio, ¿quieres crear tu negocio?'),
-                        actions: [
-                          TextButton(onPressed: () {}, child: Text('No')),
-                          TextButton(
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          BusinessRegisterPage(),
-                                    ));
-                              },
-                              child: Text('Si'))
-                        ],
-                      ));
-            }
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MyBusinessesPage(),
+                ));
+            ref.read(ownBusinessProvider.notifier).cargar(context);
           }
 
           //}

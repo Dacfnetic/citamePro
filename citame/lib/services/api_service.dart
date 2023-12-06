@@ -52,7 +52,7 @@ abstract class API {
     throw Exception('Failed to add item');
   }
 
-  static Future<List<Business>> getOwnerBusiness() async {
+  static Future<List<Business>> getOwnerBusiness(BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await verifyOwnerBusiness();
     var estado = prefs.getString('ownerBusinessStatus');
@@ -60,19 +60,32 @@ abstract class API {
     final response = await http.get(
         Uri.parse('$serverUrl/api/business/get/owner'),
         headers: {'email': email!, 'estado': estado!});
+
     if (response.statusCode == 201) {
       final List<dynamic> businessList = jsonDecode(response.body);
       final List<Business> businesses = businessList.map((business) {
         Business negocio = Business.fromJson(business);
         return negocio;
       }).toList();
+      if (context.mounted) {
+        if (businesses.length == 0) {
+          API.noHayPropios(context);
+        }
+      }
       final List<String> nombres =
           businesses.map((neg) => neg.businessName).toList();
       prefs.setStringList('ownerBusiness', nombres);
+
       return businesses;
     }
+
     if (response.statusCode == 200) {
       List<Business> vacia = [];
+      if (context.mounted) {
+        if (prefs.getStringList('ownerBusiness')!.length == 0) {
+          API.noHayPropios(context);
+        }
+      }
       return vacia;
     }
     throw Exception('Failed to get items');
@@ -94,7 +107,7 @@ abstract class API {
           "email": email,
         }));
     if (response.statusCode == 201) {
-      //No son iguales
+      //No son iguales o no hay negocios
       prefs.setString('ownerBusinessStatus', '0');
       //prefs.setStringList('ownerBusiness', []);
       return;
@@ -238,6 +251,35 @@ abstract class API {
               title: Text('No hay negocios'),
               content: Text(
                   'No hay nadie que sea dueño de este tipo de negocio según tus preferencias de busqueda, esta puede ser una gran oportunidad para tí, ¿quieres crear tu negocio?'),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                    },
+                    child: Text('No')),
+                TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BusinessRegisterPage(),
+                          ));
+                    },
+                    child: Text('Si'))
+              ],
+            ));
+  }
+
+  static noHayPropios(BuildContext context) {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (_) => AlertDialog(
+              elevation: 24,
+              title: Text('Advertencia'),
+              content: Text(
+                  'No eres dueño ni empleado de ningún negocio, ¿quieres crear tu negocio?'),
               actions: [
                 TextButton(
                     onPressed: () {

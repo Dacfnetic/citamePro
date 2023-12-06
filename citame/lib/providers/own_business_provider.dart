@@ -1,6 +1,7 @@
 import 'package:citame/Widgets/business_card.dart';
 import 'package:citame/models/business_model.dart';
 import 'package:citame/services/api_service.dart';
+import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -43,22 +44,23 @@ class BusinessListNotifier extends StateNotifier<List<BusinessCard>> {
     state = [];
   }
 
-  void cargar() async {
+  void cargar(BuildContext context) async {
     List<Business> ownBusiness;
     List<BusinessCard> negocios;
-    ownBusiness = await API.getOwnerBusiness();
-
-    negocios = ownBusiness.map((e) {
-      return (BusinessCard(
-        nombre: e.businessName,
-        categoria: e.category,
-        latitud: double.parse(e.latitude),
-        longitud: double.parse(e.longitude),
-        rating: 5.0,
-        imagen: e.imgPath,
-      ));
-    }).toList();
-    state = negocios;
+    ownBusiness = await API.getOwnerBusiness(context);
+    if (ownBusiness.length != 0) {
+      negocios = ownBusiness.map((e) {
+        return (BusinessCard(
+          nombre: e.businessName,
+          categoria: e.category,
+          latitud: double.parse(e.latitude),
+          longitud: double.parse(e.longitude),
+          rating: 5.0,
+          imagen: e.imgPath,
+        ));
+      }).toList();
+      state = negocios;
+    }
   }
 }
 
