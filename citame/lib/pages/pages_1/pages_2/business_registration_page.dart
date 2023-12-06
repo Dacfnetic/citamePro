@@ -68,6 +68,7 @@ class BusinessRegisterPage extends ConsumerWidget {
               SizedBox(height: 12),
               Cuadro(control: businessName, texto: 'Nombre del negocio'),
               SizedBox(height: 12),
+              Text('Categoría del negocio', style: indicaciones),
               Cuadro(control: category, texto: 'Categoría del negocio'),
               SizedBox(height: 12),
               Cuadro(control: email, texto: 'Correo (opcional)'),
@@ -113,9 +114,8 @@ class BusinessRegisterPage extends ConsumerWidget {
                     if (signUpKey.currentState!.validate()) {
                       //var resultado = '';
                       await API.postBusiness(
-                        //TODO: Agregar imagen del negocio e identificador de usuario
                         businessName.text,
-                        category.text,
+                        API.getCat(),
                         auth.currentUser!.email,
                         //auth.currentUser!.uid,
                         [],

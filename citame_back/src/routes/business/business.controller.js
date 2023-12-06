@@ -7,7 +7,7 @@ async function getAllBusiness(req,res){
         usuario.findOne({emailUser: req.get('email')})
             .then(async(docs)=>{
                 if(docs.emailUser == req.get('email')){
-                    const allBusiness = await business.find();
+                    const allBusiness = await business.find({category: req.get('category')});
                     return res.status(200).json(allBusiness);
                 }
             }).catch(e=>console.log(e));

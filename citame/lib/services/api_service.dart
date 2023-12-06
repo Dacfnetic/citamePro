@@ -15,6 +15,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 String serverUrl = 'https://ubuntu.citame.store';
 FirebaseAuth auth = FirebaseAuth.instance;
+String actualCat = '';
+String categoriaABuscar = '';
 
 abstract class API {
   static Future<String> postUser(String googleId, String? userName,
@@ -112,6 +114,7 @@ abstract class API {
       Uri.parse('$serverUrl/api/business/get/all'),
       headers: {
         'email': email!,
+        'category': categoriaABuscar,
       },
     );
 
@@ -209,6 +212,18 @@ abstract class API {
   static Uint8List decode64(String base64string) {
     Uint8List decodedbytes = base64.decode(base64string);
     return decodedbytes;
+  }
+
+  static cat(String cat) {
+    actualCat = cat;
+  }
+
+  static setCat(String cat) {
+    categoriaABuscar = cat;
+  }
+
+  static String getCat() {
+    return actualCat;
   }
 
   static var estiloJ24negro = GoogleFonts.plusJakartaSans(

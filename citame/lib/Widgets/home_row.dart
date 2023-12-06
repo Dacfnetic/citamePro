@@ -1,5 +1,3 @@
-import 'package:citame/Widgets/business_card.dart';
-import 'package:citame/models/business_model.dart';
 import 'package:citame/pages/pages_1/business_search_page.dart';
 import 'package:citame/providers/business_provider.dart';
 import 'package:citame/providers/categories_provider.dart';
@@ -33,6 +31,7 @@ class HomeRow extends ConsumerWidget {
         onPressed: () /*async*/ {
           ref.read(businessProvider.notifier).inicializar();
           ref.read(categoriesProvider.notifier).inicializar();
+          API.setCat(categoria);
           /*/try {
             allBusiness = await API.getAllBusiness();
             negocios = allBusiness.map((e) {
@@ -69,11 +68,16 @@ class HomeRow extends ConsumerWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: Image.network(
-                  imagen,
+                child: SizedBox(
                   width: 70,
                   height: 70,
-                  fit: BoxFit.cover,
+                  child: Image(
+                    image: AssetImage(imagen),
+
+                    // width: 70,
+                    //height: 70,
+                    // fit: BoxFit.cover,
+                  ),
                 ),
               ),
               Padding(

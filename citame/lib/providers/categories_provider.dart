@@ -31,43 +31,27 @@ class CategoristListNotifier extends StateNotifier<List<HomeRow>> {
 //TODO: Cargar categorías ya sea desde el backend o desde aquí
 List<HomeRow> categorias = [
   HomeRow(
-    categoria: 'Salud',
-    imagen:
-        'https://static.nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/cd1fc4e4-5d02-4f18-afd7-a1ea42ff1f73/sportswear-club-fleece-pullover-hoodie-Gw4Nwq.png',
+    categoria: 'Abogados',
+    imagen: 'lib/assets/Abogados.jpeg',
   ),
   HomeRow(
     categoria: 'Barberias',
-    imagen:
-        'https://static.nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/cd1fc4e4-5d02-4f18-afd7-a1ea42ff1f73/sportswear-club-fleece-pullover-hoodie-Gw4Nwq.png',
+    imagen: 'lib/assets/Barberias.jpeg',
+  ),
+  HomeRow(
+    categoria: 'Belleza',
+    imagen: 'lib/assets/Belleza.jpeg',
+  ),
+  HomeRow(
+    categoria: 'Doctores y dentistas',
+    imagen: 'lib/assets/Doctores.jpeg',
   ),
   HomeRow(
     categoria: 'Entretenimiento',
-    imagen:
-        'https://static.nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/cd1fc4e4-5d02-4f18-afd7-a1ea42ff1f73/sportswear-club-fleece-pullover-hoodie-Gw4Nwq.png',
+    imagen: 'lib/assets/Entretenimiento.jpeg',
   ),
   HomeRow(
-    categoria: 'Atención profesional',
-    imagen:
-        'https://static.nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/cd1fc4e4-5d02-4f18-afd7-a1ea42ff1f73/sportswear-club-fleece-pullover-hoodie-Gw4Nwq.png',
-  ),
-  HomeRow(
-    categoria: 'Cuidado de vehiculos',
-    imagen:
-        'https://static.nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/cd1fc4e4-5d02-4f18-afd7-a1ea42ff1f73/sportswear-club-fleece-pullover-hoodie-Gw4Nwq.png',
-  ),
-  HomeRow(
-    categoria: 'Salud',
-    imagen:
-        'https://static.nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/cd1fc4e4-5d02-4f18-afd7-a1ea42ff1f73/sportswear-club-fleece-pullover-hoodie-Gw4Nwq.png',
-  ),
-  HomeRow(
-    categoria: 'Estetica y belleza',
-    imagen:
-        'https://static.nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/cd1fc4e4-5d02-4f18-afd7-a1ea42ff1f73/sportswear-club-fleece-pullover-hoodie-Gw4Nwq.png',
-  ),
-  HomeRow(
-    categoria: 'Restaurantes',
-    imagen:
-        'https://static.nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/cd1fc4e4-5d02-4f18-afd7-a1ea42ff1f73/sportswear-club-fleece-pullover-hoodie-Gw4Nwq.png',
+    categoria: 'Mecanicos',
+    imagen: 'lib/assets/Transportes.jpeg',
   ),
 ];
