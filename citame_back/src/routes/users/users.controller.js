@@ -18,6 +18,15 @@ async function getUser(req,res){
         return res.status(404).json('Errorsillo');
     }  
 }
+async function getAllUser(req,res){
+    try{
+        const allUsers = await usuario.find();
+        const allActiveUsers = allUsers.filter((nUser)=>nUser.googleId!=req.get('googleId'));
+        return res.status(200).json( allActiveUsers );
+    }catch(e){
+        return res.status(404).json('Errorsillo');
+    }  
+}
 //Función para crear usuario
 async function postUser(req,res){
     try{
@@ -43,5 +52,6 @@ async function postUser(req,res){
 module.exports = {
     getUser,
     postUser,
-    serverReady
+    serverReady,
+    getAllUser
 }
