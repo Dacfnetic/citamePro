@@ -31,9 +31,10 @@ class MyBusinessesPage extends ConsumerWidget {
                 SizedBox(height: 12),
                 Expanded(
                   child: ListView(
-                    children: negocios,
-                  ),
-                )
+                      children: (negocios.length == 0)
+                          ? [Center(child: CircularProgressIndicator())]
+                          : negocios),
+                ),
               ],
             ),
           ),

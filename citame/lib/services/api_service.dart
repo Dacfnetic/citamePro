@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:citame/firebase_options.dart';
 import 'package:citame/models/business_model.dart';
 import 'package:citame/models/user_model.dart';
+import 'package:citame/pages/pages_1/pages_2/business_registration_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
@@ -106,7 +107,7 @@ abstract class API {
     throw Exception('Failed to get items');
   }
 
-  static Future<List<Business>> getAllBusiness() async {
+  static Future<List<Business>> getAllBusiness(BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var email = prefs.getString('emailUser');
 
@@ -124,6 +125,11 @@ abstract class API {
         Business negocio = Business.fromJson(business);
         return negocio;
       }).toList();
+      if (context.mounted) {
+        if (businesses.length == 0) {
+          API.noHay(context);
+        }
+      }
 
       return businesses;
     }
@@ -162,6 +168,7 @@ abstract class API {
     String imgConv = await API.convertTo64(imgPath);
     Uint8List casi = API.decode64(imgConv);
     List<int> imagen = casi.toList();
+
     final response =
         await http.post(Uri.parse('$serverUrl/api/business/create'),
             headers: {'Content-Type': 'application/json'},
@@ -220,6 +227,35 @@ abstract class API {
 
   static setCat(String cat) {
     categoriaABuscar = cat;
+  }
+
+  static noHay(BuildContext context) {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (_) => AlertDialog(
+              elevation: 24,
+              title: Text('No hay negocios'),
+              content: Text(
+                  'No hay nadie que sea dueño de este tipo de negocio según tus preferencias de busqueda, esta puede ser una gran oportunidad para tí, ¿quieres crear tu negocio?'),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                    },
+                    child: Text('No')),
+                TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BusinessRegisterPage(),
+                          ));
+                    },
+                    child: Text('Si'))
+              ],
+            ));
   }
 
   static String getCat() {

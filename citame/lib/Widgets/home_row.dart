@@ -32,6 +32,7 @@ class HomeRow extends ConsumerWidget {
           ref.read(businessProvider.notifier).inicializar();
           ref.read(categoriesProvider.notifier).inicializar();
           API.setCat(categoria);
+          ref.read(businessProvider.notifier).limpiar();
           /*/try {
             allBusiness = await API.getAllBusiness();
             negocios = allBusiness.map((e) {
@@ -50,11 +51,10 @@ class HomeRow extends ConsumerWidget {
               MaterialPageRoute(
                 builder: (context) => BusinessSearchPage(
                   categoria: categoria,
-
-                  //
                 ),
               ));
-          ref.read(businessProvider.notifier).cargar();
+          ref.read(businessProvider.notifier).cargar(context);
+
           // }
           /*} catch (e) {
             print(e);

@@ -1,5 +1,6 @@
 import 'package:citame/Widgets/business_card.dart';
 import 'package:citame/models/business_model.dart';
+import 'package:citame/pages/pages_1/pages_2/business_registration_page.dart';
 import 'package:citame/pages/pages_1/pages_2/my_businessess_page.dart';
 import 'package:citame/providers/own_business_provider.dart';
 import 'package:citame/services/api_service.dart';
@@ -27,11 +28,11 @@ class ProfileRow extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return TextButton(
       onPressed: () async {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
         if (method == 0) {
           try {
             /*String? metodo =
                 FirebaseAuth.instance.currentUser?.providerData[0].providerId;*/
-            SharedPreferences prefs = await SharedPreferences.getInstance();
 
             await prefs.clear();
             ref.read(ownBusinessProvider.notifier).limpiar();
@@ -48,13 +49,41 @@ class ProfileRow extends ConsumerWidget {
           //try {
 
           if (context.mounted) {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => MyBusinessesPage(),
-                ));
+            if (prefs.getStringList('ownerBusiness') == null) {
+              prefs.setStringList('ownerBusiness', []);
+            }
+            if (prefs.getStringList('ownerBusiness')!.length != 0) {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MyBusinessesPage(),
+                  ));
+              ref.read(ownBusinessProvider.notifier).cargar();
+            } else {
+              showDialog(
+                  context: context,
+                  builder: (_) => AlertDialog(
+                        elevation: 24,
+                        title: Text('Advertencia'),
+                        content: Text(
+                            'No eres dueño ni empleado de ningún negocio, ¿quieres crear tu negocio?'),
+                        actions: [
+                          TextButton(onPressed: () {}, child: Text('No')),
+                          TextButton(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          BusinessRegisterPage(),
+                                    ));
+                              },
+                              child: Text('Si'))
+                        ],
+                      ));
+            }
           }
-          ref.read(ownBusinessProvider.notifier).cargar();
+
           //}
           //} catch (e) {
           //  print(e.toString());

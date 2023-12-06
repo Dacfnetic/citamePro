@@ -18,11 +18,17 @@ class BusinessSearchPage extends ConsumerWidget {
   final TextEditingController searchBarController = TextEditingController();
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    List<BusinessCard> negocios = ref.watch(businessProvider);
+
+    print(negocios);
+    print(negocios == []);
+    print(negocios.length);
+
     ref.watch(geoProvider.notifier).obtener();
 
     BusinessListNotifier businessController =
         ref.read(businessProvider.notifier);
-
+    print(businessController.cantidad());
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -93,7 +99,11 @@ class BusinessSearchPage extends ConsumerWidget {
                 Text(categoria, style: API.estiloJ24negro),
                 SizedBox(height: 12),
                 Expanded(
-                    child: ListView(children: ref.watch(businessProvider))),
+                  child: ListView(
+                      children: (negocios.length == 0)
+                          ? [Center(child: CircularProgressIndicator())]
+                          : negocios),
+                ),
               ],
             ),
           ),

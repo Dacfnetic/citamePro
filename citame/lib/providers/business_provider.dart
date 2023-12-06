@@ -1,6 +1,7 @@
 import 'package:citame/Widgets/business_card.dart';
 import 'package:citame/models/business_model.dart';
 import 'package:citame/services/api_service.dart';
+import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -16,6 +17,10 @@ class BusinessListNotifier extends StateNotifier<List<BusinessCard>> {
 
   void inicializar() {
     state = negocios;
+  }
+
+  int cantidad() {
+    return state.length;
   }
 
   void filtrar(value) {
@@ -43,11 +48,15 @@ class BusinessListNotifier extends StateNotifier<List<BusinessCard>> {
     return businessPosition.latitude;
   }
 
-  void cargar() async {
+  void limpiar() {
+    state = [];
+  }
+
+  void cargar(BuildContext context) async {
     List<Business> allBusiness;
     List<BusinessCard> negocios;
 
-    allBusiness = await API.getAllBusiness();
+    allBusiness = await API.getAllBusiness(context);
     negocios = allBusiness.map((e) {
       return (BusinessCard(
         nombre: e.businessName,
@@ -59,6 +68,10 @@ class BusinessListNotifier extends StateNotifier<List<BusinessCard>> {
       ));
     }).toList();
     state = negocios;
+  }
+
+  void noExiste(BuildContext context) {
+    API.noHay(context);
   }
 }
 
@@ -77,6 +90,4 @@ void agregarNegocio(nombre, categoria, latitud, longitud, rating, imagen) {
 
 LatLng businessPosition = LatLng(0, 0);
 
-List<BusinessCard> negocios = [
-  //TODO: Cargar desde la base de datos
-];
+List<BusinessCard> negocios = [];
