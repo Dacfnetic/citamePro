@@ -165,6 +165,22 @@ abstract class API {
     throw Exception('Failed to get items');
   }
 
+  static Future<List<String>> getAllUsers() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final response = await http.get(Uri.parse('$serverUrl/api/user/get/all'),
+        headers: {'googleId': prefs.getString('googleId')!});
+    if (response.statusCode == 200) {
+      final List<dynamic> userList = jsonDecode(response.body);
+      final List<Usuario> usuarios = userList.map((user) {
+        Usuario u = Usuario.fromJson(user);
+        return u;
+      }).toList();
+      final List<String> nombres = usuarios.map((e) => e.userName).toList();
+      return nombres;
+    }
+    throw Exception('Failed to get items');
+  }
+
   static Future<String> postBusiness(
     String businessName,
     String? category,

@@ -1,4 +1,5 @@
 import 'package:citame/models/user_model.dart';
+import 'package:citame/pages/pages_1/pages_2/chats_page.dart';
 import 'package:citame/pages/pages_1/profile_page.dart';
 import 'package:citame/providers/business_provider.dart';
 import 'package:citame/providers/categories_provider.dart';
@@ -43,6 +44,14 @@ class BarraInferior extends ConsumerWidget {
             ref.read(businessProvider.notifier).inicializar();
             ref.read(categoriesProvider.notifier).inicializar();
             searchBarController.text = "";
+            if (context.mounted) {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ChatsPage(),
+                  ));
+              await API.getAllUsers();
+            }
           }
         },
         elevation: 0,
