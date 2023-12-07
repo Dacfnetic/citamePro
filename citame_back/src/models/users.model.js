@@ -6,7 +6,9 @@ const userSchema = new Schema({
     googleId: {type: String, required: true},
     userName: {type: String, required: true},
     emailUser: {type: String, required: true, unique: true},
-    avatar: {type: String, required: true}
+    avatar: {type: String, required: true},
+    bussinessAsOwner: [String],
+    bussinessAsEmployer: [String]
 
 });
 
