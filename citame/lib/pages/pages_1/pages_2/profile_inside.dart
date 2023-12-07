@@ -1,11 +1,19 @@
+import 'dart:io';
+
+import 'package:citame/Widgets/cuadro.dart';
+import 'package:citame/providers/img_provider.dart';
+import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ProfileInsidePage extends ConsumerWidget {
-  const ProfileInsidePage({super.key});
+  ProfileInsidePage({super.key});
+  final TextEditingController workerName = TextEditingController();
+  final GlobalKey<FormState> signUpKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    String ruta = ref.watch(imgProvider);
     return Scaffold(
       appBar: AppBar(),
       body: SafeArea(
@@ -27,61 +35,75 @@ class ProfileInsidePage extends ConsumerWidget {
                       margin: EdgeInsets.all(16),
                       alignment: Alignment.centerLeft,
                       decoration: BoxDecoration(
-                          color: Color(0x4d39d2c0),
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: Color(0xff39d2c0),
-                            width: 2,
-                          )
-
-                          /*image: DecorationImage(
-                          image: AssetImage('lib/assets/Splashscreen.jpg'),
-                          fit: BoxFit.fill,
-                        ),*/
-                          ),
+                        color: Color(0x4d39d2c0),
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Color(0xff39d2c0),
+                          width: 2,
+                        ),
+                      ),
                       child: SizedBox(
                         height: 90,
                         width: 90,
+                        child: TextButton(
+                          child: ClipRRect(
+                              borderRadius: BorderRadius.circular(16),
+                              child: ruta != ''
+                                  ? Image.file(
+                                      File(ruta),
+                                      width: double.infinity,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Text('')),
+                          onPressed: () {
+                            API.pickImageFromGallery(ref);
+                          },
+                        ),
                       ),
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          //TODO: Adquirir nombre del perfil
-                          'Mike Thomson',
-                          textAlign: TextAlign.left,
-                          style: GoogleFonts.plusJakartaSans(
-                            color: Color(0xff14181b),
-                            fontSize: 24,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        Text(
-                          //TODO: Adquirir horario del perfil
-                          'Horario disponible 9am-7.30pm',
-                          textAlign: TextAlign.left,
-                          style: GoogleFonts.plusJakartaSans(
-                            color: Color(0xff57636c),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ],
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Cuadro(
+                              control: workerName,
+                              texto: 'Nombre del trabajador'),
+                        ],
+                      ),
                     ),
+                    SizedBox(
+                      width: 15,
+                    )
                   ],
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 16, 0, 0),
-                child: Text(
-                  'Perfil',
-                  textAlign: TextAlign.left,
-                  style: GoogleFonts.plusJakartaSans(
-                    color: Color(0xff57636c),
-                    fontSize: 16,
-                    fontWeight: FontWeight.normal,
-                  ),
+                child: Column(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                          color: Colors.amber,
+                          borderRadius: BorderRadius.circular(28)),
+                      width: 100,
+                      height: 100,
+                      child: TextButton(
+                        onPressed: () {
+                          API.timePicker(context);
+                        },
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.lock_clock),
+                            Text(
+                              'Hora',
+                              style: API.estiloJ14gris,
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
                 ),
               ),
             ],

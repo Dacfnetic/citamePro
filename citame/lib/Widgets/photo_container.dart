@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:citame/providers/img_provider.dart';
+import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,20 +14,6 @@ class EspacioParaSubirFotoDeNegocio extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     String ruta = ref.watch(imgProvider);
-
-    Future pickImageFromGallery() async {
-      final returnedImage =
-          await ImagePicker().pickImage(source: ImageSource.gallery);
-
-      var comprimida = await FlutterImageCompress.compressAndGetFile(
-          returnedImage!.path, '${returnedImage.path}compressed.jpg',
-          minHeight: 640, minWidth: 480, quality: 80);
-
-      if (comprimida != null) {
-        final camino = comprimida.path;
-        ref.watch(imgProvider.notifier).changeState(camino);
-      }
-    }
 
     Future pickImageFromCamera() async {
       final returnedImage =
@@ -76,8 +63,7 @@ class EspacioParaSubirFotoDeNegocio extends ConsumerWidget {
               Expanded(
                 child: ElevatedButton(
                   onPressed: () {
-                    //TODO: Anthony va a ver como incluir la foto del negocio
-                    pickImageFromGallery();
+                    API.pickImageFromGallery(ref);
                   },
                   child: Text('Subir imagen'),
                 ),

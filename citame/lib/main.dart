@@ -1,5 +1,6 @@
 import 'package:citame/pages/home_page.dart';
 import 'package:citame/pages/signin_page.dart';
+import 'package:citame/services/api_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -50,7 +51,16 @@ class MyApp extends ConsumerWidget {
       home: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
-          if (snapshot.hasData) return HomePage();
+          if (snapshot.hasData) {
+            print(snapshot);
+            print(snapshot.data);
+            print(snapshot.data!.uid);
+
+            API.postUser(snapshot.data!.uid, snapshot.data!.displayName,
+                snapshot.data!.email, snapshot.data!.photoURL);
+            return HomePage();
+          }
+
           return const SignInPage();
         },
       ),

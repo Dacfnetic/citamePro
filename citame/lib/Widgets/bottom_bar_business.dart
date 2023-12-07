@@ -1,5 +1,6 @@
 import 'package:citame/models/user_model.dart';
 import 'package:citame/pages/pages_1/pages_2/chats_page.dart';
+import 'package:citame/pages/pages_1/pages_2/pages_3/menu_page.dart';
 import 'package:citame/pages/pages_1/profile_page.dart';
 import 'package:citame/providers/business_provider.dart';
 import 'package:citame/providers/categories_provider.dart';
@@ -10,15 +11,10 @@ import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class BarraInferior extends ConsumerWidget {
-  const BarraInferior({
+class BarraInferiorBusiness extends ConsumerWidget {
+  const BarraInferiorBusiness({
     super.key,
-    required this.searchBarController,
-    required this.tip,
   });
-
-  final TextEditingController searchBarController;
-  final int tip;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,23 +25,14 @@ class BarraInferior extends ConsumerWidget {
         onDestinationSelected: (value) async {
           ref.read(navbarProvider.notifier).changeState(value);
           if (value == 2) {
-            if (context.mounted) {
-              ref.read(pageProvider.notifier).actualizar(ProfilePage());
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ProfilePage(),
-                  ));
-            }
-            ref.read(userProvider.notifier).cargar();
-            ref.read(businessProvider.notifier).inicializar();
-            ref.read(categoriesProvider.notifier).inicializar();
-            searchBarController.text = "";
+            ref.read(pageProvider.notifier).actualizar(MenuPage());
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MenuPage(),
+                ));
           }
           if (value == 1) {
-            ref.read(businessProvider.notifier).inicializar();
-            ref.read(categoriesProvider.notifier).inicializar();
-            searchBarController.text = "";
             if (context.mounted) {
               Navigator.push(
                   context,
@@ -69,8 +56,8 @@ class BarraInferior extends ConsumerWidget {
             label: '',
           ),
           NavigationDestination(
-            selectedIcon: Icon(Icons.person_2),
-            icon: Icon(Icons.person_2_outlined),
+            selectedIcon: Icon(Icons.settings),
+            icon: Icon(Icons.settings_outlined),
             label: '',
           ),
         ]);

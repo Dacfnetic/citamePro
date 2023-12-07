@@ -1,9 +1,7 @@
-import 'package:citame/Widgets/business_card.dart';
-import 'package:citame/models/business_model.dart';
-import 'package:citame/pages/pages_1/pages_2/business_registration_page.dart';
 import 'package:citame/pages/pages_1/pages_2/my_businessess_page.dart';
+import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:citame/providers/own_business_provider.dart';
-import 'package:citame/services/api_service.dart';
+import 'package:citame/providers/page_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -34,27 +32,36 @@ class ProfileRow extends ConsumerWidget {
             /*String? metodo =
                 FirebaseAuth.instance.currentUser?.providerData[0].providerId;*/
 
-            await prefs.clear();
-            ref.read(ownBusinessProvider.notifier).limpiar();
-            await GoogleSignIn().disconnect();
-            await FirebaseAuth.instance.signOut();
-            if (context.mounted) {
-              Navigator.of(context).popUntil((route) => route.isFirst);
-            }
+            await prefs.clear().then((value) {
+              ref.read(ownBusinessProvider.notifier).limpiar();
+              ref.read(myBusinessStateProvider.notifier).limpiar();
+              FirebaseAuth.instance.signOut().then((value) {
+                if (context.mounted) {
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+                }
+                GoogleSignIn().disconnect().then((value) {
+                  if (context.mounted) {
+                    Navigator.of(context).popUntil((route) => route.isFirst);
+                  }
+                });
+              }, onError: (e) {
+                print(e);
+              });
+            });
           } catch (e) {
             print(e.toString());
           }
         }
         if (method == 1) {
           //try {
-
+          ref.read(pageProvider.notifier).actualizar(MyBusinessesPage());
           if (context.mounted) {
             Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => MyBusinessesPage(),
                 ));
-            ref.read(ownBusinessProvider.notifier).cargar(context);
+            ref.read(ownBusinessProvider.notifier).cargar(context, ref);
           }
 
           //}

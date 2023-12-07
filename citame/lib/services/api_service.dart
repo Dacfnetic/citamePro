@@ -5,6 +5,8 @@ import 'package:citame/firebase_options.dart';
 import 'package:citame/models/business_model.dart';
 import 'package:citame/models/user_model.dart';
 import 'package:citame/pages/pages_1/pages_2/business_registration_page.dart';
+import 'package:citame/providers/img_provider.dart';
+import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
@@ -12,6 +14,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 String serverUrl = 'https://ubuntu.citame.store';
@@ -52,7 +55,22 @@ abstract class API {
     throw Exception('Failed to add item');
   }
 
-  static Future<List<Business>> getOwnerBusiness(BuildContext context) async {
+  static Future pickImageFromGallery(WidgetRef ref) async {
+    final returnedImage =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    var comprimida = await FlutterImageCompress.compressAndGetFile(
+        returnedImage!.path, '${returnedImage.path}compressed.jpg',
+        minHeight: 640, minWidth: 480, quality: 80);
+
+    if (comprimida != null) {
+      final camino = comprimida.path;
+      ref.watch(imgProvider.notifier).changeState(camino);
+    }
+  }
+
+  static Future<List<Business>> getOwnerBusiness(
+      BuildContext context, WidgetRef ref) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await verifyOwnerBusiness();
     var estado = prefs.getString('ownerBusinessStatus');
@@ -67,6 +85,11 @@ abstract class API {
         Business negocio = Business.fromJson(business);
         return negocio;
       }).toList();
+
+      List<String> aGuardar = businesses.map((e) => jsonEncode(e)).toList();
+      prefs.setStringList('negocios', aGuardar);
+
+      ref.read(myBusinessStateProvider.notifier).cargar(businesses);
       if (context.mounted) {
         if (businesses.length == 0) {
           API.noHayPropios(context);
@@ -80,13 +103,17 @@ abstract class API {
     }
 
     if (response.statusCode == 200) {
-      List<Business> vacia = [];
+      List<Business> negocios = prefs
+          .getStringList('negocios')!
+          .map((e) => Business.fromJson(jsonDecode(e)))
+          .toList();
+      print(negocios);
       if (context.mounted) {
         if (prefs.getStringList('ownerBusiness')!.length == 0) {
           API.noHayPropios(context);
         }
       }
-      return vacia;
+      return negocios;
     }
     throw Exception('Failed to get items');
   }
@@ -152,6 +179,7 @@ abstract class API {
 
   static Future<Usuario> getUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    print(auth);
     final response = await http.get(Uri.parse('$serverUrl/api/user/get'),
         headers: {'googleId': prefs.getString('googleId')!});
     if (response.statusCode == 200) {
@@ -285,6 +313,14 @@ abstract class API {
                     child: Text('Si'))
               ],
             ));
+  }
+
+  static timePicker(BuildContext context) {
+    Future<TimeOfDay?> selectedTime = showTimePicker(
+      initialTime: TimeOfDay.now(),
+      context: context,
+    );
+    return selectedTime;
   }
 
   static noHayPropios(BuildContext context) {

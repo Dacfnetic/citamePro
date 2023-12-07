@@ -10,7 +10,18 @@ class Business {
   final String longitude;
   final String description;
   final List<int> imgPath;
-
+  Map toJson() => {
+        'businessName': businessName,
+        'category': category,
+        'email': email,
+        'workers': workers,
+        'contactNumber': contactNumber,
+        'direction': direction,
+        'latitude': latitude,
+        'longitude': longitude,
+        'description': description,
+        'imgPath': imgPath,
+      };
   Business({
     required this.businessName,
     required this.category,

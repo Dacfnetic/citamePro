@@ -3,18 +3,6 @@ import 'package:flutter/material.dart';
 
 enum SampleItem { itemOne, itemTwo, itemThree }
 
-class Algo {
-  String? mensaje;
-  String setAlgo(String seleccionado) {
-    mensaje = seleccionado;
-    return seleccionado;
-  }
-
-  String? get algo {
-    return mensaje;
-  }
-}
-
 class Cuadro extends StatefulWidget {
   Cuadro({
     super.key,
