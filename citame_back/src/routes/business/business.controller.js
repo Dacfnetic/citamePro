@@ -2,6 +2,7 @@
 const usuario = require('../../models/users.model.js');
 const business = require('../../models/business.model.js');
 
+
 async function getAllBusiness(req,res){
     try{
         usuario.findOne({emailUser: req.get('email')})
@@ -89,10 +90,44 @@ async function postBusiness(req,res){
         return res.status(404).json('Errosillo');
     }  
 }
+async function deleteBusiness(req,res){
+
+    try {
+        
+        const businessSearch = {businessName: req.body.businessName, emailUser: req.body.email};
+        await business.findByIdAndDelete(businessSearch);
+        res.status(200).json({message: 'Negocio Eliminado'});
+        
+    } catch (error) {
+        res.status(500).json({error: error.message});
+    };
+
+}
+async function updateBusiness(req,res){
+
+    try {
+        
+        const businessSearch = {businessName: req.body.businessName, emailUser: req.body.email};//Verificar ID en Mongo
+        await business.findByIdAndUpdate(businessSearch,req.body);
+        res.status(200).json({message: 'Negocio Actualizado'});
+        
+        
+
+    } catch (error) {
+        res.status(500).json({error: error.message});
+    };
+
+
+}
+
+
+
 //Exportar funciones
 module.exports = {
     getAllBusiness,
     getOwnerBusiness,
     postBusiness,
-    verifyOwnerBusiness
+    verifyOwnerBusiness,
+    deleteBusiness,
+    updateBusiness
 }
