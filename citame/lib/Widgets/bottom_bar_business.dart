@@ -15,7 +15,6 @@ class BarraInferiorBusiness extends ConsumerWidget {
   const BarraInferiorBusiness({
     super.key,
   });
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return NavigationBar(
