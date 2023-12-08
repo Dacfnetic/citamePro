@@ -7,7 +7,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MenuPage extends ConsumerWidget {
-  const MenuPage({super.key});
+  const MenuPage({
+    super.key,
+  });
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     bool r = ref.watch(reRenderProvider);

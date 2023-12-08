@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:citame/Widgets/cuadro.dart';
 import 'package:citame/firebase_options.dart';
 import 'package:citame/models/business_model.dart';
 import 'package:citame/models/user_model.dart';
 import 'package:citame/pages/pages_1/pages_2/business_registration_page.dart';
 import 'package:citame/providers/img_provider.dart';
 import 'package:citame/providers/my_business_state_provider.dart';
+import 'package:citame/providers/re_render_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
@@ -23,6 +25,69 @@ String actualCat = '';
 String categoriaABuscar = '';
 
 abstract class API {
+  static Future<String> deleteBusiness(
+      String businessName, String email) async {
+    final response =
+        await http.delete(Uri.parse('$serverUrl/api/business/delete'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({
+              'businessName': businessName,
+              'email': email,
+            }));
+
+    if (response.statusCode == 200) {
+      return 'borrado';
+    }
+
+    throw Exception('Failed to add item');
+  }
+
+  static Future<String> updateWorkersInBusiness(
+      String businessName, String email) async {
+    final response = await http.put(
+        Uri.parse('$serverUrl/api/business/update'), //TODO:Cambiar la ruta
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'businessName': businessName,
+          'email': email,
+        }));
+
+    if (response.statusCode == 200) return 'Todo ok';
+    throw Exception('Failed to add item');
+  }
+
+  static Future<String> postWorker(
+      String name,
+      String workerEmail,
+      String imgPath,
+      double salary,
+      String horario,
+      String businessName,
+      String email) async {
+    String imgConv = await API.convertTo64(imgPath);
+    Uint8List casi = API.decode64(imgConv);
+    List<int> imagen = casi.toList();
+
+    final response = await http.post(
+        Uri.parse('$serverUrl/api/user/create'), //TODO:Cambiar Ruta
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'name': name,
+          'email': workerEmail,
+          'imgPath': imagen,
+          'salary': salary,
+          'horario': horario,
+          'status': false,
+        }));
+    if (response.statusCode == 201) {
+      API.updateWorkersInBusiness(businessName, email);
+      return 'Todo ok';
+    }
+    ;
+    if (response.statusCode == 202) return 'Todo ok';
+    throw Exception('Failed to add item');
+  }
+
   static Future<String> postUser(String googleId, String? userName,
       String? emailUser, String? avatar) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -315,10 +380,54 @@ abstract class API {
             ));
   }
 
-  static timePicker(BuildContext context) {
+  static cambiarHorario(
+      BuildContext context, WidgetRef ref, String dia, Map turno) {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (_) => AlertDialog(
+              elevation: 24,
+              title: Text('Que desea hacer con este horario'),
+              content: Text(
+                  'Desea cambiar, eliminar o no hacer nada con este horario.'),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text('Nada')),
+                TextButton(
+                    onPressed: () async {
+                      TimeOfDay inicio =
+                          await API.timePicker(context, 'Horario de inicio');
+                      TimeOfDay fin =
+                          await API.timePicker(context, 'Horario de fin');
+
+                      ref
+                          .read(myBusinessStateProvider.notifier)
+                          .cambiarHorario(dia, turno, inicio, fin);
+                      ref.read(reRenderProvider.notifier).reRender();
+                      Navigator.pop(context);
+                    },
+                    child: Text('Cambiar')),
+                TextButton(
+                    onPressed: () {
+                      ref
+                          .read(myBusinessStateProvider.notifier)
+                          .eliminarHorario(dia, turno);
+                      ref.read(reRenderProvider.notifier).reRender();
+                      Navigator.pop(context);
+                    },
+                    child: Text('Eliminar'))
+              ],
+            ));
+  }
+
+  static timePicker(BuildContext context, String titulo) {
     Future<TimeOfDay?> selectedTime = showTimePicker(
       initialTime: TimeOfDay.now(),
       context: context,
+      helpText: titulo,
     );
     return selectedTime;
   }
@@ -348,6 +457,36 @@ abstract class API {
                           ));
                     },
                     child: Text('Si'))
+              ],
+            ));
+  }
+
+  static estasSeguro(BuildContext context, String businessName, String email) {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (_) => AlertDialog(
+              elevation: 24,
+              title: Text('Advertencia'),
+              content: Column(
+                children: [
+                  Text('Una vez borrado cagaste'),
+                  Cuadro(control: TextEditingController(), texto: 'Contraseña')
+                ],
+              ),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                      API.deleteBusiness(businessName, email);
+                    },
+                    child: Text('Si')),
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text('No'))
               ],
             ));
   }

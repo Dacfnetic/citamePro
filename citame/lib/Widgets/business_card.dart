@@ -7,6 +7,7 @@ import 'package:citame/pages/pages_1/pages_2/pages_3/preview_business_page.dart'
 import 'package:citame/pages/pages_1/pages_2/profile_inside.dart';
 import 'package:citame/pages/pages_1/profile_page.dart';
 import 'package:citame/providers/geolocator_provider.dart';
+import 'package:citame/providers/my_actual_business_provider.dart';
 import 'package:citame/providers/page_provider.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
@@ -52,6 +53,7 @@ class BusinessCard extends ConsumerWidget {
         ),
         onPressed: () {
           Widget actual = ref.read(pageProvider);
+          ref.read(actualBusinessProvider.notifier).actualizar(nombre);
           if (actual.runtimeType == MyBusinessesPage().runtimeType) {
             Navigator.push(
               context,
