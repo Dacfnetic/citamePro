@@ -95,7 +95,7 @@ async function deleteBusiness(req,res){
     try {
         
         const businessSearch = {businessName: req.body.businessName, emailUser: req.body.email};
-        await business.findByIdAndDelete(businessSearch);
+        await business.findOneAndDelete(businessSearch);
         res.status(200).json({message: 'Negocio Eliminado'});
         
     } catch (error) {
