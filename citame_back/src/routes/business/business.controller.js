@@ -91,24 +91,46 @@ async function postBusiness(req,res){
     }  
 }
 async function deleteBusiness(req,res){
-
-    try {
-        
-        const businessSearch = {businessName: req.body.businessName, emailUser: req.body.email};
-        await business.findOneAndDelete(businessSearch);
-        res.status(200).json({message: 'Negocio Eliminado'});
-        
-    } catch (error) {
-        res.status(500).json({error: error.message});
-    };
-
+    try{
+        let existe = true;    
+        await business.findOneAndDelete({businessName: req.body.businessName, email: req.body.email})
+        return res.status(200).json({message: 'Todo ok'});
+    }catch(e){
+        console.log(e);
+        return res.status(404).json('Errosillo');
+    }  
 }
 async function updateBusiness(req,res){
 
     try {
         
         const businessSearch = {businessName: req.body.businessName, emailUser: req.body.email};//Verificar ID en Mongo
-        await business.findByIdAndUpdate(businessSearch,req.body);
+         
+        //Diego envia el email del trabador por el body
+
+        //Tenemos que encontrar el idmongo de ese email
+        let idMongo = '';
+
+        await usuario.findOne({emailUser: req.body.workerEmail})
+        .then((docs)=>{
+            if(docs != null){
+               idMongo = docs._id.toString();
+            }
+        });
+    
+        //Encontrar los workers que ya existen
+        let previousWorkers = '';
+ 
+        await business.findOne({businessName: req.body.businessName, email: req.body.email})
+            .then((docs) => {
+                previousWorkers = docs.workers;
+                console.log(docs);
+        });
+        item = JSON.parse(JSON.stringify(previousWorkers));
+        item.push(idMongo);
+        const modificaciones = {workers: item};
+        
+         await business.findOneAndUpdate(businessSearch,{$set:{workers: item}},{new: true});
         res.status(200).json({message: 'Negocio Actualizado'});
         
         

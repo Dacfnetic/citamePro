@@ -43,11 +43,12 @@ abstract class API {
   }
 
   static Future<String> updateWorkersInBusiness(
-      String businessName, String email) async {
+      String businessName, String email, String workerEmail) async {
     final response = await http.put(
         Uri.parse('$serverUrl/api/business/update'), //TODO:Cambiar la ruta
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
+          'workerEmail': workerEmail,
           'businessName': businessName,
           'email': email,
         }));
@@ -69,7 +70,7 @@ abstract class API {
     List<int> imagen = casi.toList();
 
     final response = await http.post(
-        Uri.parse('$serverUrl/api/user/create'), //TODO:Cambiar Ruta
+        Uri.parse('$serverUrl/api/workers/create'), //TODO:Cambiar Ruta
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'name': name,
@@ -80,10 +81,10 @@ abstract class API {
           'status': false,
         }));
     if (response.statusCode == 201) {
-      API.updateWorkersInBusiness(businessName, email);
+      API.updateWorkersInBusiness(businessName, email, workerEmail);
       return 'Todo ok';
     }
-    ;
+
     if (response.statusCode == 202) return 'Todo ok';
     throw Exception('Failed to add item');
   }
@@ -477,6 +478,7 @@ abstract class API {
               actions: [
                 TextButton(
                     onPressed: () {
+                      Navigator.pop(context);
                       Navigator.pop(context);
                       Navigator.pop(context);
                       API.deleteBusiness(businessName, email);

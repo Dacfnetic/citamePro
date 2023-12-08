@@ -34,105 +34,111 @@ class ProfileInsidePage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(),
       body: SafeArea(
-        child: Container(
-          color: Color.fromRGBO(240, 240, 240, 1),
-          child: ListView(
-            children: [
-              Container(
-                margin: EdgeInsets.fromLTRB(0, 1, 0, 0),
-                //padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
-                decoration: BoxDecoration(color: Colors.white, boxShadow: [
-                  BoxShadow(
-                    color: Colors.black,
-                  )
-                ]),
-                child: Row(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.all(16),
-                      alignment: Alignment.centerLeft,
-                      decoration: BoxDecoration(
-                        color: Color(0x4d39d2c0),
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: Color(0xff39d2c0),
-                          width: 2,
-                        ),
-                      ),
-                      child: SizedBox(
-                        height: 90,
-                        width: 90,
-                        child: TextButton(
-                          child: ClipRRect(
-                              borderRadius: BorderRadius.circular(16),
-                              child: ruta != ''
-                                  ? Image.file(
-                                      File(ruta),
-                                      width: double.infinity,
-                                      fit: BoxFit.cover,
-                                    )
-                                  : Text('')),
-                          onPressed: () {
-                            API.pickImageFromGallery(ref);
-                          },
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Cuadro(
-                              control: workerName,
-                              texto: 'Nombre del trabajador'),
-                          Cuadro(
-                              control: workerEmail,
-                              texto: 'Email del trabajador'),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      width: 15,
+        child: Form(
+          key: signUpKey,
+          child: Container(
+            color: Color.fromRGBO(240, 240, 240, 1),
+            child: ListView(
+              children: [
+                Container(
+                  margin: EdgeInsets.fromLTRB(0, 1, 0, 0),
+                  //padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
+                  decoration: BoxDecoration(color: Colors.white, boxShadow: [
+                    BoxShadow(
+                      color: Colors.black,
                     )
-                  ],
+                  ]),
+                  child: Row(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.all(16),
+                        alignment: Alignment.centerLeft,
+                        decoration: BoxDecoration(
+                          color: Color(0x4d39d2c0),
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: Color(0xff39d2c0),
+                            width: 2,
+                          ),
+                        ),
+                        child: SizedBox(
+                          height: 90,
+                          width: 90,
+                          child: TextButton(
+                            child: ClipRRect(
+                                borderRadius: BorderRadius.circular(16),
+                                child: ruta != ''
+                                    ? Image.file(
+                                        File(ruta),
+                                        width: double.infinity,
+                                        fit: BoxFit.cover,
+                                      )
+                                    : Text('')),
+                            onPressed: () {
+                              API.pickImageFromGallery(ref);
+                            },
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Cuadro(
+                                control: workerName,
+                                texto: 'Nombre del trabajador'),
+                            Cuadro(
+                                control: workerEmail,
+                                texto: 'Email del trabajador'),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: 15,
+                      )
+                    ],
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 0, 0),
-                child: Column(
-                  children: [
-                    ContenedorDeHorario(
-                        horario: horario, day: 'lunes', ref: ref),
-                    ContenedorDeHorario(
-                        horario: horario, day: 'martes', ref: ref),
-                    ContenedorDeHorario(
-                        horario: horario, day: 'miercoles', ref: ref),
-                    ContenedorDeHorario(
-                        horario: horario, day: 'jueves', ref: ref),
-                    ContenedorDeHorario(
-                        horario: horario, day: 'viernes', ref: ref),
-                    ContenedorDeHorario(
-                        horario: horario, day: 'sabado', ref: ref),
-                    ContenedorDeHorario(
-                        horario: horario, day: 'domingo', ref: ref),
-                    ElevatedButton(
-                        onPressed: () async {
-                          SharedPreferences prefs =
-                              await SharedPreferences.getInstance();
-                          API.postWorker(
-                              workerName.text,
-                              workerEmail.text,
-                              ref.read(imgProvider),
-                              500.50,
-                              jsonEncode(horas),
-                              ref.read(actualBusinessProvider),
-                              prefs.getString('emailUser')!);
-                        },
-                        child: Text('Agregar trabajador')),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 0, 0),
+                  child: Column(
+                    children: [
+                      ContenedorDeHorario(
+                          horario: horario, day: 'lunes', ref: ref),
+                      ContenedorDeHorario(
+                          horario: horario, day: 'martes', ref: ref),
+                      ContenedorDeHorario(
+                          horario: horario, day: 'miercoles', ref: ref),
+                      ContenedorDeHorario(
+                          horario: horario, day: 'jueves', ref: ref),
+                      ContenedorDeHorario(
+                          horario: horario, day: 'viernes', ref: ref),
+                      ContenedorDeHorario(
+                          horario: horario, day: 'sabado', ref: ref),
+                      ContenedorDeHorario(
+                          horario: horario, day: 'domingo', ref: ref),
+                      ElevatedButton(
+                          onPressed: () async {
+                            SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                            var enviar = jsonEncode(horas.toJson().toString());
+                            if (signUpKey.currentState!.validate()) {
+                              API.postWorker(
+                                  workerName.text,
+                                  workerEmail.text,
+                                  ref.read(imgProvider),
+                                  500.50,
+                                  enviar,
+                                  ref.read(actualBusinessProvider),
+                                  prefs.getString('emailUser')!);
+                            }
+                          },
+                          child: Text('Agregar trabajador')),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

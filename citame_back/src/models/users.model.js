@@ -7,8 +7,8 @@ const userSchema = new Schema({
     userName: {type: String, required: true},
     emailUser: {type: String, required: true, unique: true},
     avatar: {type: String, required: true},
-    bussinessAsOwner: [String],
-    bussinessAsEmployer: [String]
+    //bussinessAsOwner: [String],
+    //bussinessAsEmployer: [String]
 
 });
 
