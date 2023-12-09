@@ -58,6 +58,7 @@ class MyApp extends ConsumerWidget {
 
             API.postUser(snapshot.data!.uid, snapshot.data!.displayName,
                 snapshot.data!.email, snapshot.data!.photoURL);
+
             return HomePage();
           }
 

@@ -18,7 +18,10 @@ class ProfilePage extends ConsumerWidget {
     Usuario user = ref.watch(userProvider);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile', style: API.estiloJ16negro),
+        title: Text(
+          'Profile',
+          style: API.estiloJ16negro,
+        ),
       ),
       body: SafeArea(
         child: Container(

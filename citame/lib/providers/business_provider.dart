@@ -65,6 +65,7 @@ class BusinessListNotifier extends StateNotifier<List<BusinessCard>> {
         longitud: double.parse(e.longitude),
         rating: 5.0,
         imagen: e.imgPath,
+        description: e.description,
       ));
     }).toList();
     state = negocios;
@@ -79,12 +80,14 @@ void agregarNegocio(nombre, categoria, latitud, longitud, rating, imagen) {
   negocios = [
     ...negocios,
     BusinessCard(
-        nombre: nombre,
-        categoria: categoria,
-        latitud: latitud,
-        longitud: longitud,
-        rating: rating,
-        imagen: imagen)
+      nombre: nombre,
+      categoria: categoria,
+      latitud: latitud,
+      longitud: longitud,
+      rating: rating,
+      imagen: imagen,
+      description: 'x',
+    )
   ];
 }
 

@@ -103,9 +103,7 @@ async function deleteBusiness(req,res){
 async function updateBusiness(req,res){
 
     try {
-        
-        const businessSearch = {businessName: req.body.businessName, emailUser: req.body.email};//Verificar ID en Mongo
-         
+  
         //Diego envia el email del trabador por el body
 
         //Tenemos que encontrar el idmongo de ese email
@@ -120,17 +118,20 @@ async function updateBusiness(req,res){
     
         //Encontrar los workers que ya existen
         let previousWorkers = '';
- 
+        let bId = '';
         await business.findOne({businessName: req.body.businessName, email: req.body.email})
             .then((docs) => {
                 previousWorkers = docs.workers;
+                bId = docs._id.toString();
                 console.log(docs);
         });
         item = JSON.parse(JSON.stringify(previousWorkers));
         item.push(idMongo);
         const modificaciones = {workers: item};
-        
-         await business.findOneAndUpdate(businessSearch,{$set:{workers: item}},{new: true});
+        console.log('Si prro');
+        let resultado = await business.findByIdAndUpdate(bId,{$set:modificaciones});
+        //await business.findOneAndUpdate(businessSearch,{$set:{workers: item}},{new: true});
+        console.log(resultado);
         res.status(200).json({message: 'Negocio Actualizado'});
         
         

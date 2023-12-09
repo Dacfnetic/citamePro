@@ -10,7 +10,6 @@ import 'package:citame/providers/re_render_provider.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileInsidePage extends ConsumerWidget {
@@ -199,12 +198,36 @@ class ContenedorDeHorario extends StatelessWidget {
             child: Text(day.toUpperCase()),
           ),
           Column(children: obtenerHorario(day, horario)),
-          ElevatedButton(
-            onPressed: () async {
-              getSchedule(day);
-            },
-            child: Text('Agregar horario'),
-          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () async {
+                  getSchedule(day);
+                },
+                child: Text('+'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  ref
+                      .read(myBusinessStateProvider.notifier)
+                      .copiarHorariosWorker(day);
+                  ref.read(reRenderProvider.notifier).reRender();
+                },
+                child: Text('C'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  ref
+                      .read(myBusinessStateProvider.notifier)
+                      .pegarHorariosWorker(day);
+                  ref.read(reRenderProvider.notifier).reRender();
+                },
+                child: Text('P'),
+              )
+            ],
+          )
+
           /*TextButton(
             onPressed: () {},
             child: Column(

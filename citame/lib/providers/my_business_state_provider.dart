@@ -32,6 +32,7 @@ class MyBusinessStateNotifier extends StateNotifier<List<Business>> {
 
   void eliminarHorario(dia, Map horario) {
     workerDaysAvailable[dia].remove(horario);
+    print(workerDaysAvailable);
   }
 
   void cambiarHorario(dia, Map horario, TimeOfDay inicio, TimeOfDay fin) {
@@ -42,6 +43,14 @@ class MyBusinessStateNotifier extends StateNotifier<List<Business>> {
 
   Map obtenerDiasWorker() {
     return workerDaysAvailable;
+  }
+
+  void copiarHorariosWorker(dia) {
+    papelera = List.from(workerDaysAvailable[dia]);
+  }
+
+  void pegarHorariosWorker(dia) {
+    workerDaysAvailable[dia] = List.from(papelera);
   }
 }
 
@@ -56,7 +65,16 @@ Map diasLaboralesGenerales = {
 };
 
 Map workerDaysAvailable = {
-  'lunes': [],
+  'lunes': [
+    {
+      'inicio': TimeOfDay(hour: 7, minute: 0),
+      'fin': TimeOfDay(hour: 13, minute: 0)
+    },
+    {
+      'inicio': TimeOfDay(hour: 14, minute: 0),
+      'fin': TimeOfDay(hour: 17, minute: 0)
+    }
+  ],
   'martes': [],
   'miercoles': [],
   'jueves': [],
@@ -64,3 +82,5 @@ Map workerDaysAvailable = {
   'sabado': [],
   'domingo': [],
 };
+
+List papelera = [];

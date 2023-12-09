@@ -1,4 +1,4 @@
-import 'package:citame/providers/own_business_provider.dart';
+import 'package:citame/providers/page_provider.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:citame/pages/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';

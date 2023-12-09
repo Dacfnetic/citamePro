@@ -2,7 +2,6 @@ import 'package:citame/Widgets/business_card.dart';
 import 'package:citame/models/business_model.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -47,7 +46,6 @@ class BusinessListNotifier extends StateNotifier<List<BusinessCard>> {
   void cargar(BuildContext context, WidgetRef ref) async {
     List<Business> ownBusiness;
     List<BusinessCard> negocios;
-    Function eq = const ListEquality().equals;
     ownBusiness = await API.getOwnerBusiness(context, ref);
     if (ownBusiness.length != 0) {
       negocios = ownBusiness.map((e) {
@@ -58,6 +56,7 @@ class BusinessListNotifier extends StateNotifier<List<BusinessCard>> {
           longitud: double.parse(e.longitude),
           rating: 5.0,
           imagen: e.imgPath,
+          description: e.description,
         ));
       }).toList();
       if (state.length != negocios.length) {

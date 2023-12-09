@@ -1,6 +1,7 @@
 import 'package:citame/pages/pages_1/business_search_page.dart';
 import 'package:citame/providers/business_provider.dart';
 import 'package:citame/providers/categories_provider.dart';
+import 'package:citame/providers/page_provider.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -33,6 +34,9 @@ class HomeRow extends ConsumerWidget {
           ref.read(categoriesProvider.notifier).inicializar();
           API.setCat(categoria);
           ref.read(businessProvider.notifier).limpiar();
+          ref
+              .read(pageProvider.notifier)
+              .actualizar(BusinessSearchPage(categoria: categoria));
           /*/try {
             allBusiness = await API.getAllBusiness();
             negocios = allBusiness.map((e) {

@@ -381,6 +381,25 @@ abstract class API {
             ));
   }
 
+  static mensaje(BuildContext context, String titulo, String mensaje) {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (_) => AlertDialog(
+              elevation: 24,
+              title: Text(titulo),
+              content: Text(mensaje),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                    },
+                    child: Text('Gracias')),
+              ],
+            ));
+  }
+
   static cambiarHorario(
       BuildContext context, WidgetRef ref, String dia, Map turno) {
     showDialog(

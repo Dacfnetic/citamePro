@@ -1,4 +1,5 @@
 import 'package:citame/models/user_model.dart';
+import 'package:citame/pages/home_page.dart';
 import 'package:citame/pages/pages_1/pages_2/chats_page.dart';
 import 'package:citame/pages/pages_1/profile_page.dart';
 import 'package:citame/providers/business_provider.dart';
@@ -35,11 +36,14 @@ class BarraInferior extends ConsumerWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) => ProfilePage(),
-                  ));
+                  )).then((_) {
+                ref.read(pageProvider.notifier).actualizar(HomePage());
+              });
             }
             ref.read(userProvider.notifier).cargar();
             ref.read(businessProvider.notifier).inicializar();
             ref.read(categoriesProvider.notifier).inicializar();
+            ref.read(pageProvider.notifier).actualizar(ProfilePage());
             searchBarController.text = "";
           }
           if (value == 1) {

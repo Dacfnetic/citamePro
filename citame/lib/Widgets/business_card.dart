@@ -1,15 +1,11 @@
-import 'dart:ffi' as f;
-import 'dart:ui' as u;
 import 'dart:typed_data';
 
+import 'package:citame/pages/pages_1/pages_2/business_inside_page.dart';
 import 'package:citame/pages/pages_1/pages_2/my_businessess_page.dart';
 import 'package:citame/pages/pages_1/pages_2/pages_3/preview_business_page.dart';
-import 'package:citame/pages/pages_1/pages_2/profile_inside.dart';
-import 'package:citame/pages/pages_1/profile_page.dart';
 import 'package:citame/providers/geolocator_provider.dart';
 import 'package:citame/providers/my_actual_business_provider.dart';
 import 'package:citame/providers/page_provider.dart';
-import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -17,6 +13,7 @@ import 'package:google_fonts/google_fonts.dart';
 class BusinessCard extends ConsumerWidget {
   final String nombre;
   final String categoria;
+  final String description;
   final double latitud;
   final double longitud;
   final double rating;
@@ -29,6 +26,7 @@ class BusinessCard extends ConsumerWidget {
     required this.longitud,
     required this.rating,
     required this.imagen,
+    required this.description,
   }) : super(key: key);
 
   @override
@@ -59,6 +57,17 @@ class BusinessCard extends ConsumerWidget {
               context,
               MaterialPageRoute(
                 builder: (context) => PreviewBusinessPage(),
+              ),
+            );
+          } else {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BusinessInsidePage(
+                  businessName: nombre,
+                  imagen: esta,
+                  description: description,
+                ),
               ),
             );
           }
