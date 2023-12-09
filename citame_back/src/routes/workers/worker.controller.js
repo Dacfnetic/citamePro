@@ -5,7 +5,7 @@ const workers = require('../../models/worker.model.js');
 
 async function postWorkers(req,res){
     try{
-        /*let existe = true;
+        /* let existe = true;
         workers.findOne({email: req.body.email})
         .then(async (docs)=>{
             if(docs == null){
@@ -23,7 +23,8 @@ async function postWorkers(req,res){
                     imgPath:req.body.imgPath,
                     salary :req.body.salary,
                     horario:req.body.horario,
-                    status: req.body.status
+                    status: req.body.status,
+                    puesto: req.body.puesto
                 });
                 return res.status(201).send({'sms':'Trabajador creado'});
             }
@@ -34,6 +35,9 @@ async function postWorkers(req,res){
     }  
 }
 
+async function deleteWorkers(req,res){
+    
+}
 
 module.exports  = {
 

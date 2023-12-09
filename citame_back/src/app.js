@@ -5,7 +5,8 @@ const bodyParser = require('body-parser');
 //Importación de enrutadores
 const usersRouter = require('./routes/users/users.router.js');
 const businessRouter = require('./routes/business/business.router.js');
-const workersRouter = require('./routes/business/worker.router.js')
+const workersRouter = require('./routes/workers/worker.router.js');
+const servicesRouter = require('./routes/services/services.router.js');
 //Creación de aplicación express
 const app = express();
 //Informacion del servidor
@@ -15,5 +16,6 @@ app.use(bodyParser.urlencoded({ limit: "50mb", extended: true, parameterLimit: 5
 app.use(usersRouter);
 app.use(businessRouter);
 app.use(workersRouter);
+app.use(servicesRouter);
 //Exportación de aplicación express
 module.exports = app;
