@@ -1,6 +1,6 @@
 //Importación de modelos de objetos
 const usuario = require('../../models/users.model.js');
-//Funciones que puede hacer con el usuario
+
 //Función para obtener usuario
 async function serverReady(req,res){
     try{
