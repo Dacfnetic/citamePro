@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:citame/Widgets/cuadro.dart';
 import 'package:citame/models/worker_moder.dart';
 import 'package:citame/providers/img_provider.dart';
@@ -19,6 +18,7 @@ class ProfileInsidePage extends ConsumerWidget {
 
   final TextEditingController workerName = TextEditingController();
   final TextEditingController workerEmail = TextEditingController();
+  final TextEditingController workerJob = TextEditingController();
   final GlobalKey<FormState> signUpKey = GlobalKey<FormState>();
 
   @override
@@ -89,6 +89,9 @@ class ProfileInsidePage extends ConsumerWidget {
                             Cuadro(
                                 control: workerEmail,
                                 texto: 'Email del trabajador'),
+                            Cuadro(
+                                control: workerJob,
+                                texto: 'Puesto del trabajador'),
                           ],
                         ),
                       ),
@@ -122,14 +125,20 @@ class ProfileInsidePage extends ConsumerWidget {
                                 await SharedPreferences.getInstance();
                             var enviar = jsonEncode(horas.toJson().toString());
                             if (signUpKey.currentState!.validate()) {
-                              API.postWorker(
-                                  workerName.text,
-                                  workerEmail.text,
-                                  ref.read(imgProvider),
-                                  500.50,
-                                  enviar,
-                                  ref.read(actualBusinessProvider),
-                                  prefs.getString('emailUser')!);
+                              if (context.mounted) {
+                                API.postWorker(
+                                    workerName.text,
+                                    workerEmail.text,
+                                    ref.read(imgProvider),
+                                    500.50,
+                                    enviar,
+                                    ref.read(actualBusinessProvider),
+                                    prefs.getString('emailUser')!,
+                                    context,
+                                    workerJob.text);
+                                API.mensaje(context, 'Aviso',
+                                    'La solicitud fue enviada al trabajador');
+                              }
                             }
                           },
                           child: Text('Agregar trabajador')),
@@ -212,7 +221,7 @@ class ContenedorDeHorario extends StatelessWidget {
                   ref
                       .read(myBusinessStateProvider.notifier)
                       .copiarHorariosWorker(day);
-                  ref.read(reRenderProvider.notifier).reRender();
+                  API.mensaje2(context, 'Horario copiado');
                 },
                 child: Text('C'),
               ),
@@ -224,6 +233,15 @@ class ContenedorDeHorario extends StatelessWidget {
                   ref.read(reRenderProvider.notifier).reRender();
                 },
                 child: Text('P'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  ref
+                      .read(myBusinessStateProvider.notifier)
+                      .borrarDiaWorker(day);
+                  ref.read(reRenderProvider.notifier).reRender();
+                },
+                child: Text('B'),
               )
             ],
           )

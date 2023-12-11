@@ -1,4 +1,5 @@
 import 'package:citame/models/business_model.dart';
+import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -12,6 +13,14 @@ class MyBusinessStateNotifier extends StateNotifier<List<Business>> {
 
   void cargar(myBusiness) {
     state = myBusiness;
+  }
+
+  void establecerWorkers(email, nombre) async {
+    workers = await API.getWorkers(email, nombre);
+  }
+
+  List obtenerWorkers() {
+    return workers;
   }
 
   void setDias(dia, valor) {
@@ -52,6 +61,10 @@ class MyBusinessStateNotifier extends StateNotifier<List<Business>> {
   void pegarHorariosWorker(dia) {
     workerDaysAvailable[dia] = List.from(papelera);
   }
+
+  void borrarDiaWorker(dia) {
+    workerDaysAvailable[dia] = [];
+  }
 }
 
 Map diasLaboralesGenerales = {
@@ -82,5 +95,7 @@ Map workerDaysAvailable = {
   'sabado': [],
   'domingo': [],
 };
+
+List workers = [];
 
 List papelera = [];

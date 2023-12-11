@@ -1,10 +1,10 @@
-import 'package:citame/pages/pages_1/pages_2/profile_inside.dart';
+import 'package:citame/Widgets/worker.dart';
+import 'package:citame/pages/pages_1/pages_2/pages_3/pages_4/pages_5/profile_inside.dart';
 import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:citame/providers/re_render_provider.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class MenuPage extends ConsumerWidget {
   const MenuPage({
@@ -16,6 +16,9 @@ class MenuPage extends ConsumerWidget {
     bool r = ref.watch(reRenderProvider);
 
     ReRenderNotifier reRender = ref.read(reRenderProvider.notifier);
+    List workers = ref.watch(myBusinessStateProvider.notifier).obtenerWorkers();
+    /* List<WorkerBox> trabajadores =
+        workers.map((e) => WorkerBox(worker: e, ref: ref)).toList();*/
 
     return Scaffold(
       body: SafeArea(
@@ -145,6 +148,7 @@ class MenuPage extends ConsumerWidget {
               Text(
                   'Crea los perfiles de tu personal para que tus clientes puedan conocerlos.',
                   style: API.estiloJ14gris),
+              //  ListView(children: trabajadores),
               ElevatedButton.icon(
                 onPressed: () {
                   Navigator.push(
@@ -156,7 +160,6 @@ class MenuPage extends ConsumerWidget {
                 icon: Icon(Icons.plus_one),
                 label: Text('Agregar más'),
               ),
-              Container(),
               SizedBox(
                 height: 24,
               )

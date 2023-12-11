@@ -5,12 +5,12 @@ const workers = require('../../models/worker.model.js');
 
 async function postWorkers(req,res){
     try{
-        /*let existe = true;
-        workers.findOne({email: req.body.email})
+        let existe = true;
+        business.findOne({email: req.body.email})
         .then(async (docs)=>{
             if(docs == null){
                 existe = false;
-        }});*/
+        }});
         //if(existe) return res.status(201).send('El worker ya esta en el negocio');
         usuario.findOne({emailUser: req.body.email})
         .then(async (docs)=>{
