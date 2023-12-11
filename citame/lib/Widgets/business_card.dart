@@ -6,6 +6,7 @@ import 'package:citame/pages/pages_1/pages_2/pages_3/preview_business_page.dart'
 import 'package:citame/providers/geolocator_provider.dart';
 import 'package:citame/providers/my_actual_business_provider.dart';
 import 'package:citame/providers/page_provider.dart';
+import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -18,6 +19,7 @@ class BusinessCard extends ConsumerWidget {
   final double longitud;
   final double rating;
   final List<int> imagen;
+  final String googleId;
   const BusinessCard({
     Key? key,
     required this.nombre,
@@ -27,6 +29,7 @@ class BusinessCard extends ConsumerWidget {
     required this.rating,
     required this.imagen,
     required this.description,
+    required this.googleId,
   }) : super(key: key);
 
   @override
@@ -53,6 +56,7 @@ class BusinessCard extends ConsumerWidget {
           Widget actual = ref.read(pageProvider);
           ref.read(actualBusinessProvider.notifier).actualizar(nombre);
           if (actual.runtimeType == MyBusinessesPage().runtimeType) {
+            API.getWorkers(googleId, nombre);
             Navigator.push(
               context,
               MaterialPageRoute(

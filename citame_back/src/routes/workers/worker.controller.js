@@ -4,8 +4,7 @@ const business = require('../../models/business.model.js');
 const workersModel = require('../../models/worker.model.js');
 
 async function postWorkers(req,res){
-    try{
-       
+    try{       
         
         let worker = [];  
         await business.findOne({businessName: req.body.businessName, email: req.body.email})
@@ -27,10 +26,10 @@ async function postWorkers(req,res){
 
         if (workerExist == true){
             return res.status(202).send('El trabajador ya esta en el negocio');
-        }else {
+        }
 
-            usuario.findOne({emailUser: req.body.email})
-            .then(async (docs)=>{
+        usuario.findOne({emailUser: req.body.email})
+         .then(async (docs)=>{
             if(docs != null){
                 console.log('Creando Trabajador');
                 await workersModel.create({

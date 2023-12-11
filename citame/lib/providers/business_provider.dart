@@ -66,6 +66,7 @@ class BusinessListNotifier extends StateNotifier<List<BusinessCard>> {
         rating: 5.0,
         imagen: e.imgPath,
         description: e.description,
+        googleId: e.email,
       ));
     }).toList();
     state = negocios;
@@ -76,7 +77,8 @@ class BusinessListNotifier extends StateNotifier<List<BusinessCard>> {
   }
 }
 
-void agregarNegocio(nombre, categoria, latitud, longitud, rating, imagen) {
+void agregarNegocio(
+    nombre, categoria, latitud, longitud, rating, imagen, email) {
   negocios = [
     ...negocios,
     BusinessCard(
@@ -87,6 +89,7 @@ void agregarNegocio(nombre, categoria, latitud, longitud, rating, imagen) {
       rating: rating,
       imagen: imagen,
       description: 'x',
+      googleId: email,
     )
   ];
 }

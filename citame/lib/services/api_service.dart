@@ -64,7 +64,9 @@ abstract class API {
       double salary,
       String horario,
       String businessName,
-      String email) async {
+      String email,
+      BuildContext context,
+      String puesto) async {
     String imgConv = await API.convertTo64(imgPath);
     Uint8List casi = API.decode64(imgConv);
     List<int> imagen = casi.toList();
@@ -79,6 +81,7 @@ abstract class API {
           'salary': salary,
           'horario': horario,
           'status': false,
+          'puesto': puesto,
         }));
     if (response.statusCode == 201) {
       API.updateWorkersInBusiness(businessName, email, workerEmail);
@@ -86,6 +89,11 @@ abstract class API {
     }
 
     if (response.statusCode == 202) return 'Todo ok';
+    if (response.statusCode == 203) {
+      API.mensaje(
+          context, 'Aviso', 'El correo no está registrado en la aplicación');
+    }
+
     throw Exception('Failed to add item');
   }
 
@@ -259,6 +267,17 @@ abstract class API {
     throw Exception('Failed to get items');
   }
 
+  static Future<List<dynamic>> getWorkers(
+      String googleId, String businessName) async {
+    final response = await http.get(Uri.parse('$serverUrl/api/user/get'),
+        headers: {'googleId': googleId, 'businessName': businessName});
+    if (response.statusCode == 200) {
+      final List<dynamic> workerList = jsonDecode(response.body);
+      return workerList;
+    }
+    throw Exception('Failed to get items');
+  }
+
   static Future<List<String>> getAllUsers() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final response = await http.get(Uri.parse('$serverUrl/api/user/get/all'),
@@ -398,6 +417,19 @@ abstract class API {
                     child: Text('Gracias')),
               ],
             ));
+  }
+
+  static mensaje2(BuildContext context, String titulo) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          Future.delayed(Duration(seconds: 1), () {
+            Navigator.of(context).pop(true);
+          });
+          return AlertDialog(
+            title: Text(titulo),
+          );
+        });
   }
 
   static cambiarHorario(
