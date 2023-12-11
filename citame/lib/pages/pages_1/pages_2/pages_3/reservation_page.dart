@@ -35,7 +35,7 @@ class ReservationPage extends ConsumerWidget {
             color: Color.fromRGBO(240, 240, 240, 1),
             child: ListView(
               children: [
-                WorkerBox(ruta: ruta, ref: ref),
+                //  WorkerBox(ruta: ruta, ref: ref),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 16, 0, 0),
                   child: Column(

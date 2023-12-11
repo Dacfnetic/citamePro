@@ -5,8 +5,13 @@ const workers = require('../../models/worker.model.js');
 
 async function postWorkers(req,res){
     try{
+<<<<<<< HEAD:citame_back/src/routes/business/worker.controller.js
         let existe = true;
         business.findOne({email: req.body.email})
+=======
+        /* let existe = true;
+        workers.findOne({email: req.body.email})
+>>>>>>> 1a78631bdd8856ec18ee30a0bd9b5556ac20bfce:citame_back/src/routes/workers/worker.controller.js
         .then(async (docs)=>{
             if(docs == null){
                 existe = false;
@@ -23,7 +28,8 @@ async function postWorkers(req,res){
                     imgPath:req.body.imgPath,
                     salary :req.body.salary,
                     horario:req.body.horario,
-                    status: req.body.status
+                    status: req.body.status,
+                    puesto: req.body.puesto
                 });
                 return res.status(201).send({'sms':'Trabajador creado'});
             }
@@ -34,6 +40,9 @@ async function postWorkers(req,res){
     }  
 }
 
+async function deleteWorkers(req,res){
+    
+}
 
 module.exports  = {
 

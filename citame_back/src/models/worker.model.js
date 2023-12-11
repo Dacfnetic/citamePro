@@ -9,7 +9,8 @@ const workerSchema = new Schema({
     imgPath:[[Number]],
     salary :{type: Number},
     horario: {type: String},
-    status: {type: Boolean}
+    status: {type: Boolean},
+    puesto: {type:String}
 });
 
 module.exports = model('worker',workerSchema);

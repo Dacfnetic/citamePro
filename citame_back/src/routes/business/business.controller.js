@@ -82,6 +82,8 @@ async function postBusiness(req,res){
                     longitude: req.body.longitude,
                     description: req.body.description,
                     imgPath: req.body.imgPath,
+                    horario: req.body.horario,
+                    servicios: req.body.servicios
                 });
                 return res.status(201).send("Negocio creado");
         });
