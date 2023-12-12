@@ -136,8 +136,6 @@ class ProfileInsidePage extends ConsumerWidget {
                                     prefs.getString('emailUser')!,
                                     context,
                                     workerJob.text);
-                                API.mensaje(context, 'Aviso',
-                                    'La solicitud fue enviada al trabajador');
                               }
                             }
                           },

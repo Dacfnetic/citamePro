@@ -1,22 +1,27 @@
-import 'dart:io';
+import 'dart:typed_data';
 
+import 'package:citame/models/worker_moder.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-/*
+
 class WorkerBox extends StatelessWidget {
   const WorkerBox({
     super.key,
     required this.worker,
     required this.ref,
+    required this.imagen,
   });
-  final Map worker;
-
+  final Worker worker;
+  final List<int> imagen;
   final WidgetRef ref;
   @override
   Widget build(BuildContext context) {
+    Uint8List esta = Uint8List.fromList(imagen);
+    String horas = worker.horario;
     return Container(
       margin: EdgeInsets.fromLTRB(0, 1, 0, 0),
+      //height: 300,
       //padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
       decoration: BoxDecoration(color: Colors.white, boxShadow: [
         BoxShadow(
@@ -41,14 +46,14 @@ class WorkerBox extends StatelessWidget {
               width: 90,
               child: TextButton(
                 child: ClipRRect(
-                    borderRadius: BorderRadius.circular(16),
-                    child: worker.ruta != ''
-                        ? Image.file(
-                            File(worker.ruta),
-                            width: double.infinity,
-                            fit: BoxFit.cover,
-                          )
-                        : Text('')),
+                  borderRadius: BorderRadius.circular(16),
+                  child: Image.memory(
+                    esta,
+                    width: double.infinity,
+                    height: 230,
+                    fit: BoxFit.cover,
+                  ),
+                ),
                 onPressed: () {
                   API.pickImageFromGallery(ref);
                 },
@@ -59,8 +64,8 @@ class WorkerBox extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Nombre del worker', style: API.estiloJ16negro),
-                Text('Horarios del worker', style: API.estiloJ14gris),
+                Text(worker.name, style: API.estiloJ16negro),
+                Text(horas, style: API.estiloJ14gris),
               ],
             ),
           ),
@@ -72,4 +77,3 @@ class WorkerBox extends StatelessWidget {
     );
   }
 }
-*/
