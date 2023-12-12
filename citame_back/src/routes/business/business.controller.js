@@ -160,7 +160,6 @@ async function updateWorkers(req,res){
         const filtro = req.body.idWorker;
         const arrayWorker = [item].filter(e => e !== filtro);
       
-        
 
         const modificaciones = {workers: arrayWorker};
         //console.log('Si prro');

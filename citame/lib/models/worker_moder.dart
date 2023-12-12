@@ -38,7 +38,7 @@ class Worker {
     return Worker(
       name: json['name'],
       email: json['email'],
-      imgPath: json['imgPath'],
+      imgPath: json['imgPath'].cast<int>(),
       salary: json['salary'],
       horario: json['horario'],
       status: json['status'],

@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:citame/Widgets/cuadro.dart';
 import 'package:citame/models/worker_moder.dart';
 import 'package:citame/providers/img_provider.dart';
@@ -19,7 +18,9 @@ class ProfileInsidePage extends ConsumerWidget {
 
   final TextEditingController workerName = TextEditingController();
   final TextEditingController workerEmail = TextEditingController();
-  final GlobalKey<FormState> signUpKey = GlobalKey<FormState>();
+  final TextEditingController workerJob = TextEditingController();
+  final GlobalKey<FormState> signUpKey =
+      GlobalKey<FormState>(); //llave global del form para validaciones
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -83,12 +84,26 @@ class ProfileInsidePage extends ConsumerWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Cuadro(
-                                control: workerName,
-                                texto: 'Nombre del trabajador'),
-                            Cuadro(
-                                control: workerEmail,
-                                texto: 'Email del trabajador'),
+                            Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Albert Einstein",
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                TextButton(
+                                    onPressed: () {}, child: Text("edit")),
+                              ],
+                            ),
+                            Text("Einstein@gmail.com"),
+                            Text(
+                              "Barbero",
+                              style:
+                                  TextStyle(fontSize: 12, color: Colors.grey),
+                            )
                           ],
                         ),
                       ),
@@ -122,14 +137,18 @@ class ProfileInsidePage extends ConsumerWidget {
                                 await SharedPreferences.getInstance();
                             var enviar = jsonEncode(horas.toJson().toString());
                             if (signUpKey.currentState!.validate()) {
-                              API.postWorker(
-                                  workerName.text,
-                                  workerEmail.text,
-                                  ref.read(imgProvider),
-                                  500.50,
-                                  enviar,
-                                  ref.read(actualBusinessProvider),
-                                  prefs.getString('emailUser')!);
+                              if (context.mounted) {
+                                API.postWorker(
+                                    workerName.text,
+                                    workerEmail.text,
+                                    ref.read(imgProvider),
+                                    500.50,
+                                    enviar,
+                                    ref.read(actualBusinessProvider),
+                                    prefs.getString('emailUser')!,
+                                    context,
+                                    workerJob.text);
+                              }
                             }
                           },
                           child: Text('Agregar trabajador')),
@@ -187,34 +206,36 @@ class ContenedorDeHorario extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-          color: Colors.blueGrey, borderRadius: BorderRadius.circular(10)),
+          color: Color.fromARGB(255, 255, 255, 255),
+          borderRadius: BorderRadius.circular(12)),
       width: double.infinity,
       margin: EdgeInsets.fromLTRB(0, 5, 15, 5),
       child: Column(
         children: [
           Container(
             //width: double.infinity,
-            color: Colors.orange,
+
             child: Text(day.toUpperCase()),
           ),
           Column(children: obtenerHorario(day, horario)),
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               ElevatedButton(
                 onPressed: () async {
                   getSchedule(day);
                 },
-                child: Text('+'),
+                child: Icon(Icons.add),
               ),
               ElevatedButton(
                 onPressed: () async {
                   ref
                       .read(myBusinessStateProvider.notifier)
                       .copiarHorariosWorker(day);
-                  ref.read(reRenderProvider.notifier).reRender();
+                  API.mensaje2(context, 'Horario copiado');
                 },
-                child: Text('C'),
+                child: Icon(Icons.copy),
               ),
               ElevatedButton(
                 onPressed: () async {
@@ -223,7 +244,16 @@ class ContenedorDeHorario extends StatelessWidget {
                       .pegarHorariosWorker(day);
                   ref.read(reRenderProvider.notifier).reRender();
                 },
-                child: Text('P'),
+                child: Icon(Icons.paste),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  ref
+                      .read(myBusinessStateProvider.notifier)
+                      .borrarDiaWorker(day);
+                  ref.read(reRenderProvider.notifier).reRender();
+                },
+                child: Icon(Icons.delete),
               )
             ],
           )

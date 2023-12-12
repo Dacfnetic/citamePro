@@ -1,17 +1,10 @@
-import 'dart:convert';
-import 'dart:io';
-
-import 'package:citame/Widgets/cuadro.dart';
 import 'package:citame/models/worker_moder.dart';
 import 'package:citame/providers/img_provider.dart';
-import 'package:citame/providers/my_actual_business_provider.dart';
 import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:citame/providers/re_render_provider.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ReservationPage extends ConsumerWidget {
   ReservationPage({
@@ -24,11 +17,13 @@ class ReservationPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    List workers = ref.read(myBusinessStateProvider.notifier).obtenerWorkers();
     String ruta = ref.watch(imgProvider);
     bool reRender = ref.watch(reRenderProvider);
     Map horario =
         ref.watch(myBusinessStateProvider.notifier).obtenerDiasWorker();
     Schedule horas = Schedule(horario: horario);
+
     print(TimeOfDay.now().format(context));
 
     return Scaffold(
@@ -40,63 +35,7 @@ class ReservationPage extends ConsumerWidget {
             color: Color.fromRGBO(240, 240, 240, 1),
             child: ListView(
               children: [
-                Container(
-                  margin: EdgeInsets.fromLTRB(0, 1, 0, 0),
-                  //padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
-                  decoration: BoxDecoration(color: Colors.white, boxShadow: [
-                    BoxShadow(
-                      color: Colors.black,
-                    )
-                  ]),
-                  child: Row(
-                    children: [
-                      Container(
-                        margin: EdgeInsets.all(16),
-                        alignment: Alignment.centerLeft,
-                        decoration: BoxDecoration(
-                          color: Color(0x4d39d2c0),
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: Color(0xff39d2c0),
-                            width: 2,
-                          ),
-                        ),
-                        child: SizedBox(
-                          height: 90,
-                          width: 90,
-                          child: TextButton(
-                            child: ClipRRect(
-                                borderRadius: BorderRadius.circular(16),
-                                child: ruta != ''
-                                    ? Image.file(
-                                        File(ruta),
-                                        width: double.infinity,
-                                        fit: BoxFit.cover,
-                                      )
-                                    : Text('')),
-                            onPressed: () {
-                              API.pickImageFromGallery(ref);
-                            },
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Nombre del worker',
-                                style: API.estiloJ16negro),
-                            Text('Horarios del worker',
-                                style: API.estiloJ14gris),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        width: 15,
-                      )
-                    ],
-                  ),
-                ),
+                //  WorkerBox(ruta: ruta, ref: ref),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 16, 0, 0),
                   child: Column(

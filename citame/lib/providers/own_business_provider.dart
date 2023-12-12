@@ -57,6 +57,7 @@ class BusinessListNotifier extends StateNotifier<List<BusinessCard>> {
           rating: 5.0,
           imagen: e.imgPath,
           description: e.description,
+          email: e.email,
         ));
       }).toList();
       if (state.length != negocios.length) {

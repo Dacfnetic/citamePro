@@ -5,6 +5,7 @@ import 'package:citame/Widgets/cuadro.dart';
 import 'package:citame/firebase_options.dart';
 import 'package:citame/models/business_model.dart';
 import 'package:citame/models/user_model.dart';
+import 'package:citame/models/worker_moder.dart';
 import 'package:citame/pages/pages_1/pages_2/business_registration_page.dart';
 import 'package:citame/providers/img_provider.dart';
 import 'package:citame/providers/my_business_state_provider.dart';
@@ -18,6 +19,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 String serverUrl = 'https://ubuntu.citame.store';
 FirebaseAuth auth = FirebaseAuth.instance;
@@ -64,28 +66,43 @@ abstract class API {
       double salary,
       String horario,
       String businessName,
-      String email) async {
+      String email,
+      BuildContext context,
+      String puesto) async {
     String imgConv = await API.convertTo64(imgPath);
     Uint8List casi = API.decode64(imgConv);
     List<int> imagen = casi.toList();
 
-    final response = await http.post(
-        Uri.parse('$serverUrl/api/workers/create'), //TODO:Cambiar Ruta
+    final response = await http.post(Uri.parse('$serverUrl/api/workers/create'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'name': name,
           'email': workerEmail,
+          'businessName': businessName,
+          'businessEmail': email,
           'imgPath': imagen,
           'salary': salary,
           'horario': horario,
           'status': false,
+          'puesto': puesto,
         }));
     if (response.statusCode == 201) {
+      API.mensaje(context, 'Aviso', 'La solicitud fue enviada al trabajador');
       API.updateWorkersInBusiness(businessName, email, workerEmail);
       return 'Todo ok';
     }
 
-    if (response.statusCode == 202) return 'Todo ok';
+    if (response.statusCode == 202) {
+      API.mensaje(
+          context, 'Aviso', 'El correo no está registrado en la aplicación');
+      return 'Todo ok';
+    }
+    if (response.statusCode == 203) {
+      API.mensaje(
+          context, 'Aviso', 'El correo ya está asignado a este negocio');
+      return 'Todo ok';
+    }
+
     throw Exception('Failed to add item');
   }
 
@@ -118,6 +135,7 @@ abstract class API {
         }));
     if (response.statusCode == 201) return 'Todo ok';
     if (response.statusCode == 202) return 'Todo ok';
+
     throw Exception('Failed to add item');
   }
 
@@ -259,6 +277,28 @@ abstract class API {
     throw Exception('Failed to get items');
   }
 
+  static Future<List<Worker>> getWorkers(
+      String email, String businessName) async {
+    final response = await http.get(Uri.parse('$serverUrl/api/workers/get'),
+        headers: {'businessEmail': email, 'businessName': businessName});
+    if (response.statusCode == 200) {
+      final List<dynamic> workerList = jsonDecode(response.body);
+      final List<Worker> trabajadores = workerList.map((trabajador) {
+        Worker negocio = Worker.fromJson(trabajador);
+        return negocio;
+      }).toList();
+      return trabajadores;
+    }
+    if (response.statusCode == 201) {
+      return [];
+    }
+    throw Exception('Failed to get items');
+  }
+
+  static reRender(WidgetRef ref) {
+    ref.read(reRenderProvider.notifier).reRender();
+  }
+
   static Future<List<String>> getAllUsers() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final response = await http.get(Uri.parse('$serverUrl/api/user/get/all'),
@@ -335,7 +375,6 @@ abstract class API {
     Uint8List imagebytes = await imagefile.readAsBytes(); //convert to bytes
     String base64string =
         base64.encode(imagebytes); //convert bytes to base64 string
-    print(base64string);
     return base64string;
   }
 
@@ -398,6 +437,34 @@ abstract class API {
                     child: Text('Gracias')),
               ],
             ));
+  }
+
+  static mensaje2(BuildContext context, String titulo) {
+    FToast fToast = FToast();
+
+    fToast.init(context);
+
+    _showToast() {
+      Widget toast = Container(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25.0),
+          color: Colors.black.withOpacity(0.7),
+        ),
+        child: Text(
+          titulo,
+          style: TextStyle(color: Colors.white),
+        ),
+      );
+
+      fToast.showToast(
+        child: toast,
+        gravity: ToastGravity.BOTTOM,
+        toastDuration: Duration(seconds: 2),
+      );
+    }
+
+    _showToast();
   }
 
   static cambiarHorario(
