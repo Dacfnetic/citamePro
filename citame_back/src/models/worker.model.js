@@ -6,7 +6,7 @@ const workerSchema = new Schema({
     id: {type:mongoose.Schema.Types.ObjectId, ref:'usuario',required:true},
     name: {type: String, required: true},
     email: {type: String, required: true},
-    imgPath:[[Number]],
+    imgPath:[Number],
     salary :{type: Number},
     horario: {type: String},
     status: {type: Boolean},
