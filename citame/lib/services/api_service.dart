@@ -18,6 +18,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 String serverUrl = 'https://ubuntu.citame.store';
 FirebaseAuth auth = FirebaseAuth.instance;
@@ -420,16 +421,14 @@ abstract class API {
   }
 
   static mensaje2(BuildContext context, String titulo) {
-    showDialog(
-        context: context,
-        builder: (context) {
-          Future.delayed(Duration(seconds: 1), () {
-            Navigator.of(context).pop(true);
-          });
-          return AlertDialog(
-            title: Text(titulo),
-          );
-        });
+    Fluttertoast.showToast(
+        msg: titulo,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
   }
 
   static cambiarHorario(
