@@ -16,6 +16,43 @@ async function postWorkers(req,res){
        
         
 
+        const workersEmail = worker.map(async (e)=>{ 
+                
+            await workersModel.find({id : e}).then((docs) =>{
+                    return docs.email;
+                });
+              
+            
+            });
+        const workerExist = workersEmail.has(req.body.email);
+
+
+        if (workerExist == true){
+            return res.status(202).send('El trabajador ya esta en el negocio');
+        }
+        
+            usuario.findOne({emailUser: req.body.email})
+            .then(async (docs)=>{
+            if(docs != null){
+                console.log('Creando Trabajador');
+                await workersModel.create({
+                    id: docs._id,
+                    name: req.body.name,
+                    email: req.body.email,
+                    imgPath:req.body.imgPath,
+                    salary :req.body.salary,
+                    horario:req.body.horario,
+                    status: req.body.status,
+                    puesto: req.body.puesto
+                });
+                return res.status(201).send({'sms':'Trabajador creado'});
+            }
+               
+            });
+
+        
+
+
         if(worker.length == 0){
             await usuario.findOne({emailUser: req.body.email})
                 .then(async (docs)=>{
@@ -71,9 +108,10 @@ async function postWorkers(req,res){
             });   
         }
                    
+
         
     }catch(e){
-        return res.status(404).json('Errosillo');
+        return res.status(404).json('Error Catastrofico, no se que paso');
     }; 
 
 }
@@ -95,7 +133,7 @@ async function getWorkers(req,res){
         let trabajadores = []
         let contador = 0;
 
-        await worker.forEach(async (e)=> {
+        worker.forEach(async (e)=> {
 
             const trabajador = await workersModel.findOne({id : e});
 
@@ -119,8 +157,22 @@ async function getWorkers(req,res){
 
 }
 
-
 async function deleteWorkers(req,res){
+
+    try {
+        
+        
+        //Borrar modelo
+        await workersModel.findByIdAndDelete({id: req.body.idWorker})
+        return res.status(200).json({message: 'Todo ok'});
+
+
+    } catch (e) {
+        return res.status(404).json('Error Catastrofico, no se que paso');
+    }
+
+
+
 
 }
 
