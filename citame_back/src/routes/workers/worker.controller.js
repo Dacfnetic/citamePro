@@ -21,14 +21,14 @@ async function postWorkers(req,res){
                 });
               
             
-            })
+            });
         const workerExist = workersEmail.has(req.body.email);
 
 
         if (workerExist == true){
             return res.status(202).send('El trabajador ya esta en el negocio');
-        }else {
-
+        }
+        
             usuario.findOne({emailUser: req.body.email})
             .then(async (docs)=>{
             if(docs != null){
@@ -48,20 +48,33 @@ async function postWorkers(req,res){
                
             });
 
-        }
+        
         
     }catch(e){
-        return res.status(404).json('Errosillo');
+        return res.status(404).json('Error Catastrofico, no se que paso');
     }; 
 
 }
 
 async function deleteWorkers(req,res){
 
+    try {
+        
+        
+        //Borrar modelo
+        await workersModel.findByIdAndDelete({id: req.body.idWorker})
+        return res.status(200).json({message: 'Todo ok'});
+
+
+    } catch (e) {
+        return res.status(404).json('Error Catastrofico, no se que paso');
+    }
 
 
 
 }
+
+
 
 module.exports  = {
 
