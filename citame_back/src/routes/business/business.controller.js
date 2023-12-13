@@ -145,7 +145,28 @@ async function updateBusiness(req,res){
 
 }
 
+async function updateWorkers(req,res){
+    let item = [];
+    let previousWorkers = '';
+        let bId = '';
+        await business.findOne({businessName: req.body.businessName, email: req.body.email})
+            .then((docs) => {
+                previousWorkers = docs.workers;
+                bId = docs._id.toString();
+                console.log(docs);
+        });
+         item = JSON.parse(JSON.stringify(previousWorkers));
 
+        const filtro = req.body.idWorker;
+        const arrayWorker = [item].filter(e => e !== filtro);
+      
+
+        const modificaciones = {workers: arrayWorker};
+        //console.log('Si prro');
+        let resultado = await business.findByIdAndUpdate(bId,{$set:modificaciones});
+        console.log(resultado);
+
+}
 
 //Exportar funciones
 module.exports = {
@@ -154,5 +175,6 @@ module.exports = {
     postBusiness,
     verifyOwnerBusiness,
     deleteBusiness,
-    updateBusiness
+    updateBusiness,
+    updateWorkers
 }

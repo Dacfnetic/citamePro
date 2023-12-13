@@ -11,11 +11,11 @@ const servicesRouter = require('./routes/services/services.router.js');
 const app = express();
 //Informacion del servidor
 app.use(cors());
-app.use(bodyParser.json({ limit: "50mb" }));
-app.use(bodyParser.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 }));
+app.use(bodyParser.json({ limit: "500mb" }));
+app.use(bodyParser.urlencoded({ limit: "500mb", extended: true, parameterLimit: 500000 }));
 app.use(usersRouter);
 app.use(businessRouter);
 app.use(workersRouter);
-app.use(servicesRouter);
+//app.use(servicesRouter);
 //Exportación de aplicación express
 module.exports = app;

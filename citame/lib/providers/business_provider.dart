@@ -66,7 +66,7 @@ class BusinessListNotifier extends StateNotifier<List<BusinessCard>> {
         rating: 5.0,
         imagen: e.imgPath,
         description: e.description,
-        googleId: e.email,
+        email: e.email,
       ));
     }).toList();
     state = negocios;
@@ -89,7 +89,7 @@ void agregarNegocio(
       rating: rating,
       imagen: imagen,
       description: 'x',
-      googleId: email,
+      email: email,
     )
   ];
 }

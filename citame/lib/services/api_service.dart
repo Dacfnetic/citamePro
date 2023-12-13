@@ -5,6 +5,7 @@ import 'package:citame/Widgets/cuadro.dart';
 import 'package:citame/firebase_options.dart';
 import 'package:citame/models/business_model.dart';
 import 'package:citame/models/user_model.dart';
+import 'package:citame/models/worker_moder.dart';
 import 'package:citame/pages/pages_1/pages_2/business_registration_page.dart';
 import 'package:citame/providers/img_provider.dart';
 import 'package:citame/providers/my_business_state_provider.dart';
@@ -72,12 +73,13 @@ abstract class API {
     Uint8List casi = API.decode64(imgConv);
     List<int> imagen = casi.toList();
 
-    final response = await http.post(
-        Uri.parse('$serverUrl/api/workers/create'), //TODO:Cambiar Ruta
+    final response = await http.post(Uri.parse('$serverUrl/api/workers/create'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'name': name,
           'email': workerEmail,
+          'businessName': businessName,
+          'businessEmail': email,
           'imgPath': imagen,
           'salary': salary,
           'horario': horario,
@@ -85,14 +87,20 @@ abstract class API {
           'puesto': puesto,
         }));
     if (response.statusCode == 201) {
+      API.mensaje(context, 'Aviso', 'La solicitud fue enviada al trabajador');
       API.updateWorkersInBusiness(businessName, email, workerEmail);
       return 'Todo ok';
     }
 
-    if (response.statusCode == 202) return 'Todo ok';
-    if (response.statusCode == 203) {
+    if (response.statusCode == 202) {
       API.mensaje(
           context, 'Aviso', 'El correo no está registrado en la aplicación');
+      return 'Todo ok';
+    }
+    if (response.statusCode == 203) {
+      API.mensaje(
+          context, 'Aviso', 'El correo ya está asignado a este negocio');
+      return 'Todo ok';
     }
 
     throw Exception('Failed to add item');
@@ -127,6 +135,7 @@ abstract class API {
         }));
     if (response.statusCode == 201) return 'Todo ok';
     if (response.statusCode == 202) return 'Todo ok';
+
     throw Exception('Failed to add item');
   }
 
@@ -268,15 +277,26 @@ abstract class API {
     throw Exception('Failed to get items');
   }
 
-  static Future<List<dynamic>> getWorkers(
-      String googleId, String businessName) async {
-    final response = await http.get(Uri.parse('$serverUrl/api/user/get'),
-        headers: {'googleId': googleId, 'businessName': businessName});
+  static Future<List<Worker>> getWorkers(
+      String email, String businessName) async {
+    final response = await http.get(Uri.parse('$serverUrl/api/workers/get'),
+        headers: {'businessEmail': email, 'businessName': businessName});
     if (response.statusCode == 200) {
       final List<dynamic> workerList = jsonDecode(response.body);
-      return workerList;
+      final List<Worker> trabajadores = workerList.map((trabajador) {
+        Worker negocio = Worker.fromJson(trabajador);
+        return negocio;
+      }).toList();
+      return trabajadores;
+    }
+    if (response.statusCode == 201) {
+      return [];
     }
     throw Exception('Failed to get items');
+  }
+
+  static reRender(WidgetRef ref) {
+    ref.read(reRenderProvider.notifier).reRender();
   }
 
   static Future<List<String>> getAllUsers() async {
@@ -355,7 +375,6 @@ abstract class API {
     Uint8List imagebytes = await imagefile.readAsBytes(); //convert to bytes
     String base64string =
         base64.encode(imagebytes); //convert bytes to base64 string
-    print(base64string);
     return base64string;
   }
 

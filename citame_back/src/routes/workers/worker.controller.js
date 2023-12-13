@@ -1,27 +1,41 @@
 //Importación de modelos de objetos
 const usuario = require('../../models/users.model.js');
 const business = require('../../models/business.model.js');
-const workers = require('../../models/worker.model.js');
+const workersModel = require('../../models/worker.model.js');
 
 async function postWorkers(req,res){
-    try{
-<<<<<<< HEAD:citame_back/src/routes/business/worker.controller.js
+    try{       
         let existe = true;
-        business.findOne({email: req.body.email})
-=======
-        /* let existe = true;
-        workers.findOne({email: req.body.email})
->>>>>>> 1a78631bdd8856ec18ee30a0bd9b5556ac20bfce:citame_back/src/routes/workers/worker.controller.js
-        .then(async (docs)=>{
-            if(docs == null){
-                existe = false;
+        let worker = [];  
+        await business.findOne({businessName: req.body.businessName, email: req.body.businessEmail})
+            .then((docs) => {
+                if(docs != null){
+                    worker = JSON.parse(JSON.stringify(docs.workers)); //id mongo 
         }});
-        //if(existe) return res.status(201).send('El worker ya esta en el negocio');
-        usuario.findOne({emailUser: req.body.email})
-        .then(async (docs)=>{
+        let contador = 0;
+       
+        
+
+        const workersEmail = worker.map(async (e)=>{ 
+                
+            await workersModel.find({id : e}).then((docs) =>{
+                    return docs.email;
+                });
+              
+            
+            });
+        const workerExist = workersEmail.has(req.body.email);
+
+
+        if (workerExist == true){
+            return res.status(202).send('El trabajador ya esta en el negocio');
+        }
+        
+            usuario.findOne({emailUser: req.body.email})
+            .then(async (docs)=>{
             if(docs != null){
                 console.log('Creando Trabajador');
-                await workers.create({
+                await workersModel.create({
                     id: docs._id,
                     name: req.body.name,
                     email: req.body.email,
@@ -33,19 +47,139 @@ async function postWorkers(req,res){
                 });
                 return res.status(201).send({'sms':'Trabajador creado'});
             }
-            return res.status(202).send({'sms': 'El Trabajador ya existe'});//Cambiar porque est[a raro]
-        });
+               
+            });
+
+        
+
+
+        if(worker.length == 0){
+            await usuario.findOne({emailUser: req.body.email})
+                .then(async (docs)=>{
+                    if(docs != null){
+                        console.log('Creando Trabajador');
+                        await workersModel.create({
+                            id: docs._id,
+                            name: req.body.name,
+                            email: req.body.email,
+                            imgPath:req.body.imgPath,
+                            salary :req.body.salary,
+                            horario:req.body.horario,
+                            status: req.body.status,
+                            puesto: req.body.puesto
+                        });
+                    return res.status(201).send({'sms':'Trabajador creado'});
+                    }
+                return res.status(202).send('Correo no registrado');
+            });
+        }
+
+
+        if(worker.length != 0){
+            await worker.forEach(async (e)=> {
+                await workersModel.findOne({id : e}).then(async (docs) =>{
+                    console.log(docs.email);
+                    if(docs.email == req.body.email){
+                        return res.status(203).send('El trabajador ya esta en el negocio');
+                    }
+                    contador += 1;
+                    if(contador == worker.length){
+                        await usuario.findOne({emailUser: req.body.email})
+                        .then(async (docs)=>{
+                            if(docs != null){
+                                console.log('Creando Trabajador');
+                                await workersModel.create({
+                                    id: docs._id,
+                                    name: req.body.name,
+                                    email: req.body.email,
+                                    imgPath:req.body.imgPath,
+                                    salary :req.body.salary,
+                                    horario:req.body.horario,
+                                    status: req.body.status,
+                                    puesto: req.body.puesto
+                        });
+                    return res.status(201).send({'sms':'Trabajador creado'});
+                }
+                return res.status(202).send('Correo no registrado');
+                });
+    
+                }
+                });           
+            });   
+        }
+                   
+
+        
     }catch(e){
-        return res.status(404).json('Errosillo');
-    }  
+        return res.status(404).json('Error Catastrofico, no se que paso');
+    }; 
+
+}
+
+async function getWorkers(req,res){
+
+    try{
+
+        let worker = [];
+        await business.findOne({businessName: req.get('businessName'), email: req.get('businessEmail')})
+        .then((docs) => {
+            if(docs != null){
+                worker = JSON.parse(JSON.stringify(docs.workers)); //id mongo 
+            }else{
+                return res.status(201).send('No hay trabajadores');
+            }
+        });
+
+        let trabajadores = []
+        let contador = 0;
+
+        worker.forEach(async (e)=> {
+
+            const trabajador = await workersModel.findOne({id : e});
+
+            trabajadores.push(trabajador);
+
+            contador += 1;
+            if(contador == worker.length){
+                return res.status(200).json(trabajadores);
+            }
+
+    
+        });
+                            
+    
+
+    }catch(e){
+
+        return res.status(404).json('Errorsillo');
+
+    }
+
 }
 
 async function deleteWorkers(req,res){
-    
+
+    try {
+        
+        
+        //Borrar modelo
+        await workersModel.findByIdAndDelete({id: req.body.idWorker})
+        return res.status(200).json({message: 'Todo ok'});
+
+
+    } catch (e) {
+        return res.status(404).json('Error Catastrofico, no se que paso');
+    }
+
+
+
+
 }
 
 module.exports  = {
 
-    postWorkers
+    getWorkers,
+    postWorkers,
+    deleteWorkers
 
 }

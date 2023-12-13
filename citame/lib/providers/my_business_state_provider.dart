@@ -1,4 +1,5 @@
 import 'package:citame/models/business_model.dart';
+import 'package:citame/models/worker_moder.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,11 +16,12 @@ class MyBusinessStateNotifier extends StateNotifier<List<Business>> {
     state = myBusiness;
   }
 
-  void establecerWorkers(email, nombre) async {
+  void establecerWorkers(email, nombre, ref) async {
     workers = await API.getWorkers(email, nombre);
+    API.reRender(ref);
   }
 
-  List obtenerWorkers() {
+  List<Worker> obtenerWorkers() {
     return workers;
   }
 
@@ -96,6 +98,6 @@ Map workerDaysAvailable = {
   'domingo': [],
 };
 
-List workers = [];
+List<Worker> workers = [];
 
 List papelera = [];

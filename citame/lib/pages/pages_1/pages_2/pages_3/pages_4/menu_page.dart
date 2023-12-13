@@ -1,4 +1,5 @@
 import 'package:citame/Widgets/worker.dart';
+import 'package:citame/models/worker_moder.dart';
 import 'package:citame/pages/pages_1/pages_2/pages_3/pages_4/pages_5/profile_inside.dart';
 import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:citame/providers/re_render_provider.dart';
@@ -14,11 +15,12 @@ class MenuPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     bool r = ref.watch(reRenderProvider);
-
     ReRenderNotifier reRender = ref.read(reRenderProvider.notifier);
-    List workers = ref.watch(myBusinessStateProvider.notifier).obtenerWorkers();
-    /* List<WorkerBox> trabajadores =
-        workers.map((e) => WorkerBox(worker: e, ref: ref)).toList();*/
+    List<Worker> workers =
+        ref.watch(myBusinessStateProvider.notifier).obtenerWorkers();
+    List<WorkerBox> trabajadores = workers
+        .map((e) => WorkerBox(worker: e, ref: ref, imagen: e.imgPath))
+        .toList();
 
     return Scaffold(
       body: SafeArea(
@@ -148,7 +150,9 @@ class MenuPage extends ConsumerWidget {
               Text(
                   'Crea los perfiles de tu personal para que tus clientes puedan conocerlos.',
                   style: API.estiloJ14gris),
-              //  ListView(children: trabajadores),
+              workers.length != 0
+                  ? ListView(shrinkWrap: true, children: trabajadores)
+                  : Container(),
               ElevatedButton.icon(
                 onPressed: () {
                   Navigator.push(

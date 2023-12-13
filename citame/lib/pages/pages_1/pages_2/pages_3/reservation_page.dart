@@ -1,4 +1,3 @@
-import 'package:citame/Widgets/worker.dart';
 import 'package:citame/models/worker_moder.dart';
 import 'package:citame/providers/img_provider.dart';
 import 'package:citame/providers/my_business_state_provider.dart';
@@ -24,6 +23,7 @@ class ReservationPage extends ConsumerWidget {
     Map horario =
         ref.watch(myBusinessStateProvider.notifier).obtenerDiasWorker();
     Schedule horas = Schedule(horario: horario);
+
     print(TimeOfDay.now().format(context));
 
     return Scaffold(

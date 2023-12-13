@@ -1,8 +1,12 @@
 import 'dart:typed_data';
 
 import 'package:citame/Widgets/business_card.dart';
+import 'package:citame/Widgets/worker.dart';
+import 'package:citame/models/worker_moder.dart';
 import 'package:citame/pages/pages_1/pages_2/pages_3/reservation_page.dart';
+import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:citame/providers/own_business_provider.dart';
+import 'package:citame/providers/re_render_provider.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,6 +24,14 @@ class BusinessInsidePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     List<BusinessCard> negocios = ref.watch(ownBusinessProvider);
+
+    bool r = ref.watch(reRenderProvider);
+    ReRenderNotifier reRender = ref.read(reRenderProvider.notifier);
+    List<Worker> workers =
+        ref.watch(myBusinessStateProvider.notifier).obtenerWorkers();
+    List<WorkerBox> trabajadores = workers
+        .map((e) => WorkerBox(worker: e, ref: ref, imagen: e.imgPath))
+        .toList();
     return Scaffold(
       appBar: AppBar(),
       body: SafeArea(
@@ -48,6 +60,9 @@ class BusinessInsidePage extends ConsumerWidget {
                 Text(
                     'Cargar desde backend tenemos que cambiar el modelo de negocio para agregarle los servicios',
                     style: API.estiloJ16negro),
+                workers.length != 0
+                    ? ListView(shrinkWrap: true, children: trabajadores)
+                    : Container(),
                 TextButton(
                   onPressed: () {
                     Navigator.push(
