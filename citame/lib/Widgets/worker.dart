@@ -1,11 +1,12 @@
 import 'dart:typed_data';
 
 import 'package:citame/models/worker_moder.dart';
+import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class WorkerBox extends StatelessWidget {
+class WorkerBox extends ConsumerWidget {
   const WorkerBox({
     super.key,
     required this.worker,
@@ -15,8 +16,9 @@ class WorkerBox extends StatelessWidget {
   final Worker worker;
   final List<int> imagen;
   final WidgetRef ref;
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     Uint8List esta = Uint8List.fromList(imagen);
     String horas = worker.horario;
     return Container(
@@ -71,7 +73,19 @@ class WorkerBox extends StatelessWidget {
           ),
           SizedBox(
             width: 15,
-          )
+          ),
+          ElevatedButton(
+              onPressed: () {
+                API.deleteWorkerInBusiness(
+                  ref
+                      .read(myBusinessStateProvider.notifier)
+                      .getActualBusiness(),
+                  ref.read(myBusinessStateProvider.notifier).getActualEmail(),
+                  worker.id,
+                  worker.idWorker,
+                );
+              },
+              child: Text('Borrar')),
         ],
       ),
     );

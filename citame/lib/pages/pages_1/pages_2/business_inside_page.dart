@@ -30,7 +30,11 @@ class BusinessInsidePage extends ConsumerWidget {
     List<Worker> workers =
         ref.watch(myBusinessStateProvider.notifier).obtenerWorkers();
     List<WorkerBox> trabajadores = workers
-        .map((e) => WorkerBox(worker: e, ref: ref, imagen: e.imgPath))
+        .map((e) => WorkerBox(
+              worker: e,
+              ref: ref,
+              imagen: e.imgPath,
+            ))
         .toList();
     return Scaffold(
       appBar: AppBar(),

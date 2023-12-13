@@ -139,15 +139,15 @@ class ProfileInsidePage extends ConsumerWidget {
                             if (signUpKey.currentState!.validate()) {
                               if (context.mounted) {
                                 API.postWorker(
-                                    workerName.text,
-                                    workerEmail.text,
+                                    'Diego',
+                                    'dacf9x@gmail.com',
                                     ref.read(imgProvider),
                                     500.50,
                                     enviar,
                                     ref.read(actualBusinessProvider),
                                     prefs.getString('emailUser')!,
                                     context,
-                                    workerJob.text);
+                                    'Presidente');
                               }
                             }
                           },

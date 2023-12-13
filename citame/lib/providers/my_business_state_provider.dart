@@ -37,6 +37,22 @@ class MyBusinessStateNotifier extends StateNotifier<List<Business>> {
     return diasLaboralesGenerales;
   }
 
+  void setActualEmail(email) {
+    actualEmail = email;
+  }
+
+  String getActualEmail() {
+    return actualEmail;
+  }
+
+  void setActualBusiness(businessName) {
+    actualBusiness = businessName;
+  }
+
+  String getActualBusiness() {
+    return actualBusiness;
+  }
+
   void setDiasWorker(dia, TimeOfDay inicio, TimeOfDay fin) {
     workerDaysAvailable[dia].add({'inicio': inicio, 'fin': fin});
   }
@@ -101,3 +117,7 @@ Map workerDaysAvailable = {
 List<Worker> workers = [];
 
 List papelera = [];
+
+String actualBusiness = '';
+
+String actualEmail = '';

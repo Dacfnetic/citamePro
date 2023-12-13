@@ -44,6 +44,40 @@ abstract class API {
     throw Exception('Failed to add item');
   }
 
+  static Future<String> deleteWorkerInBusiness(
+      String businessName, String email, String id, String workerId) async {
+    final response =
+        await http.delete(Uri.parse('$serverUrl/api/workers/delete'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({
+              'businessName': businessName,
+              'email': email,
+              'idWorker': workerId,
+            }));
+
+    if (response.statusCode == 200) {
+      API.updateWorkersInBusinessByDelete(businessName, email, id);
+      return 'borrado';
+    }
+
+    throw Exception('Failed to add item');
+  }
+
+  static Future<String> updateWorkersInBusinessByDelete(
+      String businessName, String email, String id) async {
+    final response =
+        await http.put(Uri.parse('$serverUrl/api/business/workerupdate'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({
+              'idWorker': id,
+              'businessName': businessName,
+              'email': email,
+            }));
+
+    if (response.statusCode == 200) return 'Todo ok';
+    throw Exception('Failed to add item');
+  }
+
   static Future<String> updateWorkersInBusiness(
       String businessName, String email, String workerEmail) async {
     final response = await http.put(
