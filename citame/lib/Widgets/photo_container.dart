@@ -32,31 +32,27 @@ class EspacioParaSubirFotoDeNegocio extends ConsumerWidget {
       margin: EdgeInsets.all(5),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        color: Colors.amber,
+        image: DecorationImage(
+            image: AssetImage('lib/assets/store.jpg'), fit: BoxFit.fitHeight),
+        border: Border.all(color: Colors.black),
       ),
-      height: 200,
+      height: 350,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Expanded(
-            child: /*Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                color: Colors.red,
-                border: Border.all(width: 5),
-              ),*/
-                ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: ruta != ''
-                  ? Image.file(
-                      File(ruta),
-                      width: double.infinity,
-                      height: 230,
-                      fit: BoxFit.cover,
-                    )
-                  : Text('Sube una imagen prro'),
-            ),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(16),
+            child: ruta != ''
+                ? Image.file(
+                    File(ruta),
+                    width: double.infinity,
+                    height: 230,
+                    fit: BoxFit.cover,
+                  )
+                : Text(''),
+          ),
+          SizedBox(
+            height: 40,
           ),
           Row(
             children: [
@@ -67,6 +63,9 @@ class EspacioParaSubirFotoDeNegocio extends ConsumerWidget {
                   },
                   child: Text('Subir imagen'),
                 ),
+              ),
+              SizedBox(
+                width: 15,
               ),
               Expanded(
                 child: ElevatedButton(

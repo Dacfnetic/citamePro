@@ -58,10 +58,25 @@ class BusinessRegisterPage extends ConsumerWidget {
           padding: const EdgeInsets.all(8.0),
           child: ListView(
             children: [
-              FotoConTexto(mensaje: 'No recuerdo', estilo: letraBlanca),
+              /*FotoConTexto(mensaje: 'No recuerdo', estilo: letraBlanca),
               SizedBox(height: 12),
               FotoConTexto(mensaje: mensaje, estilo: letraBlancaSmall),
-              Text('Datos del negocio', style: titulos),
+             
+             
+                 */
+              //media query
+              Row(
+                children: [
+                  Text(
+                    'Datos del negocio',
+                    style: MediaQuery.of(context).size.width < 100
+                        ? API.estiloJ14negro
+                        : API.estiloJ24negro,
+                  ),
+                  IconButton(onPressed: () {}, icon: Icon(Icons.info)),
+                ],
+              ),
+
               Text('Foto del negocio (obligatorio)', style: indicaciones),
               EspacioParaSubirFotoDeNegocio(),
               Text('Llene los siguientes campos', style: indicaciones),

@@ -494,7 +494,7 @@ abstract class API {
       fToast.showToast(
         child: toast,
         gravity: ToastGravity.BOTTOM,
-        toastDuration: Duration(seconds: 2),
+        toastDuration: Duration(seconds: 1),
       );
     }
 
