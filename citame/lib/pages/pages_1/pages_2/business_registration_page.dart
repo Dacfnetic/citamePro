@@ -64,7 +64,7 @@ class BusinessRegisterPage extends ConsumerWidget {
              
              
                  */
-
+              //media query
               Row(
                 children: [
                   Text(
