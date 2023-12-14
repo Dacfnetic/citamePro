@@ -99,7 +99,6 @@ class ProfilePage extends ConsumerWidget {
               ProfileRow(
                 description: 'Ver mis negocios',
                 icon: Icons.store,
-                //TODO: Implementar para ver mis negocios
                 page: Placeholder(),
                 method: 1,
               ),

@@ -1,4 +1,3 @@
-import 'package:citame/models/user_model.dart';
 import 'package:citame/pages/home_page.dart';
 import 'package:citame/pages/pages_1/pages_2/chats_page.dart';
 import 'package:citame/pages/pages_1/profile_page.dart';

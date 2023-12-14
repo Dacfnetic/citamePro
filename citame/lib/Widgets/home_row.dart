@@ -4,6 +4,7 @@ import 'package:citame/providers/categories_provider.dart';
 import 'package:citame/providers/page_provider.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HomeRow extends ConsumerWidget {
@@ -95,6 +96,6 @@ class HomeRow extends ConsumerWidget {
           ),
         ),
       ),
-    );
+    ).animate().fade(duration: 2000.ms).slide(curve: Curves.easeIn);
   }
 }

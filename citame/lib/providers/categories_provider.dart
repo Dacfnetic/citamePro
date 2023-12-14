@@ -28,7 +28,6 @@ class CategoristListNotifier extends StateNotifier<List<HomeRow>> {
   }
 }
 
-//TODO: Cargar categorías ya sea desde el backend o desde aquí
 List<HomeRow> categorias = [
   HomeRow(
     categoria: 'Abogados',

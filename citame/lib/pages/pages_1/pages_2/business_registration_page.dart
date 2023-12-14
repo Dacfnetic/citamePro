@@ -1,6 +1,5 @@
 import 'package:citame/Widgets/cuadro.dart';
 import 'package:citame/Widgets/photo_container.dart';
-import 'package:citame/Widgets/photo_with_text.dart';
 import 'package:citame/pages/pages_1/pages_2/map_page.dart';
 import 'package:citame/providers/img_provider.dart';
 import 'package:citame/providers/marker_provider.dart';
@@ -29,27 +28,10 @@ class BusinessRegisterPage extends ConsumerWidget {
     FirebaseAuth auth = FirebaseAuth.instance;
 
     Marker negocio = ref.watch(markerProvider);
-    const String mensaje =
-        'Facilidad de uso: Nuestra aplicación es intuitiva y fácil de usar.\n\nAcceso rápido: Con nuestra aplicación, puedes programar citas desde cualquier lugar y en cualquier momento, gracias a su accesibilidad en dispositivos móviles.\n\nRecordatorios automáticos: Olvídate de preocuparte por olvidar tus citas. Nuestra aplicación te notifica';
     final indicaciones = GoogleFonts.plusJakartaSans(
       color: Color(0xff57636c),
       fontSize: 14,
       fontWeight: FontWeight.w500,
-    );
-    final titulos = GoogleFonts.plusJakartaSans(
-      color: Color(0xff57636c),
-      fontSize: 36,
-      fontWeight: FontWeight.w500,
-    );
-    final letraBlanca = GoogleFonts.plusJakartaSans(
-      color: Color(0xffffffff),
-      fontSize: 36,
-      fontWeight: FontWeight.w600,
-    );
-    final letraBlancaSmall = GoogleFonts.plusJakartaSans(
-      color: Color(0xffffffff),
-      fontSize: 20,
-      fontWeight: FontWeight.w600,
     );
     return Scaffold(
       body: Form(

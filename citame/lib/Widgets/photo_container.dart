@@ -70,7 +70,6 @@ class EspacioParaSubirFotoDeNegocio extends ConsumerWidget {
               Expanded(
                 child: ElevatedButton(
                   onPressed: () {
-                    //TODO: Anthony va a ver como incluir la foto del negocio
                     pickImageFromCamera();
                   },
                   child: Text('Tomar foto'),

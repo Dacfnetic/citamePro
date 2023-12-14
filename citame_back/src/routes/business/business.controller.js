@@ -158,14 +158,14 @@ async function updateWorkers(req,res){
          item = JSON.parse(JSON.stringify(previousWorkers));
 
         const filtro = req.body.idWorker;
-        const arrayWorker = [item].filter(e => e !== filtro);
+        const arrayWorker = [item].filter(e => e === filtro);
       
 
         const modificaciones = {workers: arrayWorker};
         //console.log('Si prro');
         let resultado = await business.findByIdAndUpdate(bId,{$set:modificaciones});
         console.log(resultado);
-
+        return res.status(200).send('Todo ok');
 }
 
 //Exportar funciones

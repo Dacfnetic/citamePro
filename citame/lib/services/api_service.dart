@@ -80,8 +80,7 @@ abstract class API {
 
   static Future<String> updateWorkersInBusiness(
       String businessName, String email, String workerEmail) async {
-    final response = await http.put(
-        Uri.parse('$serverUrl/api/business/update'), //TODO:Cambiar la ruta
+    final response = await http.put(Uri.parse('$serverUrl/api/business/update'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'workerEmail': workerEmail,
@@ -121,20 +120,26 @@ abstract class API {
           'puesto': puesto,
         }));
     if (response.statusCode == 201) {
-      API.mensaje(context, 'Aviso', 'La solicitud fue enviada al trabajador');
-      API.updateWorkersInBusiness(businessName, email, workerEmail);
-      return 'Todo ok';
+      if (context.mounted) {
+        API.mensaje(context, 'Aviso', 'La solicitud fue enviada al trabajador');
+        API.updateWorkersInBusiness(businessName, email, workerEmail);
+        return 'Todo ok';
+      }
     }
 
     if (response.statusCode == 202) {
-      API.mensaje(
-          context, 'Aviso', 'El correo no está registrado en la aplicación');
-      return 'Todo ok';
+      if (context.mounted) {
+        API.mensaje(
+            context, 'Aviso', 'El correo no está registrado en la aplicación');
+        return 'Todo ok';
+      }
     }
     if (response.statusCode == 203) {
-      API.mensaje(
-          context, 'Aviso', 'El correo ya está asignado a este negocio');
-      return 'Todo ok';
+      if (context.mounted) {
+        API.mensaje(
+            context, 'Aviso', 'El correo ya está asignado a este negocio');
+        return 'Todo ok';
+      }
     }
 
     throw Exception('Failed to add item');
@@ -209,7 +214,7 @@ abstract class API {
 
       ref.read(myBusinessStateProvider.notifier).cargar(businesses);
       if (context.mounted) {
-        if (businesses.length == 0) {
+        if (businesses.isEmpty) {
           API.noHayPropios(context);
         }
       }
@@ -227,7 +232,7 @@ abstract class API {
           .toList();
       print(negocios);
       if (context.mounted) {
-        if (prefs.getStringList('ownerBusiness')!.length == 0) {
+        if (prefs.getStringList('ownerBusiness')!.isEmpty) {
           API.noHayPropios(context);
         }
       }
@@ -284,7 +289,7 @@ abstract class API {
         return negocio;
       }).toList();
       if (context.mounted) {
-        if (businesses.length == 0) {
+        if (businesses.isEmpty) {
           API.noHay(context);
         }
       }
@@ -478,7 +483,7 @@ abstract class API {
 
     fToast.init(context);
 
-    _showToast() {
+    showToast() {
       Widget toast = Container(
         padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
         decoration: BoxDecoration(
@@ -498,7 +503,7 @@ abstract class API {
       );
     }
 
-    _showToast();
+    showToast();
   }
 
   static cambiarHorario(
@@ -521,14 +526,18 @@ abstract class API {
                     onPressed: () async {
                       TimeOfDay inicio =
                           await API.timePicker(context, 'Horario de inicio');
-                      TimeOfDay fin =
-                          await API.timePicker(context, 'Horario de fin');
+                      if (context.mounted) {
+                        TimeOfDay fin =
+                            await API.timePicker(context, 'Horario de fin');
 
-                      ref
-                          .read(myBusinessStateProvider.notifier)
-                          .cambiarHorario(dia, turno, inicio, fin);
-                      ref.read(reRenderProvider.notifier).reRender();
-                      Navigator.pop(context);
+                        ref
+                            .read(myBusinessStateProvider.notifier)
+                            .cambiarHorario(dia, turno, inicio, fin);
+                        ref.read(reRenderProvider.notifier).reRender();
+                        if (context.mounted) {
+                          Navigator.pop(context);
+                        }
+                      }
                     },
                     child: Text('Cambiar')),
                 TextButton(

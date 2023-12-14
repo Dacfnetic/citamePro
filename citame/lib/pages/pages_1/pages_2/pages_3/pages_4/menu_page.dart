@@ -14,7 +14,7 @@ class MenuPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    bool r = ref.watch(reRenderProvider);
+    ref.watch(reRenderProvider);
     ReRenderNotifier reRender = ref.read(reRenderProvider.notifier);
     List<Worker> workers =
         ref.watch(myBusinessStateProvider.notifier).obtenerWorkers();
@@ -150,7 +150,7 @@ class MenuPage extends ConsumerWidget {
               Text(
                   'Crea los perfiles de tu personal para que tus clientes puedan conocerlos.',
                   style: API.estiloJ14gris),
-              workers.length != 0
+              workers.isNotEmpty
                   ? ListView(shrinkWrap: true, children: trabajadores)
                   : Container(),
               ElevatedButton.icon(

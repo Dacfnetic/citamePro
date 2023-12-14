@@ -1,5 +1,3 @@
-import 'package:citame/models/worker_moder.dart';
-import 'package:citame/providers/img_provider.dart';
 import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:citame/providers/re_render_provider.dart';
 import 'package:citame/services/api_service.dart';
@@ -17,13 +15,7 @@ class ReservationPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    List workers = ref.read(myBusinessStateProvider.notifier).obtenerWorkers();
-    String ruta = ref.watch(imgProvider);
-    bool reRender = ref.watch(reRenderProvider);
-    Map horario =
-        ref.watch(myBusinessStateProvider.notifier).obtenerDiasWorker();
-    Schedule horas = Schedule(horario: horario);
-
+    ref.watch(reRenderProvider);
     print(TimeOfDay.now().format(context));
 
     return Scaffold(
@@ -91,11 +83,13 @@ class ContenedorDeHorario extends StatelessWidget {
 
     void getSchedule(String dia) async {
       TimeOfDay inicio = await API.timePicker(context, 'Horario de inicio');
-      TimeOfDay fin = await API.timePicker(context, 'Horario de fin');
-      ref
-          .read(myBusinessStateProvider.notifier)
-          .setDiasWorker(dia, inicio, fin);
-      ref.read(reRenderProvider.notifier).reRender();
+      if (context.mounted) {
+        TimeOfDay fin = await API.timePicker(context, 'Horario de fin');
+        ref
+            .read(myBusinessStateProvider.notifier)
+            .setDiasWorker(dia, inicio, fin);
+        ref.read(reRenderProvider.notifier).reRender();
+      }
     }
 
     return Container(
@@ -153,7 +147,7 @@ class Horario extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool reRender = ref.watch(reRenderProvider);
+    ref.watch(reRenderProvider);
     int horaInicial = horario['inicio'].hourOfPeriod;
     int minutoInicial = horario['inicio'].minute;
     String mI = minutoInicial.toString();

@@ -47,7 +47,7 @@ class BusinessListNotifier extends StateNotifier<List<BusinessCard>> {
     List<Business> ownBusiness;
     List<BusinessCard> negocios;
     ownBusiness = await API.getOwnerBusiness(context, ref);
-    if (ownBusiness.length != 0) {
+    if (ownBusiness.isNotEmpty) {
       negocios = ownBusiness.map((e) {
         return (BusinessCard(
           nombre: e.businessName,
@@ -69,6 +69,4 @@ class BusinessListNotifier extends StateNotifier<List<BusinessCard>> {
 
 LatLng businessPosition = LatLng(0, 0);
 
-List<BusinessCard> negocios = [
-  //TODO: Cargar desde la base de datos
-];
+List<BusinessCard> negocios = [];

@@ -1,12 +1,7 @@
-import 'package:citame/models/user_model.dart';
 import 'package:citame/pages/pages_1/pages_2/chats_page.dart';
 import 'package:citame/pages/pages_1/pages_2/pages_3/pages_4/menu_page.dart';
-import 'package:citame/pages/pages_1/profile_page.dart';
-import 'package:citame/providers/business_provider.dart';
-import 'package:citame/providers/categories_provider.dart';
 import 'package:citame/providers/navbar_provider.dart';
 import 'package:citame/providers/page_provider.dart';
-import 'package:citame/providers/user_provider.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

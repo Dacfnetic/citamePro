@@ -1,6 +1,5 @@
 import 'package:citame/Widgets/bottom_bar.dart';
 import 'package:citame/Widgets/business_card.dart';
-import 'package:citame/models/business_model.dart';
 import 'package:citame/providers/business_provider.dart';
 import 'package:citame/providers/geolocator_provider.dart';
 import 'package:citame/services/api_service.dart';
@@ -100,7 +99,7 @@ class BusinessSearchPage extends ConsumerWidget {
                 SizedBox(height: 12),
                 Expanded(
                   child: ListView(
-                      children: (negocios.length == 0)
+                      children: (negocios.isEmpty)
                           ? [Center(child: CircularProgressIndicator())]
                           : negocios),
                 ),

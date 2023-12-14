@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:citame/Widgets/cuadro.dart';
 import 'package:citame/models/worker_moder.dart';
 import 'package:citame/providers/img_provider.dart';
 import 'package:citame/providers/my_actual_business_provider.dart';
@@ -25,7 +24,6 @@ class ProfileInsidePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     String ruta = ref.watch(imgProvider);
-    bool reRender = ref.watch(reRenderProvider);
     Map horario =
         ref.watch(myBusinessStateProvider.notifier).obtenerDiasWorker();
     Schedule horas = Schedule(horario: horario);
@@ -196,12 +194,15 @@ class ContenedorDeHorario extends StatelessWidget {
     }
 
     void getSchedule(String dia) async {
-      TimeOfDay inicio = await API.timePicker(context, 'Horario de inicio');
-      TimeOfDay fin = await API.timePicker(context, 'Horario de fin');
-      ref
-          .read(myBusinessStateProvider.notifier)
-          .setDiasWorker(dia, inicio, fin);
-      ref.read(reRenderProvider.notifier).reRender();
+      TimeOfDay inicio =
+          await API.timePicker(context, 'Horario de inicio').then();
+      if (context.mounted) {
+        TimeOfDay fin = await API.timePicker(context, 'Horario de fin');
+        ref
+            .read(myBusinessStateProvider.notifier)
+            .setDiasWorker(dia, inicio, fin);
+        ref.read(reRenderProvider.notifier).reRender();
+      }
     }
 
     return Container(
@@ -212,11 +213,7 @@ class ContenedorDeHorario extends StatelessWidget {
       margin: EdgeInsets.fromLTRB(0, 5, 15, 5),
       child: Column(
         children: [
-          Container(
-            //width: double.infinity,
-
-            child: Text(day.toUpperCase()),
-          ),
+          Text(day.toUpperCase()),
           Column(children: obtenerHorario(day, horario)),
           Row(
             mainAxisSize: MainAxisSize.max,
@@ -294,7 +291,7 @@ class Horario extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool reRender = ref.watch(reRenderProvider);
+    ref.watch(reRenderProvider);
     int horaInicial = horario['inicio'].hourOfPeriod;
     int minutoInicial = horario['inicio'].minute;
     String mI = minutoInicial.toString();

@@ -16,43 +16,6 @@ async function postWorkers(req,res){
        
         
 
-        const workersEmail = worker.map(async (e)=>{ 
-                
-            await workersModel.find({id : e}).then((docs) =>{
-                    return docs.email;
-                });
-              
-            
-            });
-        const workerExist = workersEmail.has(req.body.email);
-
-
-        if (workerExist == true){
-            return res.status(202).send('El trabajador ya esta en el negocio');
-        }
-        
-            usuario.findOne({emailUser: req.body.email})
-            .then(async (docs)=>{
-            if(docs != null){
-                console.log('Creando Trabajador');
-                await workersModel.create({
-                    id: docs._id,
-                    name: req.body.name,
-                    email: req.body.email,
-                    imgPath:req.body.imgPath,
-                    salary :req.body.salary,
-                    horario:req.body.horario,
-                    status: req.body.status,
-                    puesto: req.body.puesto
-                });
-                return res.status(201).send({'sms':'Trabajador creado'});
-            }
-               
-            });
-
-        
-
-
         if(worker.length == 0){
             await usuario.findOne({emailUser: req.body.email})
                 .then(async (docs)=>{
@@ -130,6 +93,7 @@ async function getWorkers(req,res){
             }
         });
 
+        
         let trabajadores = []
         let contador = 0;
 
@@ -147,7 +111,10 @@ async function getWorkers(req,res){
     
         });
                             
-    
+        if(worker.length == 0) {
+            return res.status(201).send('No hay trabajadores');
+        }
+
 
     }catch(e){
 
@@ -163,7 +130,7 @@ async function deleteWorkers(req,res){
         
         
         //Borrar modelo
-        await workersModel.findByIdAndDelete({id: req.body.idWorker})
+        await workersModel.findByIdAndDelete(req.body.idWorker);
         return res.status(200).json({message: 'Todo ok'});
 
 
