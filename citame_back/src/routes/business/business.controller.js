@@ -1,6 +1,9 @@
 //Importación de modelos de objetos
 const usuario = require('../../models/users.model.js');
 const business = require('../../models/business.model.js');
+const path = require('path');
+const multer = require('multer');
+const app = require('../../app.js')
 
 
 async function getAllBusiness(req,res){
@@ -67,8 +70,8 @@ async function postBusiness(req,res){
         await usuario.findOne({emailUser: req.body.email})
             .then(async (docs)=>{
 
-                const img64 = req.body.imgPath;// x64
-                const imgReady = '';
+                //Recibe la imagen
+                const imgCompress = req.file.map();
 
                 await business.create({
                     businessName: req.body.businessName,
@@ -158,8 +161,9 @@ async function updateWorkers(req,res){
          item = JSON.parse(JSON.stringify(previousWorkers));
 
         const filtro = req.body.idWorker;
-        const arrayWorker = [item].filter(e => e === filtro);
-      
+        const setWorker = new Set(item);
+        setWorker.delete(filtro);
+        const arrayWorker = Array.from(setWorker);
 
         const modificaciones = {workers: arrayWorker};
         //console.log('Si prro');

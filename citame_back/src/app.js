@@ -7,6 +7,7 @@ const usersRouter = require('./routes/users/users.router.js');
 const businessRouter = require('./routes/business/business.router.js');
 const workersRouter = require('./routes/workers/worker.router.js');
 const servicesRouter = require('./routes/services/services.router.js');
+const imgRouter = require('./routes/images/img.router.js');
 //Creación de aplicación express
 const app = express();
 //Informacion del servidor
@@ -16,6 +17,7 @@ app.use(bodyParser.urlencoded({ limit: "500mb", extended: true, parameterLimit: 
 app.use(usersRouter);
 app.use(businessRouter);
 app.use(workersRouter);
+app.use(imgRouter);
 //app.use(servicesRouter);
 //Exportación de aplicación express
 module.exports = app;

@@ -14,7 +14,7 @@ const businessSchema = new Schema({
     latitude: {type: String, required: true},
     longitude: {type: String, required: true},
     description: {type: String, required: true},
-    imgPath:[Number],
+    imgPath:[{type:Schema.Types.ObjectId,ref:'Imagen'}],
     horario:{type: String},
     servicios:[String]
 
