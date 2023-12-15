@@ -6,13 +6,29 @@ const Imagen = require('../../models/image.model');
 const Trabajador = require('../../models/worker.model');
 
 
+function randomImageName(){
+    const longitudName = 15;
+    const diccionario = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let randomName = '';
+
+    for(let i = 0 ; i<longitudName; i++){
+        const randomIndex = Math.floor(Math.random()*diccionario.length);
+        randomName += diccionario.charAt(randomIndex);
+    }
+    
+    return randomName;
+
+
+}
+
+
 async function uploadImage(req,res){
 
     try {
 
         const bufferImg = await sharp(req.file.buffer).resize({width:300,height:300}).toBuffer();
-
-        const nameFile = `img_${Date.now()}.png`;
+        const nameImg = randomImageName();
+        const nameFile = `img_${nameImg}_${Date.now()}.png`;
         const rutaAlmacenamiento = `src/img_CitaMe/${nameFile}`;
 
         
