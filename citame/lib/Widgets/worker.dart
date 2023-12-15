@@ -14,12 +14,11 @@ class WorkerBox extends ConsumerWidget {
     required this.imagen,
   });
   final Worker worker;
-  final List<int> imagen;
+  final Uint8List imagen;
   final WidgetRef ref;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    Uint8List esta = Uint8List.fromList(imagen);
     String horas = worker.horario;
     return Container(
       margin: EdgeInsets.fromLTRB(0, 1, 0, 0),
@@ -50,7 +49,7 @@ class WorkerBox extends ConsumerWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(16),
                   child: Image.memory(
-                    esta,
+                    imagen,
                     width: double.infinity,
                     height: 230,
                     fit: BoxFit.cover,
@@ -67,7 +66,7 @@ class WorkerBox extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(worker.name, style: API.estiloJ16negro),
-                Text(horas, style: API.estiloJ14gris),
+                //Text(horas, style: API.estiloJ14gris),
               ],
             ),
           ),

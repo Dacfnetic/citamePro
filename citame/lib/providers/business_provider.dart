@@ -57,14 +57,20 @@ class BusinessListNotifier extends StateNotifier<List<BusinessCard>> {
     List<BusinessCard> negocios;
 
     allBusiness = await API.getAllBusiness(context);
+    if (allBusiness.isNotEmpty) {
+      for (var element in allBusiness) {
+        element.imgPath[0] = await API.downloadImage(element.imgPath[0]);
+      }
+    }
     negocios = allBusiness.map((e) {
       return (BusinessCard(
         nombre: e.businessName,
+        id: e.idMongo,
         categoria: e.category,
         latitud: double.parse(e.latitude),
         longitud: double.parse(e.longitude),
         rating: 5.0,
-        imagen: e.imgPath,
+        imagen: e.imgPath[0],
         description: e.description,
         email: e.email,
       ));
@@ -75,23 +81,6 @@ class BusinessListNotifier extends StateNotifier<List<BusinessCard>> {
   void noExiste(BuildContext context) {
     API.noHay(context);
   }
-}
-
-void agregarNegocio(
-    nombre, categoria, latitud, longitud, rating, imagen, email) {
-  negocios = [
-    ...negocios,
-    BusinessCard(
-      nombre: nombre,
-      categoria: categoria,
-      latitud: latitud,
-      longitud: longitud,
-      rating: rating,
-      imagen: imagen,
-      description: 'x',
-      email: email,
-    )
-  ];
 }
 
 LatLng businessPosition = LatLng(0, 0);

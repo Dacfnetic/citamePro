@@ -12,7 +12,7 @@ class Schedule {
 class Worker {
   final String name;
   final String email;
-  final List<int> imgPath;
+  final List imgPath;
   final double salary;
   final String horario;
   final bool status;
@@ -44,7 +44,7 @@ class Worker {
     return Worker(
       name: json['name'],
       email: json['email'],
-      imgPath: json['imgPath'].cast<int>(),
+      imgPath: json['imgPath'],
       salary: json['salary'],
       horario: json['horario'],
       status: json['status'],

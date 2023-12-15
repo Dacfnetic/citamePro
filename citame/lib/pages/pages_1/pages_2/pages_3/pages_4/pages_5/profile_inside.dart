@@ -23,7 +23,7 @@ class ProfileInsidePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    String ruta = ref.watch(imgProvider);
+    File ruta = ref.watch(imgProvider);
     Map horario =
         ref.watch(myBusinessStateProvider.notifier).obtenerDiasWorker();
     Schedule horas = Schedule(horario: horario);
@@ -65,9 +65,9 @@ class ProfileInsidePage extends ConsumerWidget {
                           child: TextButton(
                             child: ClipRRect(
                                 borderRadius: BorderRadius.circular(16),
-                                child: ruta != ''
+                                child: ruta.path != ''
                                     ? Image.file(
-                                        File(ruta),
+                                        ruta,
                                         width: double.infinity,
                                         fit: BoxFit.cover,
                                       )
@@ -143,6 +143,9 @@ class ProfileInsidePage extends ConsumerWidget {
                                     500.50,
                                     enviar,
                                     ref.read(actualBusinessProvider),
+                                    ref
+                                        .read(myBusinessStateProvider.notifier)
+                                        .getActualBusiness(),
                                     prefs.getString('emailUser')!,
                                     context,
                                     'Presidente');
@@ -194,8 +197,7 @@ class ContenedorDeHorario extends StatelessWidget {
     }
 
     void getSchedule(String dia) async {
-      TimeOfDay inicio =
-          await API.timePicker(context, 'Horario de inicio').then();
+      TimeOfDay inicio = await API.timePicker(context, 'Horario de inicio');
       if (context.mounted) {
         TimeOfDay fin = await API.timePicker(context, 'Horario de fin');
         ref

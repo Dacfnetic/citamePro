@@ -1,5 +1,6 @@
 class Business {
   final String businessName;
+  final String idMongo;
   final String category;
   final String email;
   //final String createdBy;
@@ -9,9 +10,10 @@ class Business {
   final String latitude;
   final String longitude;
   final String description;
-  final List<int> imgPath;
+  final List imgPath;
   Map toJson() => {
         'businessName': businessName,
+        'idMongo': idMongo,
         'category': category,
         'email': email,
         'workers': workers,
@@ -24,6 +26,7 @@ class Business {
       };
   Business({
     required this.businessName,
+    required this.idMongo,
     required this.category,
     required this.email,
     //required this.createdBy,
@@ -39,6 +42,7 @@ class Business {
   factory Business.fromJson(Map<String, dynamic> json) {
     return Business(
       businessName: json['businessName'],
+      idMongo: json['_id'],
       category: json['category'],
       email: json['email'],
       //createdBy: json['createdBy'],
@@ -48,7 +52,23 @@ class Business {
       latitude: json['latitude'],
       longitude: json['longitude'],
       description: json['description'],
-      imgPath: json['imgPath'].cast<int>(),
+      imgPath: json['imgPath'],
+    );
+  }
+  factory Business.fromJson2(Map<String, dynamic> json) {
+    return Business(
+      businessName: json['businessName'],
+      idMongo: json['idMongo'],
+      category: json['category'],
+      email: json['email'],
+      //createdBy: json['createdBy'],
+      workers: json['workers'],
+      contactNumber: json['contactNumber'],
+      direction: json['direction'],
+      latitude: json['latitude'],
+      longitude: json['longitude'],
+      description: json['description'],
+      imgPath: json['imgPath'],
     );
   }
 }

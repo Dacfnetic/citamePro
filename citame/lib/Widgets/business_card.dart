@@ -1,5 +1,4 @@
-import 'dart:typed_data';
-
+import 'dart:io';
 import 'package:citame/pages/pages_1/pages_2/business_inside_page.dart';
 import 'package:citame/pages/pages_1/pages_2/my_businessess_page.dart';
 import 'package:citame/pages/pages_1/pages_2/pages_3/preview_business_page.dart';
@@ -8,23 +7,25 @@ import 'package:citame/providers/my_actual_business_provider.dart';
 import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:citame/providers/page_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class BusinessCard extends ConsumerWidget {
   final String nombre;
+  final String id;
   final String categoria;
   final String description;
   final double latitud;
   final double longitud;
   final double rating;
-  final List<int> imagen;
-
+  final Uint8List imagen;
   final String email;
   const BusinessCard({
     Key? key,
     required this.nombre,
+    required this.id,
     required this.categoria,
     required this.latitud,
     required this.longitud,
@@ -43,7 +44,6 @@ class BusinessCard extends ConsumerWidget {
         latitudB: coordenadas[0],
         longitudB: coordenadas[1]);
 
-    Uint8List esta = Uint8List.fromList(imagen);
     return Animate(
       effects: [
         FadeEffect(delay: 500.ms, duration: 2000.ms),
@@ -61,14 +61,12 @@ class BusinessCard extends ConsumerWidget {
           ),
           onPressed: () {
             Widget actual = ref.read(pageProvider);
-            ref.read(actualBusinessProvider.notifier).actualizar(nombre);
+            ref.read(actualBusinessProvider.notifier).actualizar(id);
             if (actual.runtimeType == MyBusinessesPage().runtimeType) {
               ref
                   .read(myBusinessStateProvider.notifier)
-                  .establecerWorkers(email, nombre, ref);
-              ref
-                  .read(myBusinessStateProvider.notifier)
-                  .setActualBusiness(nombre);
+                  .establecerWorkers(id, ref);
+              ref.read(myBusinessStateProvider.notifier).setActualBusiness(id);
               ref.read(myBusinessStateProvider.notifier).setActualEmail(email);
               Navigator.push(
                 context,
@@ -79,17 +77,15 @@ class BusinessCard extends ConsumerWidget {
             } else {
               ref
                   .read(myBusinessStateProvider.notifier)
-                  .establecerWorkers(email, nombre, ref);
-              ref
-                  .read(myBusinessStateProvider.notifier)
-                  .setActualBusiness(nombre);
+                  .establecerWorkers(id, ref);
+              ref.read(myBusinessStateProvider.notifier).setActualBusiness(id);
               ref.read(myBusinessStateProvider.notifier).setActualEmail(email);
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => BusinessInsidePage(
                     businessName: nombre,
-                    imagen: esta,
+                    imagen: imagen,
                     description: description,
                   ),
                 ),
@@ -103,7 +99,7 @@ class BusinessCard extends ConsumerWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(16),
                 child: Image.memory(
-                  esta,
+                  imagen,
                   width: double.infinity,
                   height: 230,
                   fit: BoxFit.cover,

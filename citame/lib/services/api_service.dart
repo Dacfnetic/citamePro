@@ -12,7 +12,6 @@ import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:citame/providers/re_render_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -79,13 +78,12 @@ abstract class API {
   }
 
   static Future<String> updateWorkersInBusiness(
-      String businessName, String email, String workerEmail) async {
+      String businessId, String workerId) async {
     final response = await http.put(Uri.parse('$serverUrl/api/business/update'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
-          'workerEmail': workerEmail,
-          'businessName': businessName,
-          'email': email,
+          'workerId': workerId,
+          'businessId': businessId,
         }));
 
     if (response.statusCode == 200) return 'Todo ok';
@@ -95,16 +93,17 @@ abstract class API {
   static Future<String> postWorker(
       String name,
       String workerEmail,
-      String imgPath,
+      File imgPath,
       double salary,
       String horario,
       String businessName,
+      String businessId,
       String email,
       BuildContext context,
       String puesto) async {
-    String imgConv = await API.convertTo64(imgPath);
+    /* String imgConv = await API.convertTo64(imgPath);
     Uint8List casi = API.decode64(imgConv);
-    List<int> imagen = casi.toList();
+    List<int> imagen = casi.toList();*/
 
     final response = await http.post(Uri.parse('$serverUrl/api/workers/create'),
         headers: {'Content-Type': 'application/json'},
@@ -112,21 +111,22 @@ abstract class API {
           'name': name,
           'email': workerEmail,
           'businessName': businessName,
+          'id': businessId,
           'businessEmail': email,
-          'imgPath': imagen,
           'salary': salary,
           'horario': horario,
           'status': false,
           'puesto': puesto,
         }));
     if (response.statusCode == 201) {
+      var workerData = jsonDecode(response.body);
+      await API.postImagen(imgPath, workerData['_id'], 'worker');
       if (context.mounted) {
         API.mensaje(context, 'Aviso', 'La solicitud fue enviada al trabajador');
-        API.updateWorkersInBusiness(businessName, email, workerEmail);
+        API.updateWorkersInBusiness(businessId, workerData['_id']);
         return 'Todo ok';
       }
     }
-
     if (response.statusCode == 202) {
       if (context.mounted) {
         API.mensaje(
@@ -175,21 +175,14 @@ abstract class API {
     if (response.statusCode == 201) return 'Todo ok';
     if (response.statusCode == 202) return 'Todo ok';
 
-    throw Exception('Failed to add item');
+    throw Exception('Failed to adddsds item');
   }
 
   static Future pickImageFromGallery(WidgetRef ref) async {
     final returnedImage =
         await ImagePicker().pickImage(source: ImageSource.gallery);
-
-    var comprimida = await FlutterImageCompress.compressAndGetFile(
-        returnedImage!.path, '${returnedImage.path}compressed.jpg',
-        minHeight: 640, minWidth: 480, quality: 80);
-
-    if (comprimida != null) {
-      final camino = comprimida.path;
-      ref.watch(imgProvider.notifier).changeState(camino);
-    }
+    File imagen = File(returnedImage!.path);
+    ref.read(imgProvider.notifier).changeState(imagen);
   }
 
   static Future<List<Business>> getOwnerBusiness(
@@ -228,7 +221,7 @@ abstract class API {
     if (response.statusCode == 200) {
       List<Business> negocios = prefs
           .getStringList('negocios')!
-          .map((e) => Business.fromJson(jsonDecode(e)))
+          .map((e) => Business.fromJson2(jsonDecode(e)))
           .toList();
       print(negocios);
       if (context.mounted) {
@@ -237,6 +230,19 @@ abstract class API {
         }
       }
       return negocios;
+    }
+    throw Exception('Failed to get items');
+  }
+
+  static Future<Uint8List> downloadImage(String id) async {
+    final response = await http
+        .get(Uri.parse('$serverUrl/api/imagen/download'), headers: {'id': id});
+    if (response.statusCode == 200) {
+      var imagen = jsonDecode(response.body);
+      var imagen2 = imagen['data'].cast<int>();
+      Uint8List imagen3 = Uint8List.fromList(imagen2);
+
+      return imagen3;
     }
     throw Exception('Failed to get items');
   }
@@ -316,10 +322,9 @@ abstract class API {
     throw Exception('Failed to get items');
   }
 
-  static Future<List<Worker>> getWorkers(
-      String email, String businessName) async {
+  static Future<List<Worker>> getWorkers(String businessId) async {
     final response = await http.get(Uri.parse('$serverUrl/api/workers/get'),
-        headers: {'businessEmail': email, 'businessName': businessName});
+        headers: {'businessId': businessId});
     if (response.statusCode == 200) {
       final List<dynamic> workerList = jsonDecode(response.body);
       final List<Worker> trabajadores = workerList.map((trabajador) {
@@ -354,6 +359,21 @@ abstract class API {
     throw Exception('Failed to get items');
   }
 
+  static Future<String> postImagen(
+      File imagen, String id, String destiny) async {
+    var request = http.MultipartRequest(
+        'POST', Uri.parse('$serverUrl/api/imagen/upload'));
+    request.files.add(await http.MultipartFile.fromPath('imagen', imagen.path));
+    request.fields['id'] = id;
+    request.fields['destiny'] = destiny;
+    var response = await request.send();
+
+    if (response.statusCode == 201) return 'Todo ok';
+    if (response.statusCode == 202) return 'Todo ok';
+
+    throw Exception('Failed to adddsds item');
+  }
+
   static Future<String> postBusiness(
     String businessName,
     String? category,
@@ -365,12 +385,8 @@ abstract class API {
     String? latitude,
     String? longitude,
     String? description,
-    String imgPath,
+    File imgPath,
   ) async {
-    String imgConv = await API.convertTo64(imgPath);
-    Uint8List casi = API.decode64(imgConv);
-    List<int> imagen = casi.toList();
-
     final response =
         await http.post(Uri.parse('$serverUrl/api/business/create'),
             headers: {'Content-Type': 'application/json'},
@@ -385,9 +401,12 @@ abstract class API {
               "latitude": latitude,
               "longitude": longitude,
               "description": description,
-              "imgPath": imagen,
             }));
-    if (response.statusCode == 201) return "Negocio creado";
+    if (response.statusCode == 201) {
+      var businessList = jsonDecode(response.body);
+      await API.postImagen(imgPath, businessList['_id'], 'business');
+      return 'todo OK';
+    }
     if (response.statusCode == 202) return "El negocio ya existe";
     throw Exception('Failed to add item');
   }

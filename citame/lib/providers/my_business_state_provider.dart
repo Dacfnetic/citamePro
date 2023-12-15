@@ -16,8 +16,12 @@ class MyBusinessStateNotifier extends StateNotifier<List<Business>> {
     state = myBusiness;
   }
 
-  void establecerWorkers(email, nombre, ref) async {
-    workers = await API.getWorkers(email, nombre);
+  void establecerWorkers(id, ref) async {
+    workers = await API.getWorkers(id);
+
+    for (var element in workers) {
+      element.imgPath[0] = await API.downloadImage(element.imgPath[0]);
+    }
     API.reRender(ref);
   }
 
@@ -45,8 +49,8 @@ class MyBusinessStateNotifier extends StateNotifier<List<Business>> {
     return actualEmail;
   }
 
-  void setActualBusiness(businessName) {
-    actualBusiness = businessName;
+  void setActualBusiness(id) {
+    actualBusiness = id;
   }
 
   String getActualBusiness() {

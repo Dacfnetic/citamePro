@@ -48,14 +48,20 @@ class BusinessListNotifier extends StateNotifier<List<BusinessCard>> {
     List<BusinessCard> negocios;
     ownBusiness = await API.getOwnerBusiness(context, ref);
     if (ownBusiness.isNotEmpty) {
+      for (var element in ownBusiness) {
+        element.imgPath[0] = await API.downloadImage(element.imgPath[0]);
+      }
+    }
+    if (ownBusiness.isNotEmpty) {
       negocios = ownBusiness.map((e) {
         return (BusinessCard(
           nombre: e.businessName,
+          id: e.idMongo,
           categoria: e.category,
           latitud: double.parse(e.latitude),
           longitud: double.parse(e.longitude),
           rating: 5.0,
-          imagen: e.imgPath,
+          imagen: e.imgPath[0],
           description: e.description,
           email: e.email,
         ));

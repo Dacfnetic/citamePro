@@ -29,9 +29,46 @@ class ReservationPage extends ConsumerWidget {
               children: [
                 //  WorkerBox(ruta: ruta, ref: ref),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 16, 0, 0),
+                  padding: const EdgeInsets.all(8),
                   child: Column(
                     children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              margin: EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  width: 5,
+                                  color: Colors.black38,
+                                ),
+                              ),
+                              height: 200,
+                              child: TextButton(
+                                  onPressed: () {},
+                                  child: Icon(Icons.calendar_month)),
+                            ),
+                          ),
+                          Expanded(
+                            child: Container(
+                              margin: EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  width: 5,
+                                  color: Colors.black38,
+                                ),
+                              ),
+                              height: 200,
+                              child: TextButton(
+                                  onPressed: () {
+                                    TimeOfDay inicio =
+                                        API.timePicker(context, 'Horario');
+                                  },
+                                  child: Icon(Icons.lock_clock)),
+                            ),
+                          ),
+                        ],
+                      ),
                       ElevatedButton(
                           onPressed: () async {
                             API.mensaje(context, 'Aviso',

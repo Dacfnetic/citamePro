@@ -70,10 +70,7 @@ async function postBusiness(req,res){
         await usuario.findOne({emailUser: req.body.email})
             .then(async (docs)=>{
 
-                //Recibe la imagen
-                const imgCompress = req.file.map();
-
-                await business.create({
+                const nuevo = new business({
                     businessName: req.body.businessName,
                     category: req.body.category,
                     email: req.body.email,
@@ -84,11 +81,11 @@ async function postBusiness(req,res){
                     latitude: req.body.latitude,
                     longitude: req.body.longitude,
                     description: req.body.description,
-                    imgPath: req.body.imgPath,
                     horario: req.body.horario,
                     servicios: req.body.servicios
                 });
-                return res.status(201).send("Negocio creado");
+                await nuevo.save();
+                return res.status(201).json(nuevo);
         });
     }catch(e){
         console.log(e);
@@ -109,38 +106,18 @@ async function updateBusiness(req,res){
 
     try {
   
-        //Diego envia el email del trabador por el body
-
-        //Tenemos que encontrar el idmongo de ese email
-        let idMongo = '';
-
-        await usuario.findOne({emailUser: req.body.workerEmail})
-        .then((docs)=>{
-            if(docs != null){
-               idMongo = docs._id.toString();
-            }
-        });
-    
-        //Encontrar los workers que ya existen
         let previousWorkers = '';
-        let bId = '';
-        await business.findOne({businessName: req.body.businessName, email: req.body.email})
+      
+        await business.findById(req.body.businessId)
             .then((docs) => {
                 previousWorkers = docs.workers;
-                bId = docs._id.toString();
-                console.log(docs);
         });
         item = JSON.parse(JSON.stringify(previousWorkers));
-        item.push(idMongo);
+        item.push(req.body.workerId);
         const modificaciones = {workers: item};
-        console.log('Si prro');
-        let resultado = await business.findByIdAndUpdate(bId,{$set:modificaciones});
-        //await business.findOneAndUpdate(businessSearch,{$set:{workers: item}},{new: true});
-        console.log(resultado);
+        let resultado = await business.findByIdAndUpdate(req.body.businessId,{$set:modificaciones});
         res.status(200).json({message: 'Negocio Actualizado'});
         
-        
-
     } catch (error) {
         res.status(500).json({error: error.message});
     };

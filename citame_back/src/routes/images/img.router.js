@@ -1,11 +1,11 @@
-const multer = require('multer');
-const sharp = require('sharp');
+const express = require('express');
+const imgController = require('../images/img.controller');
+const uploadMiddleware = require('../middlewares/uploadMiddleware');
 
-const almacenamiento = multer.memoryStorage();
-const upload = multer(
-    {
-        storage: almacenamiento
-    }
-);
+const imgRouter = express.Router();
 
-module.exports = upload
+imgRouter.post('/api/imagen/upload',uploadMiddleware.single('imagen'),imgController.uploadImage);
+imgRouter.get('/api/imagen/download',imgController.downloadImage);
+
+
+module.exports = imgRouter;

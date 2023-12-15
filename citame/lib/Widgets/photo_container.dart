@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:citame/providers/img_provider.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,7 @@ class EspacioParaSubirFotoDeNegocio extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    String ruta = ref.watch(imgProvider);
+    File ruta = ref.watch(imgProvider);
 
     Future pickImageFromCamera() async {
       final returnedImage =
@@ -42,9 +43,9 @@ class EspacioParaSubirFotoDeNegocio extends ConsumerWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(16),
-            child: ruta != ''
+            child: ruta.path.isNotEmpty
                 ? Image.file(
-                    File(ruta),
+                    ruta,
                     width: double.infinity,
                     height: 230,
                     fit: BoxFit.cover,

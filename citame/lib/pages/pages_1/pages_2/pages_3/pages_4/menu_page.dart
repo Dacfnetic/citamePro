@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:citame/Widgets/worker.dart';
 import 'package:citame/models/worker_moder.dart';
 import 'package:citame/pages/pages_1/pages_2/pages_3/pages_4/pages_5/profile_inside.dart';
@@ -19,7 +21,7 @@ class MenuPage extends ConsumerWidget {
     List<Worker> workers =
         ref.watch(myBusinessStateProvider.notifier).obtenerWorkers();
     List<WorkerBox> trabajadores = workers
-        .map((e) => WorkerBox(worker: e, ref: ref, imagen: e.imgPath))
+        .map((e) => WorkerBox(worker: e, ref: ref, imagen: e.imgPath[0]))
         .toList();
 
     return Scaffold(

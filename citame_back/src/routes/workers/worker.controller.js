@@ -7,36 +7,33 @@ async function postWorkers(req,res){
     try{       
         let existe = true;
         let worker = [];  
-        await business.findOne({businessName: req.body.businessName, email: req.body.businessEmail})
+        await business.findById(req.body.id)
             .then((docs) => {
                 if(docs != null){
                     worker = JSON.parse(JSON.stringify(docs.workers)); //id mongo 
         }});
         let contador = 0;
-       
-        
 
         if(worker.length == 0){
             await usuario.findOne({emailUser: req.body.email})
                 .then(async (docs)=>{
                     if(docs != null){
                         console.log('Creando Trabajador');
-                        await workersModel.create({
+                        const nuevo = new workersModel({
                             id: docs._id,
                             name: req.body.name,
                             email: req.body.email,
-                            imgPath:req.body.imgPath,
                             salary :req.body.salary,
                             horario:req.body.horario,
                             status: req.body.status,
                             puesto: req.body.puesto
                         });
-                    return res.status(201).send({'sms':'Trabajador creado'});
+                        await nuevo.save();
+                        return res.status(201).json(nuevo);    
                     }
                 return res.status(202).send('Correo no registrado');
             });
         }
-
 
         if(worker.length != 0){
             await worker.forEach(async (e)=> {
@@ -84,7 +81,7 @@ async function getWorkers(req,res){
     try{
 
         let worker = [];
-        await business.findOne({businessName: req.get('businessName'), email: req.get('businessEmail')})
+        await business.findById(req.get('businessId'))
         .then((docs) => {
             if(docs != null){
                 worker = JSON.parse(JSON.stringify(docs.workers)); //id mongo 
@@ -99,7 +96,7 @@ async function getWorkers(req,res){
 
         worker.forEach(async (e)=> {
 
-            const trabajador = await workersModel.findOne({id : e});
+            const trabajador = await workersModel.findOne({_id : e});
 
             trabajadores.push(trabajador);
 
@@ -114,7 +111,6 @@ async function getWorkers(req,res){
         if(worker.length == 0) {
             return res.status(201).send('No hay trabajadores');
         }
-
 
     }catch(e){
 
