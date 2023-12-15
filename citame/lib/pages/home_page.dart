@@ -23,6 +23,7 @@ class HomePage extends ConsumerWidget {
         child: Container(
           margin: EdgeInsets.fromLTRB(16, 12, 16, 0),
           color: Colors.white,
+          //decoration: BoxDecoration(border: Border.all(color: Colors.black)),
           child: Center(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

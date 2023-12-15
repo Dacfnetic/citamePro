@@ -46,6 +46,7 @@ class ProfileInsidePage extends ConsumerWidget {
                       color: Colors.black,
                     )
                   ]),
+
                   child: Row(
                     children: [
                       Container(
@@ -207,13 +208,36 @@ class ContenedorDeHorario extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.5), // Color de la sombra
+              spreadRadius: 2, // Extensión de la sombra
+              blurRadius: 2, // Desenfoque de la sombra
+              offset: Offset(0, 1), // Desplazamiento de la sombra
+            ),
+          ],
           color: Color.fromARGB(255, 255, 255, 255),
           borderRadius: BorderRadius.circular(12)),
       width: double.infinity,
-      margin: EdgeInsets.fromLTRB(0, 5, 15, 5),
+      margin: EdgeInsets.fromLTRB(0, 10, 15, 10),
       child: Column(
         children: [
-          Text(day.toUpperCase()),
+          Container(
+            decoration: BoxDecoration(
+                color: Colors.cyan,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(12),
+                    topRight: Radius.circular(12))),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  day.toUpperCase(),
+                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
+                ),
+              ],
+            ),
+          ),
           Column(children: obtenerHorario(day, horario)),
           Row(
             mainAxisSize: MainAxisSize.max,
@@ -223,7 +247,10 @@ class ContenedorDeHorario extends StatelessWidget {
                 onPressed: () async {
                   getSchedule(day);
                 },
-                child: Icon(Icons.add),
+                child: Icon(
+                  Icons.add,
+                  color: Colors.cyan,
+                ),
               ),
               ElevatedButton(
                 onPressed: () async {
@@ -232,7 +259,10 @@ class ContenedorDeHorario extends StatelessWidget {
                       .copiarHorariosWorker(day);
                   API.mensaje2(context, 'Horario copiado');
                 },
-                child: Icon(Icons.copy),
+                child: Icon(
+                  Icons.copy,
+                  color: Colors.cyan,
+                ),
               ),
               ElevatedButton(
                 onPressed: () async {
@@ -241,7 +271,10 @@ class ContenedorDeHorario extends StatelessWidget {
                       .pegarHorariosWorker(day);
                   ref.read(reRenderProvider.notifier).reRender();
                 },
-                child: Icon(Icons.paste),
+                child: Icon(
+                  Icons.paste,
+                  color: Colors.cyan,
+                ),
               ),
               ElevatedButton(
                 onPressed: () async {
@@ -250,7 +283,10 @@ class ContenedorDeHorario extends StatelessWidget {
                       .borrarDiaWorker(day);
                   ref.read(reRenderProvider.notifier).reRender();
                 },
-                child: Icon(Icons.delete),
+                child: Icon(
+                  Icons.delete,
+                  color: Colors.cyan,
+                ),
               )
             ],
           )

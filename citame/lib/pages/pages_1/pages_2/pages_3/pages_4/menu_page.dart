@@ -39,7 +39,7 @@ class MenuPage extends ConsumerWidget {
                     color: Colors.black,
                     style: ButtonStyle(
                         backgroundColor:
-                            MaterialStatePropertyAll(Colors.lightBlue)),
+                            MaterialStatePropertyAll(Colors.black)),
                   )
                 ],
               ),

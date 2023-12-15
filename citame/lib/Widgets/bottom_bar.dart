@@ -62,18 +62,33 @@ class BarraInferior extends ConsumerWidget {
         elevation: 0,
         destinations: const <Widget>[
           NavigationDestination(
-            selectedIcon: Icon(Icons.home),
-            icon: Icon(Icons.home_outlined),
+            selectedIcon: Icon(
+              Icons.home,
+              size: 27,
+            ),
+            icon: Icon(
+              Icons.home_outlined,
+              size: 27,
+            ),
             label: '',
           ),
           NavigationDestination(
-            selectedIcon: Icon(Icons.sticky_note_2),
-            icon: Icon(Icons.sticky_note_2_outlined),
+            selectedIcon: Icon(Icons.sticky_note_2, size: 27),
+            icon: Icon(
+              Icons.sticky_note_2_outlined,
+              size: 27,
+            ),
             label: '',
           ),
           NavigationDestination(
-            selectedIcon: Icon(Icons.person_2),
-            icon: Icon(Icons.person_2_outlined),
+            selectedIcon: Icon(
+              Icons.person_2,
+              size: 27,
+            ),
+            icon: Icon(
+              Icons.person_2_outlined,
+              size: 27,
+            ),
             label: '',
           ),
         ]);
