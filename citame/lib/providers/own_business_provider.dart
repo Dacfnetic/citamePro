@@ -45,31 +45,25 @@ class BusinessListNotifier extends StateNotifier<List<BusinessCard>> {
 
   void cargar(BuildContext context, WidgetRef ref) async {
     List<Business> ownBusiness;
-    List<BusinessCard> negocios;
+    List<BusinessCard> negocios = [];
     ownBusiness = await API.getOwnerBusiness(context, ref);
     if (ownBusiness.isNotEmpty) {
       for (var element in ownBusiness) {
         element.imgPath[0] = await API.downloadImage(element.imgPath[0]);
-      }
-    }
-    if (ownBusiness.isNotEmpty) {
-      negocios = ownBusiness.map((e) {
-        return (BusinessCard(
-          nombre: e.businessName,
-          id: e.idMongo,
-          categoria: e.category,
-          latitud: double.parse(e.latitude),
-          longitud: double.parse(e.longitude),
+        negocios.add(BusinessCard(
+          nombre: element.businessName,
+          id: element.idMongo,
+          categoria: element.category,
+          latitud: double.parse(element.latitude),
+          longitud: double.parse(element.longitude),
           rating: 5.0,
-          imagen: e.imgPath[0],
-          description: e.description,
-          email: e.email,
+          imagen: element.imgPath[0],
+          description: element.description,
+          email: element.email,
         ));
-      }).toList();
-      if (state.length != negocios.length) {
-        state = negocios;
       }
     }
+    state = negocios;
   }
 }
 

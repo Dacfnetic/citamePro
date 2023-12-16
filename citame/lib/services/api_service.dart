@@ -20,12 +20,14 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-String serverUrl = 'https://ubuntu.citame.store';
+String serverUrl = API.server;
 FirebaseAuth auth = FirebaseAuth.instance;
 String actualCat = '';
 String categoriaABuscar = '';
 
 abstract class API {
+  static String server = 'https://ubuntu.citame.store';
+
   static Future<String> deleteBusiness(
       String businessName, String email) async {
     final response =
@@ -238,11 +240,13 @@ abstract class API {
     final response = await http
         .get(Uri.parse('$serverUrl/api/imagen/download'), headers: {'id': id});
     if (response.statusCode == 200) {
-      var imagen = jsonDecode(response.body);
-      var imagen2 = imagen['data'].cast<int>();
-      Uint8List imagen3 = Uint8List.fromList(imagen2);
+      var imagen = response.bodyBytes;
+      /*print(imagen.runtimeType);
+      var imagen1 = json.decode(imagen);
+      var imagen2 = imagen1['data'].cast<int>();
+      Uint8List imagen3 = Uint8List.fromList(imagen2);*/
 
-      return imagen3;
+      return imagen;
     }
     throw Exception('Failed to get items');
   }
@@ -326,8 +330,9 @@ abstract class API {
     final response = await http.get(Uri.parse('$serverUrl/api/workers/get'),
         headers: {'businessId': businessId});
     if (response.statusCode == 200) {
-      final List<dynamic> workerList = jsonDecode(response.body);
-      final List<Worker> trabajadores = workerList.map((trabajador) {
+      final List<dynamic> workerList1 = jsonDecode(response.body);
+      //final List<dynamic> workerList = json.decode(workerList1);
+      final List<Worker> trabajadores = workerList1.map((trabajador) {
         Worker negocio = Worker.fromJson(trabajador);
         return negocio;
       }).toList();
@@ -420,6 +425,7 @@ abstract class API {
         .signIn();
     final GoogleSignInAuthentication? googleAuth =
         await googleUser?.authentication;
+
     final credential = GoogleAuthProvider.credential(
       accessToken: googleAuth?.accessToken,
       idToken: googleAuth?.idToken,

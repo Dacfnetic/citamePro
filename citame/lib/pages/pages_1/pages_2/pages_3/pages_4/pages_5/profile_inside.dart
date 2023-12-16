@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:citame/Widgets/cuadro.dart';
 import 'package:citame/models/worker_moder.dart';
 import 'package:citame/providers/img_provider.dart';
 import 'package:citame/providers/my_actual_business_provider.dart';
@@ -18,6 +19,8 @@ class ProfileInsidePage extends ConsumerWidget {
   final TextEditingController workerName = TextEditingController();
   final TextEditingController workerEmail = TextEditingController();
   final TextEditingController workerJob = TextEditingController();
+  final TextEditingController workerSalary = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
   final GlobalKey<FormState> signUpKey =
       GlobalKey<FormState>(); //llave global del form para validaciones
 
@@ -87,22 +90,125 @@ class ProfileInsidePage extends ConsumerWidget {
                               mainAxisSize: MainAxisSize.max,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                  "Albert Einstein",
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
-                                ),
+                                workerName.text == ''
+                                    ? Text(
+                                        "Albert Einstein",
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold),
+                                      )
+                                    : Text(
+                                        workerName.text,
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold),
+                                      ),
                                 TextButton(
-                                    onPressed: () {}, child: Text("edit")),
+                                    onPressed: () async {
+                                      await showDialog<void>(
+                                        barrierDismissible: false,
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                          content: Stack(
+                                            clipBehavior: Clip.none,
+                                            children: <Widget>[
+                                              Positioned(
+                                                right: -40,
+                                                top: -40,
+                                                child: InkResponse(
+                                                  onTap: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: const CircleAvatar(
+                                                    backgroundColor: Colors.red,
+                                                    child: Icon(Icons.close),
+                                                  ),
+                                                ),
+                                              ),
+                                              Form(
+                                                key: _formKey,
+                                                child: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: <Widget>[
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8),
+                                                      child: Cuadro(
+                                                          control: workerName,
+                                                          texto:
+                                                              'Nombre del trabajador'),
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8),
+                                                      child: Cuadro(
+                                                          control: workerEmail,
+                                                          texto:
+                                                              'Email del trabajador'),
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8),
+                                                      child: Cuadro(
+                                                          control: workerJob,
+                                                          texto:
+                                                              'Puesto del trabajador'),
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8),
+                                                      child: Cuadro(
+                                                          control: workerSalary,
+                                                          texto:
+                                                              'Salario del trabajador'),
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8),
+                                                      child: ElevatedButton(
+                                                        child: const Text(
+                                                            'Submitß'),
+                                                        onPressed: () {
+                                                          if (_formKey
+                                                              .currentState!
+                                                              .validate()) {
+                                                            _formKey
+                                                                .currentState!
+                                                                .save();
+                                                            Navigator.pop(
+                                                                context);
+                                                            API.reRender(ref);
+                                                          }
+                                                        },
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    child: Text("Editar")),
                               ],
                             ),
-                            Text("Einstein@gmail.com"),
-                            Text(
-                              "Barbero",
-                              style:
-                                  TextStyle(fontSize: 12, color: Colors.grey),
-                            )
+                            workerEmail.text == ''
+                                ? Text("Einstein@gmail.com")
+                                : Text(workerEmail.text),
+                            workerJob.text == ''
+                                ? Text("Barbero")
+                                : Text(
+                                    workerJob.text,
+                                    style: TextStyle(
+                                        fontSize: 12, color: Colors.grey),
+                                  ),
                           ],
                         ),
                       ),
@@ -138,10 +244,10 @@ class ProfileInsidePage extends ConsumerWidget {
                             if (signUpKey.currentState!.validate()) {
                               if (context.mounted) {
                                 API.postWorker(
-                                    'Diego',
-                                    'dacf9x@gmail.com',
+                                    workerName.text,
+                                    workerEmail.text,
                                     ref.read(imgProvider),
-                                    500.50,
+                                    double.parse(workerSalary.text),
                                     enviar,
                                     ref.read(actualBusinessProvider),
                                     ref
@@ -149,7 +255,7 @@ class ProfileInsidePage extends ConsumerWidget {
                                         .getActualBusiness(),
                                     prefs.getString('emailUser')!,
                                     context,
-                                    'Presidente');
+                                    workerJob.text);
                               }
                             }
                           },

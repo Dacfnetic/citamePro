@@ -60,9 +60,9 @@ class ReservationPage extends ConsumerWidget {
                               ),
                               height: 200,
                               child: TextButton(
-                                  onPressed: () {
-                                    TimeOfDay inicio =
-                                        API.timePicker(context, 'Horario');
+                                  onPressed: () async {
+                                    TimeOfDay inicio = await API.timePicker(
+                                        context, 'Horario');
                                   },
                                   child: Icon(Icons.lock_clock)),
                             ),
