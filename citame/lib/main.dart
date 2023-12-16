@@ -1,3 +1,4 @@
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:citame/pages/home_page.dart';
 import 'package:citame/pages/signin_page.dart';
 import 'package:citame/services/api_service.dart';
@@ -6,10 +7,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:workmanager/workmanager.dart';
 import 'firebase_options.dart';
+import 'package:flutter/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Workmanager().initialize(callback);
+  Workmanager().registerOneOffTask("uniqueName", "taskName");
+  await initNotification();
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -58,10 +66,20 @@ class MyApp extends ConsumerWidget {
             print(snapshot.data);
             print(snapshot.data!.uid);
 
+            /* final channel = WebSocketChannel.connect(
+              Uri.parse(API.server),
+            );*/
+
             API.postUser(snapshot.data!.uid, snapshot.data!.displayName,
                 snapshot.data!.email, snapshot.data!.photoURL);
-
             return HomePage();
+            /*return StreamBuilder(
+              stream: channel.stream,
+              builder: (context, snapshot2) {
+                print(snapshot2);
+                return HomePage();
+              },
+            );*/
           }
 
           return const SignInPage();
@@ -70,4 +88,37 @@ class MyApp extends ConsumerWidget {
       debugShowCheckedModeBanner: false,
     );
   }
+}
+
+void callback() {
+  Workmanager().executeTask((taskName, inputData) {
+    showNot();
+    return Future.value(true);
+  });
+}
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
+Future<void> initNotification() async {
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('app_icon');
+  const DarwinInitializationSettings initializationSettingsIOS =
+      DarwinInitializationSettings();
+  const InitializationSettings initializationSettings = InitializationSettings(
+      android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+}
+
+Future<void> showNot() async {
+  const AndroidNotificationDetails androidNotificationDetails =
+      AndroidNotificationDetails('channelId', 'channelName',
+          importance: Importance.max, priority: Priority.high);
+  const DarwinNotificationDetails darwinNotificationDetails =
+      DarwinNotificationDetails();
+  const NotificationDetails notificationDetails =
+      NotificationDetails(android: androidNotificationDetails);
+
+  await flutterLocalNotificationsPlugin.show(1, 'Prro te aviso que...',
+      'Alguien te agregó a un negocio como trabajador', notificationDetails);
 }

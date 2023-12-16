@@ -2,6 +2,7 @@ import 'package:citame/Widgets/business_card.dart';
 import 'package:citame/Widgets/search_bar_citame.dart';
 import 'package:citame/providers/business_provider.dart';
 import 'package:citame/providers/own_business_provider.dart';
+import 'package:citame/providers/re_render_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -14,6 +15,7 @@ class MyBusinessesPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     List<BusinessCard> negocios = ref.watch(ownBusinessProvider);
+    ref.watch(reRenderProvider);
     return Scaffold(
       appBar: AppBar(),
       body: SafeArea(

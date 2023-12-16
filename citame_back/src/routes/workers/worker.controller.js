@@ -23,8 +23,8 @@ async function postWorkers(req,res){
                             id: docs._id,
                             name: req.body.name,
                             email: req.body.email,
-                            salary :req.body.salary,
-                            horario:req.body.horario,
+                            salary: req.body.salary,
+                            horario: req.body.horario,
                             status: req.body.status,
                             puesto: req.body.puesto
                         });
@@ -37,8 +37,7 @@ async function postWorkers(req,res){
 
         if(worker.length != 0){
             await worker.forEach(async (e)=> {
-                await workersModel.findOne({id : e}).then(async (docs) =>{
-                    console.log(docs.email);
+                await workersModel.findOne({_id : e}).then(async (docs) =>{
                     if(docs.email == req.body.email){
                         return res.status(203).send('El trabajador ya esta en el negocio');
                     }
@@ -48,17 +47,17 @@ async function postWorkers(req,res){
                         .then(async (docs)=>{
                             if(docs != null){
                                 console.log('Creando Trabajador');
-                                await workersModel.create({
+                                const nuevo = new workersModel({
                                     id: docs._id,
                                     name: req.body.name,
                                     email: req.body.email,
-                                    imgPath:req.body.imgPath,
-                                    salary :req.body.salary,
-                                    horario:req.body.horario,
+                                    salary: req.body.salary,
+                                    horario: req.body.horario,
                                     status: req.body.status,
                                     puesto: req.body.puesto
-                        });
-                    return res.status(201).send({'sms':'Trabajador creado'});
+                                });
+                                await nuevo.save();
+                                return res.status(201).json(nuevo); 
                 }
                 return res.status(202).send('Correo no registrado');
                 });

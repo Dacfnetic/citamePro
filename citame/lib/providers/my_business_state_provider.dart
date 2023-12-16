@@ -57,10 +57,6 @@ class MyBusinessStateNotifier extends StateNotifier<List<Business>> {
     return actualBusiness;
   }
 
-  void setDiasWorker(dia, TimeOfDay inicio, TimeOfDay fin) {
-    workerDaysAvailable[dia].add({'inicio': inicio, 'fin': fin});
-  }
-
   void eliminarHorario(dia, Map horario) {
     workerDaysAvailable[dia].remove(horario);
     print(workerDaysAvailable);
@@ -70,6 +66,10 @@ class MyBusinessStateNotifier extends StateNotifier<List<Business>> {
     //obtenerindice
     int index = workerDaysAvailable[dia].indexOf(horario);
     workerDaysAvailable[dia][index] = {'inicio': inicio, 'fin': fin};
+  }
+
+  void setDiasWorker(dia, TimeOfDay inicio, TimeOfDay fin) {
+    workerDaysAvailable[dia].add({'inicio': inicio, 'fin': fin});
   }
 
   Map obtenerDiasWorker() {

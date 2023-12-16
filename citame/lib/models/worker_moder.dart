@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 class Schedule {
   final Map horario;
   Schedule({
@@ -45,7 +47,7 @@ class Worker {
       name: json['name'],
       email: json['email'],
       imgPath: json['imgPath'],
-      salary: json['salary'],
+      salary: json['salary'].toDouble(),
       horario: json['horario'],
       status: json['status'],
       id: json['id'],
