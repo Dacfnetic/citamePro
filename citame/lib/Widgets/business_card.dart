@@ -47,18 +47,31 @@ class BusinessCard extends ConsumerWidget {
     return Animate(
       effects: [
         FadeEffect(delay: 500.ms, duration: 2000.ms),
-        SlideEffect(curve: Curves.easeIn)
+        SlideEffect(curve: Curves.easeInOut)
       ],
       child: Container(
         height: 333,
+        margin: EdgeInsets.all(5),
+        padding: EdgeInsets.all(2),
         decoration: BoxDecoration(
+          color: Colors.white,
+          //border: Border.all(color: Colors.black),
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.5), // Color de la sombra
+              spreadRadius: 2, // Extensión de la sombra
+              blurRadius: 2, // Desenfoque de la sombra
+              offset: Offset(0, 1), // Desplazamiento de la sombra
+            ),
+          ],
           shape: BoxShape.rectangle,
-          color: Colors.blue,
+          //color: Colors.blue,
         ),
         child: TextButton(
           style: ButtonStyle(
-            backgroundColor: MaterialStatePropertyAll(Colors.red),
-          ),
+              //backgroundColor: MaterialStatePropertyAll(Colors.red),
+              ),
           onPressed: () {
             Widget actual = ref.read(pageProvider);
             ref.read(actualBusinessProvider.notifier).actualizar(id);
@@ -158,9 +171,9 @@ class BusinessCard extends ConsumerWidget {
                   ),
                 ],
               ),
-              SizedBox(
+              /*SizedBox(
                 height: 24,
-              )
+              )*/
             ],
           ),
         ),
