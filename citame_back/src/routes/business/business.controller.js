@@ -7,6 +7,7 @@ const app = require('../../app.js')
 
 
 async function getAllBusiness(req,res){
+    console.log('Intentando obtener negocios por categoria');
     try{
         usuario.findOne({emailUser: req.get('email')})
             .then(async(docs)=>{
@@ -20,15 +21,21 @@ async function getAllBusiness(req,res){
     }  
 }
 async function getOwnerBusiness(req,res){
+    
     try{
+
+        console.log('Intentando obtener negocios del usuario');
         usuario.findOne({emailUser: req.get('email')})
             .then(async(docs)=>{
                 if(docs.emailUser == req.get('email')){
                     const ownerBusiness = await business.find({ createdBy: docs._id });
+                    console.log('Ya tenemos la lista de negocios del usuario');
                     const comprob =req.get('estado');
                     if(comprob=='1'){
+                        console.log('Como no habian cambios no te enviamos nada');
                         return res.status(200).send('1');
                     }
+                    console.log('Ahora te vamos a enviar los negocios del usuario, luego te envio las imagenes');
                     return res.status(201).json(ownerBusiness);
                 }
             }).catch(e=>console.log(e));
@@ -37,6 +44,7 @@ async function getOwnerBusiness(req,res){
     }  
 }
 async function verifyOwnerBusiness(req,res){
+    console.log('Verificando si los negocios del usuario han cambiado');
     try{
         usuario.findOne({emailUser: req.body.email})
             .then(async(docs)=>{
@@ -59,6 +67,7 @@ async function verifyOwnerBusiness(req,res){
     }  
 }
 async function postBusiness(req,res){
+    console.log('Intentando crear negocio');
     try{
         let existe = true;    
         await business.findOne({businessName: req.body.businessName, email: req.body.email, workers:req.body.workers})
@@ -93,6 +102,7 @@ async function postBusiness(req,res){
     }  
 }
 async function deleteBusiness(req,res){
+    console.log('Intentando borrar negocio');
     try{
         let existe = true;    
         await business.findOneAndDelete({businessName: req.body.businessName, email: req.body.email})
@@ -103,7 +113,7 @@ async function deleteBusiness(req,res){
     }  
 }
 async function updateBusiness(req,res){
-
+    console.log('Actualizando fotos del usuario');
     try {
   
         let previousWorkers = '';
@@ -126,6 +136,7 @@ async function updateBusiness(req,res){
 }
 
 async function updateWorkers(req,res){
+    console.log('Actualizando trabajadores del usuario');
     let item = [];
     let previousWorkers = '';
         let bId = '';
