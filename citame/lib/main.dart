@@ -1,3 +1,7 @@
+import 'dart:io';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:citame/services/chat_service.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:citame/pages/home_page.dart';
 import 'package:citame/pages/signin_page.dart';
@@ -7,20 +11,39 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:workmanager/workmanager.dart';
 import 'firebase_options.dart';
 import 'package:flutter/services.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Workmanager().initialize(callback);
   Workmanager().registerOneOffTask("uniqueName", "taskName");
   await initNotification();
+  //String ruta = 'ws://https://ws.citame.store';
+  //final socket = await Socket.connect(API.server, 4000);
+  //print(socket);
+  /*final channel = WebSocketChannel.connect(
+    Uri.parse(ruta),
+  );*/
+  // print(channel);
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+// Dart client
+  IO.Socket socket = IO.io('http://localhost:3000');
+  socket.onConnect((_) {
+    print('connect');
+    socket.emit('msg', 'test');
+  });
+  socket.on('event', (data) => print(data));
+  socket.onDisconnect((_) => print('disconnect'));
+  socket.on('fromServer', (_) => print(_));
+
   runApp(ProviderScope(
     child: MyApp(),
   ));
@@ -31,6 +54,8 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ChatService chatService = ChatService();
+
     return MaterialApp(
       builder: FToastBuilder(),
       title: 'Citame',
@@ -65,10 +90,6 @@ class MyApp extends ConsumerWidget {
             print(snapshot);
             print(snapshot.data);
             print(snapshot.data!.uid);
-
-            /* final channel = WebSocketChannel.connect(
-              Uri.parse(API.server),
-            );*/
 
             API.postUser(snapshot.data!.uid, snapshot.data!.displayName,
                 snapshot.data!.email, snapshot.data!.photoURL);

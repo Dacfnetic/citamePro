@@ -2,13 +2,7 @@
 const usuario = require('../../models/users.model.js');
 
 //Función para obtener usuario
-async function serverReady(req,res){
-    try{
-        return res.status(200).json('Bienvenido perro');
-    }catch(e){
-        return res.status(404).json('Errorsillo');
-    }  
-}
+
 async function getUser(req,res){
     try{
         const allUsers = await usuario.find();
@@ -52,6 +46,6 @@ async function postUser(req,res){
 module.exports = {
     getUser,
     postUser,
-    serverReady,
+
     getAllUser
 }

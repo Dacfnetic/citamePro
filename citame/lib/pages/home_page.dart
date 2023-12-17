@@ -18,6 +18,7 @@ class HomePage extends ConsumerWidget {
     ref.watch(geoProvider.notifier).obtener();
     CategoristListNotifier categoriesController =
         ref.read(categoriesProvider.notifier);
+
     return Scaffold(
       body: SafeArea(
         child: Container(
