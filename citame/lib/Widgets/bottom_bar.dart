@@ -1,4 +1,5 @@
 import 'package:citame/pages/home_page.dart';
+import 'package:citame/pages/pages_1/index_page.dart';
 import 'package:citame/pages/pages_1/pages_2/chats_page.dart';
 import 'package:citame/pages/pages_1/profile_page.dart';
 import 'package:citame/providers/business_provider.dart';
@@ -53,7 +54,7 @@ class BarraInferior extends ConsumerWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ChatsPage(),
+                    builder: (context) => IndexPage(),
                   ));
               await API.getAllUsers();
             }
