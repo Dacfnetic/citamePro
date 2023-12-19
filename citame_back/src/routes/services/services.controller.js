@@ -6,13 +6,33 @@ const services = require('../../models/services.model.js');
 async function getServices(req,res){
     
     try{
-        business.findOne({email: req.get('email')})
+        let item = [];
+        let servicioSend = [];
+        let contador = 0;
+        await business.findById(req.get('idBusiness'))
             .then(async(docs)=>{
-                if(docs.email == req.get('email')){
-                    const allServices = await services.find({nombreServicio: req.get('nombreServicio')});
-                    return res.status(200).json(allServices);
-                }
+                    
+                    const servicios = docs.servicios;
+                    item = JSON.parse(JSON.stringify(servicios));
+                
+
+        
             }).catch(e=>console.log(e));
+
+            item.forEach(async (element)  =>  {
+                const servicio = await services.findById(element)
+
+                servicioSend.push(servicio);
+                contador++;
+
+                if (contador == item.length){
+                    return res.status(200).json(servicioSend);
+                }
+
+            });
+
+            
+
     }catch(e){
         return res.status(404).json('Errosillo');
     }  
@@ -24,18 +44,23 @@ async function postServices(req,res){
 
     try{
         
-        business.findOne({email: req.body.email})
+        business.findById(req.body.idBusiness)
         .then(async (docs)=>{
             if(docs != null){
                 console.log('Creando Servicio');
-                await services.create({
+
+
+                const servicioNew = new services({
                     nombreServicio: req.body.nombreServicio,
                     businessCreatedBy : docs._id,
                     precio: req.body.precio,
                     imgPath: req.body.imgPath,
-                    descripcion: req.body.descripcion
-                });
-                return res.status(201).send({'sms':'Servicio creado'});
+                    descripcion: req.body.descripcion})
+
+
+                await servicioNew.save();
+                
+                return res.status(201).send(servicioNew);
             }
             return res.status(202).send({'sms': 'El Servicio ya existe'});//Cambiar porque est[a raro]
         });

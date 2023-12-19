@@ -16,7 +16,7 @@ const businessSchema = new Schema({
     description: {type: String, required: true},
     imgPath:[{type:Schema.Types.ObjectId,ref:'Imagen'}],
     horario:{type: String},
-    servicios:[String]
+    servicios:[{type:mongoose.Schema.Types.ObjectId, ref:'services'}]
 
 });
 
