@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
+
 import 'package:citame/services/chat_service.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -11,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:workmanager/workmanager.dart';
 import 'firebase_options.dart';
 import 'package:flutter/services.dart';
@@ -33,9 +32,9 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
+/*
 // Dart client
-  IO.Socket socket = IO.io('http://localhost:3000');
+  IO.Socket socket = IO.io(API.server);
   socket.onConnect((_) {
     print('connect');
     socket.emit('msg', 'test');
@@ -43,7 +42,7 @@ Future<void> main() async {
   socket.on('event', (data) => print(data));
   socket.onDisconnect((_) => print('disconnect'));
   socket.on('fromServer', (_) => print(_));
-
+*/
   runApp(ProviderScope(
     child: MyApp(),
   ));

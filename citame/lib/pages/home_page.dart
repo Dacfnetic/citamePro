@@ -5,6 +5,7 @@ import 'package:citame/providers/geolocator_provider.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class HomePage extends ConsumerWidget {
   HomePage({
@@ -14,10 +15,25 @@ class HomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    IO.Socket socket;
     List<HomeRow> categorias = ref.watch(categoriesProvider);
     ref.watch(geoProvider.notifier).obtener();
     CategoristListNotifier categoriesController =
         ref.read(categoriesProvider.notifier);
+
+    void connect() {
+      socket = IO.io('http://ubuntu.citame.store/', <String, dynamic>{
+        "transports": ["websocket"],
+        "autoConnect": false,
+      });
+      socket.connect();
+      socket.emit("/test", "Hello World");
+      socket.onConnect((data) => print('Connected'));
+      print(socket.connected);
+      //socket.disconnect();
+    }
+
+    connect();
 
     return Scaffold(
       body: SafeArea(

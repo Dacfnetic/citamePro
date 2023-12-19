@@ -2,7 +2,6 @@
 const usuario = require('../../models/users.model.js');
 
 //Función para obtener usuario
-
 async function getUser(req,res){
     try{
         const allUsers = await usuario.find();
@@ -46,6 +45,5 @@ async function postUser(req,res){
 module.exports = {
     getUser,
     postUser,
-
     getAllUser
 }

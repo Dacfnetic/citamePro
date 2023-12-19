@@ -3,6 +3,7 @@ const WebSocket = require('ws');
 //Referencia de clientes conectados
 const clientOnServer = new Set();
 
+
 function setupWebSocket(server){
   const wss = new WebSocket.Server({ noServer: true });
 

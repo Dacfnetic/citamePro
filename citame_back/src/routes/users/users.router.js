@@ -1,6 +1,6 @@
 const express = require('express');
 //Importación de funciones
-const { getUser, postUser,  getAllUser } = require('./users.controller.js');
+const { getUser, postUser, getAllUser } = require('./users.controller.js');
 //Crear enrutador
 const usersRouter = express.Router();
 //Asignación de direcciones

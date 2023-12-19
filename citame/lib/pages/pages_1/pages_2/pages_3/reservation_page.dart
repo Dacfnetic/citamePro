@@ -45,7 +45,14 @@ class ReservationPage extends ConsumerWidget {
                               ),
                               height: 200,
                               child: TextButton(
-                                  onPressed: () {},
+                                  onPressed: () async {
+                                    var comida = await showDatePicker(
+                                      context: context,
+                                      initialDate: DateTime.now(),
+                                      firstDate: DateTime(2024),
+                                      lastDate: DateTime(2100),
+                                    );
+                                  },
                                   child: Icon(Icons.calendar_month)),
                             ),
                           ),
