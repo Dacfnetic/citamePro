@@ -91,6 +91,7 @@ class ReservationPage extends ConsumerWidget {
                                   color: Colors.grey.withOpacity(0.2),
                                 ),
                               ),
+
                               height: 125,
                               child: Column(
                                 children: [

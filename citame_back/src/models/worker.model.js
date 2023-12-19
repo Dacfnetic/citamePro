@@ -1,7 +1,8 @@
 const {Schema, model} = require('mongoose');
 const mongoose = require('mongoose');
 const citaModel = require('./cita.model');
-const Agenda = require()
+const Agenda = require('./Agenda.js');
+
 //Datos que se guardan en la BD
 const workerSchema = new Schema({
     id: {type:mongoose.Schema.Types.ObjectId, ref:'usuario',required:true},

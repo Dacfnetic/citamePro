@@ -1,4 +1,3 @@
-import 'package:citame/pages/pages_1/pages_2/chats_page.dart';
 import 'package:citame/pages/pages_1/pages_2/pages_3/pages_4/menu_page.dart';
 import 'package:citame/providers/navbar_provider.dart';
 import 'package:citame/providers/page_provider.dart';
@@ -31,7 +30,7 @@ class BarraInferiorBusiness extends ConsumerWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ChatsPage(),
+                    builder: (context) => Placeholder(),
                   ));
               await API.getAllUsers();
             }
