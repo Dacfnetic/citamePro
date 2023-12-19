@@ -87,6 +87,50 @@ class MyBusinessStateNotifier extends StateNotifier<List<Business>> {
   void borrarDiaWorker(dia) {
     workerDaysAvailable[dia] = [];
   }
+
+  void setCita({
+    required DateTime fecha,
+    required TimeOfDay horarioInicial,
+    required TimeOfDay horarioFinal,
+    required List servicios,
+  }) {
+    citaActual['dia'] = fecha.day;
+    citaActual['mes'] = fecha.month;
+    citaActual['year'] = fecha.year;
+    citaActual['hora_inicial'] = horarioInicial.hour;
+    citaActual['minuto_inicial'] = horarioInicial.minute;
+    citaActual['hora_final'] = horarioFinal.hour;
+    citaActual['minuto_final'] = horarioFinal.minute;
+    citaActual['servicios'] = servicios;
+  }
+
+  Map getCita() {
+    return citaActual;
+  }
+
+  void setFecha(DateTime fechaEscogida) {
+    fecha = fechaEscogida;
+  }
+
+  DateTime getFecha() {
+    return fecha;
+  }
+
+  void setHora(TimeOfDay horaEscogida) {
+    hora = horaEscogida;
+  }
+
+  TimeOfDay getHora() {
+    return hora;
+  }
+
+  void setHoraFinal(TimeOfDay horaEscogida) {
+    horaFinal = horaEscogida;
+  }
+
+  TimeOfDay getHoraFinal() {
+    return horaFinal;
+  }
 }
 
 Map diasLaboralesGenerales = {
@@ -118,6 +162,21 @@ Map workerDaysAvailable = {
   'domingo': [],
 };
 
+Map citaActual = {
+  'dia': '',
+  'mes': '',
+  'year': '',
+  'servicios': [],
+  'hora_inicial': '',
+  'minuto_inicial': '',
+  'hora_final': '',
+  'minuto_final': '',
+};
+
+DateTime fecha = DateTime.now();
+
+TimeOfDay hora = TimeOfDay.now();
+TimeOfDay horaFinal = TimeOfDay.now();
 List<Worker> workers = [];
 
 List papelera = [];

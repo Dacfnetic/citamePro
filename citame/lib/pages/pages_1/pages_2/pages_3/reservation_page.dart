@@ -3,6 +3,7 @@ import 'package:citame/providers/re_render_provider.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http/http.dart';
 
 class ReservationPage extends ConsumerWidget {
   ReservationPage({
@@ -24,10 +25,56 @@ class ReservationPage extends ConsumerWidget {
         child: Form(
           key: signUpKey,
           child: Container(
-            color: Color.fromRGBO(240, 240, 240, 1),
+            color: Colors.white,
             child: ListView(
               children: [
                 //  WorkerBox(ruta: ruta, ref: ref),
+                Expanded(
+                  child: Container(
+                    margin: EdgeInsets.fromLTRB(0, 1, 0, 0),
+                    //padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
+                    decoration: BoxDecoration(color: Colors.white, boxShadow: [
+                      BoxShadow(
+                        color: Colors.black,
+                      )
+                    ]),
+                    child: Row(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.all(16),
+                          alignment: Alignment.centerLeft,
+                          decoration: BoxDecoration(
+                            color: Color(0x4d39d2c0),
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: Colors.green,
+                              width: 2,
+                            ),
+                            /*image: DecorationImage(
+                          image: NetworkImage(user.avatar),
+                          fit: BoxFit.fill,
+                        ),*/
+                          ),
+                          child: SizedBox(
+                            height: 90,
+                            width: 90,
+                          ),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('ricky ricon',
+                                textAlign: TextAlign.left,
+                                style: API.estiloJ24negro),
+                            Text('barbero',
+                                textAlign: TextAlign.left,
+                                style: API.estiloJ14gris),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
                 Padding(
                   padding: const EdgeInsets.all(8),
                   child: Column(
@@ -38,39 +85,91 @@ class ReservationPage extends ConsumerWidget {
                             child: Container(
                               margin: EdgeInsets.all(8),
                               decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
                                 border: Border.all(
                                   width: 5,
-                                  color: Colors.black38,
+                                  color: Colors.grey.withOpacity(0.2),
                                 ),
                               ),
-                              height: 200,
-                              child: TextButton(
-                                  onPressed: () {},
-                                  child: Icon(Icons.calendar_month)),
+                              height: 125,
+                              child: Column(
+                                children: [
+                                  TextButton(
+                                      onPressed: () async {
+                                        DateTime dia =
+                                            await API.datePicker(context);
+                                        ref
+                                            .read(myBusinessStateProvider
+                                                .notifier)
+                                            .setFecha(dia);
+                                      },
+                                      child: Icon(
+                                        Icons.calendar_month,
+                                        size: 60,
+                                        color: Colors.blueGrey,
+                                      )),
+                                  Text('Fecha'),
+                                ],
+                              ),
                             ),
                           ),
                           Expanded(
                             child: Container(
                               margin: EdgeInsets.all(8),
                               decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
                                 border: Border.all(
                                   width: 5,
-                                  color: Colors.black38,
+                                  color: Colors.grey.withOpacity(0.2),
                                 ),
                               ),
-                              height: 200,
-                              child: TextButton(
-                                  onPressed: () async {
-                                    TimeOfDay inicio = await API.timePicker(
-                                        context, 'Horario');
-                                  },
-                                  child: Icon(Icons.lock_clock)),
+                              height: 125,
+                              child: Column(
+                                children: [
+                                  TextButton(
+                                      onPressed: () async {
+                                        TimeOfDay inicio = await API.timePicker(
+                                            context, 'Horario');
+                                        ref
+                                            .read(myBusinessStateProvider
+                                                .notifier)
+                                            .setHora(inicio);
+                                        if (context.mounted) {
+                                          TimeOfDay horaFinal = await API
+                                              .timePicker(context, 'Horario');
+                                          ref
+                                              .read(myBusinessStateProvider
+                                                  .notifier)
+                                              .setHoraFinal(horaFinal);
+                                        }
+                                      },
+                                      child: Icon(
+                                        Icons.access_time,
+                                        size: 60,
+                                        color: Colors.blueGrey,
+                                      )),
+                                  Text('Hora'),
+                                ],
+                              ),
                             ),
                           ),
                         ],
                       ),
                       ElevatedButton(
                           onPressed: () async {
+                            ref.read(myBusinessStateProvider.notifier).setCita(
+                              fecha: ref
+                                  .read(myBusinessStateProvider.notifier)
+                                  .getFecha(),
+                              horarioInicial: ref
+                                  .read(myBusinessStateProvider.notifier)
+                                  .getHora(),
+                              horarioFinal: ref
+                                  .read(myBusinessStateProvider.notifier)
+                                  .getHoraFinal(),
+                              servicios: [],
+                            );
+                            //API.postCita(ref.read(myBusinessStateProvider.notifier).getCita());
                             API.mensaje(context, 'Aviso',
                                 'Solicitud de cita enviada, puedes acceder a el estado de la cita en la sección de citas que es el boton central de la barra inferor, también recibiras una notificación cuando esta sea aceptada.');
                           },

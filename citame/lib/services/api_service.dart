@@ -584,7 +584,18 @@ abstract class API {
       context: context,
       helpText: titulo,
     );
+
     return selectedTime;
+  }
+
+  static datePicker(BuildContext context) {
+    Future<DateTime?> selectedDate = showDatePicker(
+      context: context,
+      firstDate: DateTime(2024),
+      lastDate: DateTime(3000),
+    );
+
+    return selectedDate;
   }
 
   static noHayPropios(BuildContext context) {
