@@ -1,7 +1,6 @@
 const {Schema, model} = require('mongoose');
 const mongoose = require('mongoose');
 const citaModel = require('./cita.model');
-const Agenda = require('./Agenda.js');
 
 //Datos que se guardan en la BD
 const workerSchema = new Schema({
@@ -15,7 +14,7 @@ const workerSchema = new Schema({
     status: {type: Boolean},
     puesto: {type:String},
     citasHechas:[{type: mongoose.Schema.Types.ObjectId,ref:'cita'}],//Guardar el objeto de las citas
-    horarioDisponible:[{type:Agenda}]
+    horarioDisponible:{type:mongoose.Schema.Types.Mixed}
 });
 
 module.exports = model('worker',workerSchema);
