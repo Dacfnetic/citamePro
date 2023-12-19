@@ -13,8 +13,6 @@ const PORT = process.env.PORT || 4000;
 
 async function main(){
 
-   
-
     //Conexion a la BD
     await connect();
 
@@ -42,10 +40,5 @@ async function main(){
     });
 
 
-
-      
-
-
 }
-
 main();

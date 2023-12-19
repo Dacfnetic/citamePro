@@ -26,7 +26,7 @@ String actualCat = '';
 String categoriaABuscar = '';
 
 abstract class API {
-  static String server = 'https://ubuntu.citame.store';
+  static String server = 'http://localhost:4000';
 
   static Future<String> deleteBusiness(
       String businessName, String email) async {
@@ -584,7 +584,18 @@ abstract class API {
       context: context,
       helpText: titulo,
     );
+
     return selectedTime;
+  }
+
+  static datePicker(BuildContext context) {
+    Future<DateTime?> selectedDate = showDatePicker(
+      context: context,
+      firstDate: DateTime(2024),
+      lastDate: DateTime(3000),
+    );
+
+    return selectedDate;
   }
 
   static noHayPropios(BuildContext context) {

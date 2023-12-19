@@ -45,7 +45,7 @@ class ProfilePage extends ConsumerWidget {
                         color: Color(0x4d39d2c0),
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: Color(0xff39d2c0),
+                          color: Colors.green,
                           width: 2,
                         ),
                         image: DecorationImage(
