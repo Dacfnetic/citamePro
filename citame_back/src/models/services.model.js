@@ -7,7 +7,7 @@ const servicesSchema = new Schema({
     nombreServicio: {type: String}, 
     businessCreatedBy:{type:mongoose.Schema.Types.ObjectId, ref:'business',required:true},
     precio: {type: Number},
-    imgPath:[Number],
+    imgPath:[{type:Schema.Types.ObjectId,ref:'Imagen'}],
     descripcion:{type:String}
 
 
