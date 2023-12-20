@@ -24,7 +24,8 @@ class ProfilePage extends ConsumerWidget {
         "autoConnect": false,
       });
       socket.connect();
-      socket.emit("UsuarioRegistrado", user.userEmail);
+      String email = ref.read(userProvider.notifier).getEmail();
+      socket.emit("UsuarioRegistrado", email);
       socket.onConnect((data) => print('Connected'));
       print(socket.connected);
       //socket.disconnect();

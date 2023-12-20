@@ -11,6 +11,7 @@ import 'package:citame/pages/pages_1/pages_2/business_registration_page.dart';
 import 'package:citame/providers/img_provider.dart';
 import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:citame/providers/re_render_provider.dart';
+import 'package:citame/providers/user_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -203,7 +204,7 @@ abstract class API {
   }
 
   static Future<String> postUser(String googleId, String? userName,
-      String? emailUser, String? avatar) async {
+      String? emailUser, String? avatar, WidgetRef ref) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getString('googleId') == null ||
         prefs.getString('googleId') != googleId) {
@@ -221,6 +222,7 @@ abstract class API {
         prefs.getString('avatar') != avatar) {
       prefs.setString('avatar', avatar!);
     }
+    ref.read(userProvider.notifier).setEmail(emailUser);
     final response = await http.post(Uri.parse('$serverUrl/api/user/create'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
