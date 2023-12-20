@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:citame/Widgets/cuadro.dart';
 import 'package:citame/firebase_options.dart';
 import 'package:citame/models/business_model.dart';
+import 'package:citame/models/service_model.dart';
 import 'package:citame/models/user_model.dart';
 import 'package:citame/models/worker_moder.dart';
 import 'package:citame/pages/pages_1/pages_2/business_registration_page.dart';
@@ -92,6 +93,20 @@ abstract class API {
     throw Exception('Failed to add item');
   }
 
+  static Future<String> updateServiceInBusiness(
+      String businessId, String serviceId) async {
+    final response =
+        await http.put(Uri.parse('$serverUrl/api/business/serviceupdate'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({
+              'serviceId': serviceId,
+              'businessId': businessId,
+            }));
+
+    if (response.statusCode == 200) return 'Todo ok';
+    throw Exception('Failed to add item');
+  }
+
   static Future<String> postWorker(
       String name,
       String workerEmail,
@@ -140,6 +155,46 @@ abstract class API {
       if (context.mounted) {
         API.mensaje(
             context, 'Aviso', 'El correo ya está asignado a este negocio');
+        return 'Todo ok';
+      }
+    }
+
+    throw Exception('Failed to add item');
+  }
+
+  static Future<String> postService(
+      BuildContext context,
+      String idBusiness,
+      WidgetRef ref,
+      String nombreServicio,
+      String precio,
+      String duracion,
+      String descripcion) async {
+    final response =
+        await http.post(Uri.parse('$serverUrl/api/services/post/service'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({
+              'idBusiness': idBusiness,
+              'nombreServicio': nombreServicio,
+              'precio': precio,
+              'imgPath': [],
+              'duracion': duracion,
+              'descripcion': descripcion
+            }));
+    if (response.statusCode == 201) {
+      var serviceData = jsonDecode(response.body);
+      //await API.postImagen(imgPath, serviceData['_id'], 'worker');
+      if (context.mounted) {
+        API.mensaje(context, 'Aviso', 'El servicio fue creado');
+        await API.updateServiceInBusiness(idBusiness, serviceData['_id']);
+        ref.read(myBusinessStateProvider.notifier).setService(idBusiness, ref);
+
+        return 'Todo ok';
+      }
+    }
+    if (response.statusCode == 202) {
+      if (context.mounted) {
+        API.mensaje(context, 'Aviso', 'El servicio se repite');
         return 'Todo ok';
       }
     }
@@ -337,6 +392,25 @@ abstract class API {
         return negocio;
       }).toList();
       return trabajadores;
+    }
+    if (response.statusCode == 201) {
+      return [];
+    }
+    throw Exception('Failed to get items');
+  }
+
+  static Future<List<Service>> getService(String idBusiness) async {
+    final response = await http.get(
+        Uri.parse('$serverUrl/api/services/get/all'),
+        headers: {'idBusiness': idBusiness});
+    if (response.statusCode == 200) {
+      final List<dynamic> serviceList = jsonDecode(response.body);
+      //final List<dynamic> workerList = json.decode(workerList1);
+      final List<Service> servicios = serviceList.map((servicio) {
+        Service servicioActual = Service.fromJson(servicio);
+        return servicioActual;
+      }).toList();
+      return servicios;
     }
     if (response.statusCode == 201) {
       return [];

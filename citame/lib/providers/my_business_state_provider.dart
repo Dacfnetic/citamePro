@@ -1,4 +1,5 @@
 import 'package:citame/models/business_model.dart';
+import 'package:citame/models/service_model.dart';
 import 'package:citame/models/worker_moder.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +28,19 @@ class MyBusinessStateNotifier extends StateNotifier<List<Business>> {
 
   List<Worker> obtenerWorkers() {
     return workers;
+  }
+
+  void setService(id, ref) async {
+    services = await API.getService(id);
+/*
+    for (var element in workers) {
+      element.imgPath[0] = await API.downloadImage(element.imgPath[0]);
+    }*/
+    API.reRender(ref);
+  }
+
+  List<Service> getService() {
+    return services;
   }
 
   void setDias(dia, valor) {
@@ -178,7 +192,7 @@ DateTime fecha = DateTime.now();
 TimeOfDay hora = TimeOfDay.now();
 TimeOfDay horaFinal = TimeOfDay.now();
 List<Worker> workers = [];
-
+List<Service> services = [];
 List papelera = [];
 
 String actualBusiness = '';
