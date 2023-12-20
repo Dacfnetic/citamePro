@@ -52,7 +52,8 @@ class SignInPage extends ConsumerWidget {
                               userCredential.user!.uid,
                               userCredential.user!.displayName,
                               userCredential.user!.email,
-                              userCredential.user!.photoURL);
+                              userCredential.user!.photoURL,
+                              ref);
                           if (context.mounted) {
                             Navigator.push(
                                 context,

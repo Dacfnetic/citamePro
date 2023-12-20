@@ -86,7 +86,7 @@ class MyApp extends ConsumerWidget {
             print(snapshot.data!.uid);
 
             API.postUser(snapshot.data!.uid, snapshot.data!.displayName,
-                snapshot.data!.email, snapshot.data!.photoURL);
+                snapshot.data!.email, snapshot.data!.photoURL, ref);
             return HomePage();
             /*return StreamBuilder(
               stream: channel.stream,
