@@ -11,5 +11,6 @@ businessRouter.post('/api/business/verify/owner/business',verifyOwnerBusiness);
 businessRouter.delete('/api/business/delete',deleteBusiness);
 businessRouter.put('/api/business/update',updateBusiness);
 businessRouter.put('/api/business/workerupdate',updateWorkers);
+
 //Exportar enrutador
 module.exports = businessRouter;

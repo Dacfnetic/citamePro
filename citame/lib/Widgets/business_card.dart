@@ -79,6 +79,8 @@ class BusinessCard extends ConsumerWidget {
               ref
                   .read(myBusinessStateProvider.notifier)
                   .establecerWorkers(id, ref);
+              ref.read(myBusinessStateProvider.notifier).setService(id, ref);
+
               ref.read(myBusinessStateProvider.notifier).setActualBusiness(id);
               ref.read(myBusinessStateProvider.notifier).setActualEmail(email);
               Navigator.push(
@@ -91,6 +93,8 @@ class BusinessCard extends ConsumerWidget {
               ref
                   .read(myBusinessStateProvider.notifier)
                   .establecerWorkers(id, ref);
+              ref.read(myBusinessStateProvider.notifier).setService(id, ref);
+
               ref.read(myBusinessStateProvider.notifier).setActualBusiness(id);
               ref.read(myBusinessStateProvider.notifier).setActualEmail(email);
               Navigator.push(
