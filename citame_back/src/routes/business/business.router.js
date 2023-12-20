@@ -16,5 +16,6 @@ businessRouter.put('/api/business/update',updateWorkersInBusinessbyCreateWorker)
 businessRouter.put('/api/business/workerupdate',updateWorkers);
 businessRouter.put('/api/business/serviceupdate',updateArrayServices);
 businessRouter.put('/api/business/updateBusiness',updateBusiness);
+
 //Exportar enrutador
 module.exports = businessRouter;

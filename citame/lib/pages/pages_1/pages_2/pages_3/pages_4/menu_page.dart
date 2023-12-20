@@ -23,10 +23,14 @@ class MenuPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(reRenderProvider);
-    //List<Servicio> listaDeServicios = ref.watch(serviceProvider);
-    /*List<CajaDeServicios> servicios = listaDeServicios.map((servicio) => {
-      return CajaDeServicios(/*aca van las props del widget que vamos a crear*/ );
-    }).toList;*/
+    List<Service> listaDeServicios =
+        ref.watch(myBusinessStateProvider.notifier).getService();
+    List<CajaDeServicios> servicios = listaDeServicios
+        .map((servicio) => CajaDeServicios(
+            nombre: servicio.nombreServicio,
+            precio: servicio.precio.toStringAsFixed(2),
+            duracion: servicio.duracion))
+        .toList();
     ReRenderNotifier reRender = ref.read(reRenderProvider.notifier);
     List<Worker> workers =
         ref.watch(myBusinessStateProvider.notifier).obtenerWorkers();
@@ -95,7 +99,7 @@ class MenuPage extends ConsumerWidget {
                   children: [],
                 ),
               ),
-              //servicios.isNotEmpty?ListView(children:servicios ):Text(''),
+              servicios.isNotEmpty ? ListView(children: servicios) : Text(''),
               ElevatedButton.icon(
                 onPressed: () async {
                   await showDialog<void>(
@@ -143,11 +147,23 @@ class MenuPage extends ConsumerWidget {
                                   padding: const EdgeInsets.all(8),
                                   child: ElevatedButton(
                                     child: const Text('confirmar'),
-                                    onPressed: () {
+                                    onPressed: () async {
                                       if (validacion.currentState!.validate()) {
-                                        validacion.currentState!.save();
-                                        Navigator.pop(context);
-                                        API.reRender(ref);
+                                        await API.postService(
+                                            context,
+                                            ref
+                                                .read(myBusinessStateProvider
+                                                    .notifier)
+                                                .getActualBusiness(),
+                                            ref,
+                                            servicio.text,
+                                            precio.text,
+                                            duracion.text,
+                                            '');
+                                        if (context.mounted) {
+                                          Navigator.pop(context);
+                                          API.reRender(ref);
+                                        }
                                       }
                                     },
                                   ),
@@ -270,6 +286,28 @@ class MenuPage extends ConsumerWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class CajaDeServicios extends StatelessWidget {
+  const CajaDeServicios({
+    super.key,
+    required this.nombre,
+    required this.precio,
+    required this.duracion,
+  });
+  final String nombre;
+  final String precio;
+  final String duracion;
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Text(nombre),
+        Text(precio),
+        Text(duracion),
+      ],
     );
   }
 }

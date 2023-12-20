@@ -1,7 +1,4 @@
-import 'dart:io';
-
 import 'package:citame/services/chat_service.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:citame/pages/home_page.dart';
 import 'package:citame/pages/signin_page.dart';
@@ -53,8 +50,6 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ChatService chatService = ChatService();
-
     return MaterialApp(
       builder: FToastBuilder(),
       title: 'Citame',
