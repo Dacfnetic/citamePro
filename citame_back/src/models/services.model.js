@@ -8,7 +8,8 @@ const servicesSchema = new Schema({
     businessCreatedBy:{type:mongoose.Schema.Types.ObjectId, ref:'business',required:true},
     precio: {type: Number},
     imgPath:[{type:Schema.Types.ObjectId,ref:'Imagen'}],
-    descripcion:{type:String}
+    descripcion:{type:String},
+    duracion:{type:String}
 
 
 });

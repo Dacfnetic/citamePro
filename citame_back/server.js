@@ -1,6 +1,7 @@
 const http = require('http');
 const app = require('./src/app')
 const { Server } = require("socket.io");
+const user = require('./src/models/users.model');
 
 
 const { connect } = require('./src/config/database');
@@ -9,6 +10,7 @@ const { connect } = require('./src/config/database');
 const server = http.createServer(app);
 const io = new Server(server);
 const PORT = process.env.PORT || 4000;
+const usuariosConectados = new Set();
 
 
 async function main(){
@@ -21,19 +23,51 @@ async function main(){
         res.send('Holis');
       });
 
+      //Usuarios conectados
     io.on('connection', (socket) => {
         console.log('a user connected');
-        console.log(socket.id,"has joined");
-        socket.on("/test",(msg)=>{
-            console.log(msg);
-        });       
+        
+        socket.on('UsuarioRegistrado',(userName)=>{
+
+            user.findOne({userName: userName},(err, usuarioExistente)=>{
+
+                if(err) throw err;
+                
+                
+                if(usuarioExistente){
+
+                    socket.emit('Usuario encontrado');
+
+                }else{
+
+                    //const userNew = new user({userName: userName});
+                    //Guardarlos en el array
+                   // userNew.save();
+                    //socket.userName = userName;
+                    usuariosConectados.add(userName);
+                    //Mandar los usuarios
+                    io.emit('Usuarios Actualizados', Array.from(usuariosConectados));
+
+
+                }
+
+            });
+
+
+        });
+
+        //Desconexion de usuarios
+        socket.on('disconnect',()=>{
+            console.log('usuario desconectado');
+            usuariosConectados.delete(socket.userName);
+            io.emit('Usuarios Actualizados',Array.from(usuariosConectados));
+        })
+
     });
 
+
+
  
-
-    
-
-
     //Express app
     await server.listen(PORT ,() =>{
         console.log(`Server is running at port: ${PORT}`);
@@ -41,4 +75,5 @@ async function main(){
 
 
 }
+
 main();

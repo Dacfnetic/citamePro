@@ -1,6 +1,7 @@
 //Importación de modelos de objetos
 const usuario = require('../../models/users.model.js');
 const business = require('../../models/business.model.js');
+const services = require('../../models/services.model.js');
 const path = require('path');
 const multer = require('multer');
 const app = require('../../app.js')
@@ -112,7 +113,7 @@ async function deleteBusiness(req,res){
         return res.status(404).json('Errosillo');
     }  
 }
-async function updateBusiness(req,res){
+async function updateWorkersInBusinessbyCreateWorker(req,res){
     console.log('Actualizando fotos del usuario');
     try {
   
@@ -127,6 +128,7 @@ async function updateBusiness(req,res){
         const modificaciones = {workers: item};
         let resultado = await business.findByIdAndUpdate(req.body.businessId,{$set:modificaciones});
         res.status(200).json({message: 'Negocio Actualizado'});
+
         
     } catch (error) {
         res.status(500).json({error: error.message});
@@ -140,7 +142,7 @@ async function updateWorkers(req,res){
     let item = [];
     let previousWorkers = '';
         let bId = '';
-        await business.findOne({businessName: req.body.businessName, email: req.body.email})
+        await business.findById(req.body.idBusiness)
             .then((docs) => {
                 previousWorkers = docs.workers;
                 bId = docs._id.toString();
@@ -160,6 +162,42 @@ async function updateWorkers(req,res){
         return res.status(200).send('Todo ok');
 }
 
+async function updateArrayServices(req,res){
+    let item = [];
+
+   let previousService = '';
+
+
+   await businessModel.findById(req.body.idBusiness)
+   .then((docs) => {
+
+       previousService = docs.servicios;
+       
+       
+   });
+
+    item = JSON.parse(JSON.stringify(previousService));
+
+    const filtro = req.body.idService;
+    const setService = new Set(item);
+    setService.delete(filtro);
+
+    const arrayService = Array.from(setService);
+    const modificaciones = {servicios: arrayService}
+
+    let resultado = await business.findByIdAndUpdate(req.body.idBusiness,{set: modificaciones});
+
+    console.log(resultado);
+    return res.status(200).send('Todo Ok');
+
+}
+
+
+
+async function updateBusiness(req,res){
+
+}
+
 //Exportar funciones
 module.exports = {
     getAllBusiness,
@@ -167,6 +205,8 @@ module.exports = {
     postBusiness,
     verifyOwnerBusiness,
     deleteBusiness,
-    updateBusiness,
-    updateWorkers
+    updateWorkersInBusinessbyCreateWorker,
+    updateWorkers,
+    updateArrayServices,
+    updateBusiness
 }
