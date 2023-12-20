@@ -7,6 +7,7 @@ import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class ProfilePage extends ConsumerWidget {
   const ProfilePage({
@@ -16,6 +17,20 @@ class ProfilePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     Usuario user = ref.watch(userProvider);
+    IO.Socket socket;
+    void connect() {
+      socket = IO.io('http://ubuntu.citame.store/', <String, dynamic>{
+        "transports": ["websocket"],
+        "autoConnect": false,
+      });
+      socket.connect();
+      socket.emit("UsuarioRegistrado", user.userEmail);
+      socket.onConnect((data) => print('Connected'));
+      print(socket.connected);
+      //socket.disconnect();
+    }
+
+    connect();
     return Scaffold(
       appBar: AppBar(
         title: Text(

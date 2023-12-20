@@ -26,7 +26,7 @@ String actualCat = '';
 String categoriaABuscar = '';
 
 abstract class API {
-  static String server = 'http://localhost:4000';
+  static String server = 'https://ubuntu.citame.store';
 
   static Future<String> deleteBusiness(
       String businessName, String email) async {
