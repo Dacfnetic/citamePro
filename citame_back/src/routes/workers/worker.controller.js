@@ -139,19 +139,11 @@ async function deleteWorkers(req,res){
 }
 
 
-async function postHorarioCita(req,res){
-
-   
-
-
-}
 
 
 module.exports  = {
 
     getWorkers,
     postWorkers,
-    deleteWorkers,
-    postHorarioCita
-
+    deleteWorkers
 }

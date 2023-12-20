@@ -55,7 +55,9 @@ async function postServices(req,res){
                     businessCreatedBy : docs._id,
                     precio: req.body.precio,
                     imgPath: req.body.imgPath,
-                    descripcion: req.body.descripcion})
+                    descripcion: req.body.descripcion,
+                    duracion: req.body.duracion
+                })
 
 
                 await servicioNew.save();
@@ -72,9 +74,23 @@ async function postServices(req,res){
 
 async function deleteService(req,res){
 
+    try {
+       
+       await servicesModel.findByIdAndDelete(req.body.idService);
+       return res.status(200).json({message: 'Borrado Con exito'})
+
+
+    } catch (e) {
+       return res.status(404).json('Error al eliminar.')
+    }
+
+
+
 };
 
 async function updateService(req,res){
+
+   
 
 };
 
