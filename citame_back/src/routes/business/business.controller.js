@@ -163,12 +163,12 @@ async function updateWorkers(req,res){
 }
 
 async function updateArrayServices(req,res){
-    let item = [];
+let item = [];
 
    let previousService = '';
 
 
-   await businessModel.findById(req.body.idBusiness)
+   await business.findById(req.body.idBusiness)
    .then((docs) => {
 
        previousService = docs.servicios;
@@ -177,15 +177,12 @@ async function updateArrayServices(req,res){
    });
 
     item = JSON.parse(JSON.stringify(previousService));
+ item.push(req.body.idService);
 
-    const filtro = req.body.idService;
-    const setService = new Set(item);
-    setService.delete(filtro);
+  
+    const modificaciones = {servicios: item}
 
-    const arrayService = Array.from(setService);
-    const modificaciones = {servicios: arrayService}
-
-    let resultado = await business.findByIdAndUpdate(req.body.idBusiness,{set: modificaciones});
+    let resultado = await business.findByIdAndUpdate(req.body.idBusiness,{$set: modificaciones});
 
     console.log(resultado);
     return res.status(200).send('Todo Ok');

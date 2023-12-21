@@ -4,9 +4,11 @@ import 'package:citame/Widgets/worker.dart';
 import 'package:citame/models/service_model.dart';
 import 'package:citame/models/worker_moder.dart';
 import 'package:citame/pages/pages_1/pages_2/pages_3/pages_4/pages_5/profile_inside.dart';
+import 'package:citame/providers/duracion_provider.dart';
 import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:citame/providers/re_render_provider.dart';
 import 'package:citame/services/api_service.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -22,7 +24,31 @@ class MenuPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.watch(reRenderProvider);
+    void showDuracion(Widget child) async {
+      await showCupertinoModalPopup<void>(
+        context: context,
+        builder: (BuildContext context) => Container(
+          height: 216,
+          padding: const EdgeInsets.only(top: 6.0),
+          // The bottom margin is provided to align the popup above the system
+          // navigation bar.
+          margin: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          // Provide a background color for the popup.
+          color: CupertinoColors.systemBackground.resolveFrom(context),
+          // Use a SafeArea widget to avoid system overlaps.
+          child: SafeArea(
+            top: false,
+            child: child,
+          ),
+        ),
+      );
+      API.reRender(ref);
+    }
+
+    String horaDeDuracion = ref.watch(duracionProvider).toString();
+    bool caca = ref.watch(reRenderProvider);
     List<Service> listaDeServicios =
         ref.watch(myBusinessStateProvider.notifier).getService();
     List<CajaDeServicios> servicios = listaDeServicios
@@ -93,19 +119,15 @@ class MenuPage extends ConsumerWidget {
                   ],
                 ),
               ),
-              Form(
-                key: validacion,
-                child: Row(
-                  children: [],
-                ),
-              ),
-              servicios.isNotEmpty ? ListView(children: servicios) : Text(''),
+              servicios.isNotEmpty
+                  ? ListView(shrinkWrap: true, children: servicios)
+                  : Text(''),
               ElevatedButton.icon(
                 onPressed: () async {
                   await showDialog<void>(
                     barrierDismissible: false,
                     context: context,
-                    builder: (context) => AlertDialog(
+                    builder: (context2) => AlertDialog(
                       content: Stack(
                         clipBehavior: Clip.none,
                         children: <Widget>[
@@ -114,7 +136,7 @@ class MenuPage extends ConsumerWidget {
                             top: -40,
                             child: InkResponse(
                               onTap: () {
-                                Navigator.of(context).pop();
+                                Navigator.of(context2).pop();
                               },
                               child: const CircleAvatar(
                                 backgroundColor: Colors.red,
@@ -138,17 +160,79 @@ class MenuPage extends ConsumerWidget {
                                       Cuadro(control: precio, texto: 'precio'),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.all(8),
-                                  child: Cuadro(
-                                      control: duracion,
-                                      texto: 'tiempo maximo de duracion'),
-                                ),
+                                    padding: const EdgeInsets.all(8),
+                                    child: CupertinoButton(
+                                        // Display a CupertinoTimerPicker with hour/minute mode.
+                                        onPressed: () {
+                                          showDuracion(
+                                            CupertinoTimerPicker(
+                                              mode: CupertinoTimerPickerMode.hm,
+                                              initialTimerDuration: duration,
+
+                                              // This is called when the user changes the timer's
+                                              // duration.
+                                              onTimerDurationChanged:
+                                                  (Duration newDuration) {
+                                                API.reRender(ref);
+                                                ref
+                                                    .read(
+                                                        myBusinessStateProvider
+                                                            .notifier)
+                                                    .setDuration(newDuration);
+                                                print('jaa');
+                                                ref
+                                                    .read(duracionProvider
+                                                        .notifier)
+                                                    .change(newDuration);
+                                              },
+                                            ),
+                                          );
+                                        },
+                                        child: Text(
+                                          'Escoger duración',
+                                          style: const TextStyle(
+                                            fontSize: 22.0,
+                                          ),
+                                        ))),
                                 Padding(
                                   padding: const EdgeInsets.all(8),
                                   child: ElevatedButton(
                                     child: const Text('confirmar'),
                                     onPressed: () async {
                                       if (validacion.currentState!.validate()) {
+                                        Duration horario = ref
+                                            .read(myBusinessStateProvider
+                                                .notifier)
+                                            .getDuration();
+                                        String enviar = '';
+                                        if (horario.inMinutes > 59) {
+                                          if (horario.inHours > 1) {
+                                            int minutos3 =
+                                                (((horario.inMinutes / 60) -
+                                                            horario.inHours) *
+                                                        60)
+                                                    .round();
+                                            String minutos =
+                                                minutos3.toStringAsFixed(0);
+                                            enviar =
+                                                '   ${horario.inHours} horas con $minutos minutos';
+                                          } else {
+                                            int minutos3 =
+                                                (((horario.inMinutes / 60) -
+                                                            horario.inHours) *
+                                                        60)
+                                                    .round();
+                                            String minutos =
+                                                minutos3.toStringAsFixed(0);
+                                            enviar =
+                                                '   ${horario.inHours} hora con $minutos minutos';
+                                          }
+                                        } else {
+                                          enviar =
+                                              '   ${horario.inMinutes} minutos';
+                                        }
+
+                                        print(horario);
                                         await API.postService(
                                             context,
                                             ref
@@ -157,12 +241,12 @@ class MenuPage extends ConsumerWidget {
                                                 .getActualBusiness(),
                                             ref,
                                             servicio.text,
-                                            precio.text,
-                                            duracion.text,
+                                            double.parse(precio.text),
+                                            enviar,
                                             '');
                                         if (context.mounted) {
-                                          Navigator.pop(context);
                                           API.reRender(ref);
+                                          Navigator.pop(context);
                                         }
                                       }
                                     },

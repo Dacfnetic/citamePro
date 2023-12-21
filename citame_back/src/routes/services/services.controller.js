@@ -14,9 +14,10 @@ async function getServices(req,res){
                     
                     const servicios = docs.servicios;
                     item = JSON.parse(JSON.stringify(servicios));
+                    if(item.length==0){
+                        return res.status(201).send('No hay servicios');
+                    }
                 
-
-        
             }).catch(e=>console.log(e));
 
             item.forEach(async (element)  =>  {
@@ -49,11 +50,12 @@ async function postServices(req,res){
             if(docs != null){
                 console.log('Creando Servicio');
 
-
+                const precioEntrante = req.body.precio;
+                const precioSaliente = parseFloat(precioEntrante);
                 const servicioNew = new services({
                     nombreServicio: req.body.nombreServicio,
                     businessCreatedBy : docs._id,
-                    precio: req.body.precio,
+                    precio: precioSaliente,
                     imgPath: req.body.imgPath,
                     descripcion: req.body.descripcion,
                     duracion: req.body.duracion

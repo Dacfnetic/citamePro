@@ -95,13 +95,13 @@ abstract class API {
   }
 
   static Future<String> updateServiceInBusiness(
-      String businessId, String serviceId) async {
+      String idBusiness, String idService) async {
     final response =
         await http.put(Uri.parse('$serverUrl/api/business/serviceupdate'),
             headers: {'Content-Type': 'application/json'},
             body: jsonEncode({
-              'serviceId': serviceId,
-              'businessId': businessId,
+              'idService': idService,
+              'idBusiness': idBusiness,
             }));
 
     if (response.statusCode == 200) return 'Todo ok';
@@ -168,7 +168,7 @@ abstract class API {
       String idBusiness,
       WidgetRef ref,
       String nombreServicio,
-      String precio,
+      double precio,
       String duracion,
       String descripcion) async {
     final response =
@@ -186,10 +186,10 @@ abstract class API {
       var serviceData = jsonDecode(response.body);
       //await API.postImagen(imgPath, serviceData['_id'], 'worker');
       if (context.mounted) {
-        API.mensaje(context, 'Aviso', 'El servicio fue creado');
         await API.updateServiceInBusiness(idBusiness, serviceData['_id']);
+        await API.mensaje(context, 'Aviso', 'El servicio fue creado');
         ref.read(myBusinessStateProvider.notifier).setService(idBusiness, ref);
-
+        Navigator.pop(context);
         return 'Todo ok';
       }
     }

@@ -145,6 +145,14 @@ class MyBusinessStateNotifier extends StateNotifier<List<Business>> {
   TimeOfDay getHoraFinal() {
     return horaFinal;
   }
+
+  void setDuration(dur) {
+    duration = dur;
+  }
+
+  Duration getDuration() {
+    return duration;
+  }
 }
 
 Map diasLaboralesGenerales = {
@@ -198,3 +206,5 @@ List papelera = [];
 String actualBusiness = '';
 
 String actualEmail = '';
+
+Duration duration = const Duration(hours: 0, minutes: 30);

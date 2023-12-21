@@ -1,4 +1,3 @@
-import 'package:citame/services/chat_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:citame/pages/home_page.dart';
 import 'package:citame/pages/signin_page.dart';

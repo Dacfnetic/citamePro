@@ -27,16 +27,12 @@ async function main(){
     io.on('connection', (socket) => {
         console.log('a user connected');
         
-        socket.on('UsuarioRegistrado',(emailUser)=>{
-
-            user.findOne({emailUser: emailUser},(err, usuarioExistente)=>{
-
-                if(err) throw err;
+        socket.on('UsuarioRegistrado',(emailUser) => {         
                 
-                
-                if(usuarioExistente){
+                if(usuariosConectados.has(emailUser)){
 
                     socket.emit('Usuario encontrado');
+                    console.log(usuariosConectados);
 
                 }else{
 
@@ -51,7 +47,7 @@ async function main(){
 
                 }
 
-            });
+   
 
 
         });
