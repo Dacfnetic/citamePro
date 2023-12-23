@@ -4,7 +4,7 @@ const business = require('../../models/business.model.js');
 const services = require('../../models/services.model.js');
 const path = require('path');
 const multer = require('multer');
-const app = require('../../app.js')
+const app = require('../../app.js');
 
 
 async function getAllBusiness(req,res){
@@ -163,7 +163,7 @@ async function updateWorkers(req,res){
 }
 
 async function updateArrayServices(req,res){
-let item = [];
+    let item = [];
 
    let previousService = '';
 
@@ -189,9 +189,31 @@ let item = [];
 
 }
 
-
-
 async function updateBusiness(req,res){
+
+    let businessId = req.body.idBusiness;
+
+    const modificaciones = {
+        businessName: req.body.businessName,
+        category: req.body.category,
+        email: req.body.email,
+        contactNumber: req.body.contactNumber,
+        direction: req.body.direction,
+        latitude: req.body.latitude,
+        longitude: req.body.longitude,
+        description: req.body.description,
+        horario: req.body.horario}
+
+    await business.findByIdAndUpdate(businessId,{$set:modificaciones},(err,negocioUpdated)=>{
+        
+        if(err) {return res.status(404).json('Errosillo');}
+
+        
+        return res.status(200).json({business: negocioUpdated});
+
+    })
+
+
 
 }
 
