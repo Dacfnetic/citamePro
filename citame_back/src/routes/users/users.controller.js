@@ -1,5 +1,6 @@
 //Importación de modelos de objetos
 const usuario = require('../../models/users.model.js');
+const business = require('../../models/business.model.js');
 
 //Función para obtener usuario
 async function getUser(req,res){
@@ -62,10 +63,47 @@ async function updateUser(req,res){
 
 }
 
+
+async function FavoriteBusiness(req,res){
+    
+    let item = [];
+    let previousBusiness  = '';
+
+    await usuario.findById(req.body.idUsuario)
+    .then((docs)=>{
+
+        previousBusiness = docs.favoriteBusiness;
+
+    });
+
+    item = JSON.parse(JSON.stringify(previousBusiness));
+    item.push(req.body.idBusiness);
+
+    const mod = {favoriteBusiness: item};
+
+   await usuario.findByIdAndUpdate(req.body.idBusiness, {$set: mod});
+
+
+    return res.status(200).send('Nitido');
+
+
+}
+
+async function deleteFavBusiness(req,res){
+
+    
+
+}
+
+
+
+
+
 //Exportar funciones
 module.exports = {
     getUser,
     postUser,
     getAllUser,
-    updateUser
+    updateUser,
+    FavoriteBusiness
 }

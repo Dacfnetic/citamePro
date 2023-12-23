@@ -73,7 +73,7 @@ async function postWorkers(req,res){
         return res.status(404).json('Error Catastrofico, no se que paso');
     }; 
 
-}
+};
 
 async function getWorkers(req,res){
 
@@ -119,26 +119,24 @@ async function getWorkers(req,res){
 
     }
 
-}
+};
+
 
 async function deleteWorkers(req,res){
-
-    try {
+     try {
         
         
-        //Borrar modelo
-        await workersModel.findByIdAndDelete(req.body.idWorker);
-        return res.status(200).json({message: 'Todo ok'});
+         //Borrar modelo
+         await workersModel.findByIdAndDelete(req.body.idWorker);
+         return res.status(200).json({message: 'Todo ok'});
 
 
-    } catch (e) {
-        return res.status(404).json('Error Catastrofico, no se que paso');
-    }
+     } catch (e) {
+         return res.status(404).json('Error Catastrofico, no se que paso');
+     }
+};
 
 
-
-
-}
 
 
 
