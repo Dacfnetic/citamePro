@@ -32,7 +32,6 @@ async function main(){
         //io.disconnectSockets(true);
         console.log('a user connected' + socket.id);
         
-
         socket.on('UsuarioRegistrado',(emailUser) => {  
             contador++;
             console.log(contador);       
@@ -44,9 +43,11 @@ async function main(){
                 //Mandar los usuarios
                 io.emit('Usuarios Actualizados', Array.from(usuariosConectados));
 
+
                 console.log(usuariosConectados);
             } 
             update();
+
 
 
         });
