@@ -21,6 +21,7 @@ app.use(businessRouter);
 app.use(workersRouter);
 app.use(imgRouter);
 app.use(notificationRouter);
+app.use(servicesRouter);
 //app.use(servicesRouter);
 //Exportación de aplicación express
 module.exports = app;

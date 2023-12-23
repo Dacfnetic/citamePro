@@ -84,9 +84,13 @@ async function getWorkers(req,res){
         .then((docs) => {
             if(docs != null){
                 worker = JSON.parse(JSON.stringify(docs.workers)); //id mongo 
+                if(worker.length == 0){
+                    return res.status(201).send('No hay trabajadores');
+                }
             }else{
-                return res.status(201).send('No hay trabajadores');
+                //Implementar respuesta en front y back de que no se encontro el negocio
             }
+            
         });
 
         
@@ -107,9 +111,7 @@ async function getWorkers(req,res){
     
         });
                             
-        if(worker.length == 0) {
-            return res.status(201).send('No hay trabajadores');
-        }
+
 
     }catch(e){
 
