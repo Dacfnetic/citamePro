@@ -9,6 +9,7 @@ import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BusinessInsidePage extends ConsumerWidget {
   BusinessInsidePage({
@@ -62,6 +63,17 @@ class BusinessInsidePage extends ConsumerWidget {
                     fit: BoxFit.cover,
                   ),
                 ),
+                ElevatedButton(
+                    onPressed: () async {
+                      SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
+                      API.addToFavoritesBusiness(
+                          prefs.getString('idUsuario')!,
+                          ref
+                              .read(myBusinessStateProvider.notifier)
+                              .getActualBusiness());
+                    },
+                    child: Icon(Icons.favorite)),
                 Text('Horario'),
                 Text('Descripción'),
                 Text(description, style: API.estiloJ14gris),
