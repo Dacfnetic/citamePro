@@ -41,9 +41,31 @@ async function postUser(req,res){
         return res.status(404).json('Errosillo');
     }  
 }
+
+
+async function updateUser(req,res){
+
+    let emailUsuario = req.body.emailUser
+
+    const usuarioUpdate = {
+        userName: req.body.userName
+    }
+
+    await usuario.findOneAndUpdate(emailUsuario,{$set:usuarioUpdate},(err,userUpdated)=>{
+
+        if(err){return res.status(404).json('Errosillo');}
+
+        return res.status(200).json({usuario: userUpdated});
+    })
+
+
+
+}
+
 //Exportar funciones
 module.exports = {
     getUser,
     postUser,
-    getAllUser
+    getAllUser,
+    updateUser
 }

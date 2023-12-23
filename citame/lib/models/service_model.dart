@@ -1,6 +1,6 @@
 class Service {
   final String nombreServicio;
-  final List<List<int>> imgPath;
+  final List imgPath;
   final double precio;
   final String descripcion;
   final String businessCreatedBy;
@@ -22,10 +22,16 @@ class Service {
       required this.businessCreatedBy});
 
   factory Service.fromJson(Map<String, dynamic> json) {
+    double aEnviar = 0.00;
+    if (json['precio'].runtimeType == int) {
+      aEnviar = json['precio'].toDouble();
+    } else {
+      aEnviar = json['precio'];
+    }
     return Service(
         nombreServicio: json['nombreServicio'],
         imgPath: json['imgPath'],
-        precio: json['precio'],
+        precio: aEnviar,
         duracion: json['duracion'],
         descripcion: json['descripcion'],
         businessCreatedBy: json['businessCreatedBy']);

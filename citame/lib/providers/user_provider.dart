@@ -13,6 +13,17 @@ class UsuarioNotifier extends StateNotifier<Usuario> {
   void cargar() async {
     Usuario usuario;
     usuario = await API.getUser();
+    email = usuario.userEmail;
     state = usuario;
   }
+
+  void setEmail(entrada) {
+    email = entrada;
+  }
+
+  String getEmail() {
+    return email;
+  }
 }
+
+String email = '';

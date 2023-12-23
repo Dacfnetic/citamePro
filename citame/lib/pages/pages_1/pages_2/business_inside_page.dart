@@ -1,5 +1,7 @@
 import 'package:citame/Widgets/worker.dart';
+import 'package:citame/models/service_model.dart';
 import 'package:citame/models/worker_moder.dart';
+import 'package:citame/pages/pages_1/pages_2/pages_3/pages_4/menu_page.dart';
 import 'package:citame/pages/pages_1/pages_2/pages_3/reservation_page.dart';
 import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:citame/providers/re_render_provider.dart';
@@ -20,6 +22,15 @@ class BusinessInsidePage extends ConsumerWidget {
   final String description;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    List<Service> listaDeServicios =
+        ref.watch(myBusinessStateProvider.notifier).getService();
+    List<CajaDeServicios> servicios = listaDeServicios
+        .map((servicio) => CajaDeServicios(
+            nombre: servicio.nombreServicio,
+            precio: servicio.precio.toStringAsFixed(2),
+            duracion: servicio.duracion))
+        .toList();
+
     ref.watch(reRenderProvider);
     List<Worker> workers =
         ref.watch(myBusinessStateProvider.notifier).obtenerWorkers();
@@ -55,9 +66,11 @@ class BusinessInsidePage extends ConsumerWidget {
                 Text('Descripción'),
                 Text(description, style: API.estiloJ14gris),
                 Text('Servicios', style: API.estiloJ24negro),
-                Text(
-                    'Cargar desde backend tenemos que cambiar el modelo de negocio para agregarle los servicios',
-                    style: API.estiloJ16negro),
+                servicios.isNotEmpty
+                    ? SizedBox(
+                        height: 210,
+                        child: ListView(shrinkWrap: true, children: servicios))
+                    : Text('Este negocio no tiene servicios'),
                 workers.isNotEmpty
                     ? ListView(shrinkWrap: true, children: trabajadores)
                     : Container(),

@@ -50,12 +50,11 @@ async function postServices(req,res){
             if(docs != null){
                 console.log('Creando Servicio');
 
-                const precioEntrante = req.body.precio;
-                const precioSaliente = parseFloat(precioEntrante);
+               
                 const servicioNew = new services({
                     nombreServicio: req.body.nombreServicio,
                     businessCreatedBy : docs._id,
-                    precio: precioSaliente,
+                    precio: req.body.precio,
                     imgPath: req.body.imgPath,
                     descripcion: req.body.descripcion,
                     duracion: req.body.duracion
@@ -92,6 +91,22 @@ async function deleteService(req,res){
 
 async function updateService(req,res){
 
+    let serviceId = req.body.idService;
+
+    const serviceUpdate = {
+        nombreServicio: req.body.nombreServicio,
+        precio: req.body.precio,
+        imgPath: req.body.imgPath,
+        descripcion: req.body.descripcion,
+        duracion: req.body.duracion
+    }
+
+    await services.findByIdAndUpdate(serviceId, {$set: serviceUpdate},(err,servicioUpdated)=>{
+        if(err){return res.status(404).json('Error');}
+
+        return res.status(200).json({services: serviceUpdate});
+
+    })
    
 
 };

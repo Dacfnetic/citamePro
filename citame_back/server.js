@@ -43,9 +43,12 @@ async function main(){
                 //Mandar los usuarios
                 io.emit('Usuarios Actualizados', Array.from(usuariosConectados));
 
+
                 console.log(usuariosConectados);
             } 
+
             //update();
+
         });
      
         //Desconexion de usuarios

@@ -15,7 +15,7 @@ dependencies:
   firebase_core: ^2.22.0
   flutter:
     sdk: flutter
-    
+  flutter_slidable: ^3.0.1  
   fluttertoast: ^8.2.4
   oktoast: ^3.4.0
   flutter_image_compress: ^2.1.0
@@ -37,6 +37,7 @@ dependencies:
   custom_clippers: ^2.0.0
   flutter_dotenv: ^5.1.0
   socket_io_client: ^2.0.3+1
+  background_fetch: ^1.2.1
   
 
 dev_dependencies:
