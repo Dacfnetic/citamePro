@@ -476,6 +476,9 @@ abstract class API {
         Worker negocio = Worker.fromJson(trabajador);
         return negocio;
       }).toList();
+      for (var element in trabajadores) {
+        element.imgPath[0] = await API.downloadImage(element.imgPath[0]);
+      }
       return trabajadores;
     }
     if (response.statusCode == 201) {
