@@ -1,5 +1,7 @@
+import 'package:citame/pages/pages_1/pages_2/favorites_business_page.dart';
 import 'package:citame/pages/pages_1/pages_2/my_businessess_page.dart';
 import 'package:citame/providers/my_business_state_provider.dart';
+import 'package:citame/providers/my_favorites_provider.dart';
 import 'package:citame/providers/own_business_provider.dart';
 import 'package:citame/providers/page_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -77,6 +79,23 @@ class ProfileRow extends ConsumerWidget {
                   builder: (context) => page,
                 ));
           }
+        }
+        if (method == 3) {
+          //try {
+          ref.read(pageProvider.notifier).actualizar(MyFavoritesPage());
+          if (context.mounted) {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MyFavoritesPage(),
+                ));
+            ref.read(myFavoritesProvider.notifier).cargar(context, ref);
+          }
+
+          //}
+          //} catch (e) {
+          //  print(e.toString());
+          //}
         }
       },
       child: Container(
