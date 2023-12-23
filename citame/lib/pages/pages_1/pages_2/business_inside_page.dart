@@ -41,31 +41,51 @@ class BusinessInsidePage extends ConsumerWidget {
               imagen: Uint8List.fromList(e.imgPath[0]),
             ))
         .toList();
-    return Scaffold(
-      appBar: AppBar(),
-      body: SafeArea(
-        child: Container(
-          margin: EdgeInsets.fromLTRB(16, 12, 16, 0),
-          color: Colors.white,
-          child: Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              //mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(businessName, style: API.estiloJ24negro),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(16),
-                  child: Image.memory(
-                    imagen,
-                    width: double.infinity,
-                    height: 230,
-                    fit: BoxFit.cover,
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        appBar: AppBar(),
+        body: SafeArea(
+          child: Column(
+            children: [
+              TabBar(tabs: [
+                Tab(
+                  text: 'Informacion',
+                  icon: Icon(Icons.home),
+                ),
+                Tab(
+                  text: 'servicios',
+                  icon: Icon(Icons.menu),
+                ),
+                Tab(text: 'trabajadores', icon: Icon(Icons.person_3))
+              ]),
+              Expanded(
+                  child: TabBarView(children: [
+                Container(
+                  margin: EdgeInsets.fromLTRB(16, 12, 16, 0),
+                  color: Colors.white,
+                  child: Center(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      //mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(businessName, style: API.estiloJ24negro),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(16),
+                          child: Image.memory(
+                            imagen,
+                            width: double.infinity,
+                            height: 230,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        Text('Horario'),
+                        Text('Descripción'),
+                        Text(description, style: API.estiloJ14gris),
+                      ],
+                    ),
                   ),
                 ),
-                Text('Horario'),
-                Text('Descripción'),
-                Text(description, style: API.estiloJ14gris),
-                Text('Servicios', style: API.estiloJ24negro),
                 servicios.isNotEmpty
                     ? SizedBox(
                         height: 210,
@@ -74,29 +94,8 @@ class BusinessInsidePage extends ConsumerWidget {
                 workers.isNotEmpty
                     ? ListView(shrinkWrap: true, children: trabajadores)
                     : Container(),
-                TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ReservationPage(),
-                        ));
-                  },
-                  child: Row(
-                    children: [
-                      Expanded(child: Text('Foto')),
-                      Expanded(
-                          child: Column(
-                        children: [
-                          Text('Nombre del worker'),
-                          Text('Puesto del worker')
-                        ],
-                      ))
-                    ],
-                  ),
-                )
-              ],
-            ),
+              ]))
+            ],
           ),
         ),
       ),
