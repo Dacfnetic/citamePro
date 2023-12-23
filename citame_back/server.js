@@ -46,9 +46,8 @@ async function main(){
 
                 console.log(usuariosConectados);
             } 
-            update();
 
-
+            //update();
 
         });
      
