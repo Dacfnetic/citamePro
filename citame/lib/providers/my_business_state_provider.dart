@@ -153,6 +153,14 @@ class MyBusinessStateNotifier extends StateNotifier<List<Business>> {
   Duration getDuration() {
     return duration;
   }
+
+  void setSocketState(valor) {
+    socketConectado = valor;
+  }
+
+  bool getSocketState() {
+    return socketConectado;
+  }
 }
 
 Map diasLaboralesGenerales = {
@@ -208,3 +216,5 @@ String actualBusiness = '';
 String actualEmail = '';
 
 Duration duration = const Duration(hours: 0, minutes: 30);
+
+bool socketConectado = false;

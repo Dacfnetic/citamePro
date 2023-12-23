@@ -31,12 +31,15 @@ class BarraInferior extends ConsumerWidget {
           ref.read(navbarProvider.notifier).changeState(value);
           if (value == 2) {
             if (context.mounted) {
+              API.connect();
               ref.read(pageProvider.notifier).actualizar(ProfilePage());
+              //API.emitir();
               Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => ProfilePage(),
                   )).then((_) {
+                API.desconnect();
                 ref.read(pageProvider.notifier).actualizar(HomePage());
               });
             }
