@@ -45,7 +45,7 @@ async function main(){
 
                 console.log(usuariosConectados);
             } 
-            update();
+            //update();
         });
      
         //Desconexion de usuarios
