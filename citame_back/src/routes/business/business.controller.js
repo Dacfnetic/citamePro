@@ -219,15 +219,12 @@ async function updateBusiness(req,res){
 
 async function getFavBusiness(req,res){
     
-
-
-    await usuario.findById(req.body.idBusiness)
+    await usuario.findById(req.get('idUsuario'))
     .then(async(docs)=>{
-
-        return res.status(200).json(docs.favoriteBusiness)
-    
-    })
-
+        const negocios = docs.favoriteBusiness;
+        const negociosFavoritos = JSON.parse(JSON.stringify(negocios));
+        return res.status(200).json(negociosFavoritos);
+    });
 
 }
 
