@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:citame/Widgets/cuadro.dart';
 import 'package:citame/firebase_options.dart';
+import 'package:citame/main.dart';
 import 'package:citame/models/business_model.dart';
 import 'package:citame/models/service_model.dart';
 import 'package:citame/models/user_model.dart';
@@ -14,6 +16,7 @@ import 'package:citame/providers/re_render_provider.dart';
 import 'package:citame/providers/user_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -21,11 +24,18 @@ import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 String serverUrl = API.server;
 FirebaseAuth auth = FirebaseAuth.instance;
 String actualCat = '';
 String categoriaABuscar = '';
+IO.Socket socket = IO.io('http://ubuntu.citame.store/', <String, dynamic>{
+  "transports": ["websocket"],
+  "autoConnect": false,
+});
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
 abstract class API {
   static String server = 'https://ubuntu.citame.store';
@@ -204,7 +214,7 @@ abstract class API {
   }
 
   static Future<String> postUser(String googleId, String? userName,
-      String? emailUser, String? avatar, WidgetRef ref) async {
+      String? emailUser, String? avatar) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getString('googleId') == null ||
         prefs.getString('googleId') != googleId) {
@@ -222,7 +232,7 @@ abstract class API {
         prefs.getString('avatar') != avatar) {
       prefs.setString('avatar', avatar!);
     }
-    ref.read(userProvider.notifier).setEmail(emailUser);
+
     final response = await http.post(Uri.parse('$serverUrl/api/user/create'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
@@ -400,6 +410,19 @@ abstract class API {
     }
     throw Exception('Failed to get items');
   }
+
+  static Future<void> connect() async {
+    socket.connect();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    socket.on('CACA', (_) => API.showNot());
+    socket.emit("UsuarioRegistrado", prefs.getString('emailUser'));
+  }
+
+  static Future<void> desconnect() async {
+    socket.disconnect();
+  }
+
+  static Future<void> emitir() async {}
 
   static Future<List<Service>> getService(String idBusiness) async {
     final response = await http.get(
@@ -736,6 +759,31 @@ abstract class API {
 
   static String getCat() {
     return actualCat;
+  }
+
+  static Future<void> initNotification() async {
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('app_icon');
+    const DarwinInitializationSettings initializationSettingsIOS =
+        DarwinInitializationSettings();
+    const InitializationSettings initializationSettings =
+        InitializationSettings(
+            android: initializationSettingsAndroid,
+            iOS: initializationSettingsIOS);
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  }
+
+  static Future<void> showNot() async {
+    const AndroidNotificationDetails androidNotificationDetails =
+        AndroidNotificationDetails('channelId', 'channelName',
+            importance: Importance.max, priority: Priority.high);
+    const DarwinNotificationDetails darwinNotificationDetails =
+        DarwinNotificationDetails();
+    const NotificationDetails notificationDetails =
+        NotificationDetails(android: androidNotificationDetails);
+
+    await flutterLocalNotificationsPlugin.show(1, 'Prro te aviso que...',
+        'Alguien te agregó a un negocio como trabajador', notificationDetails);
   }
 
   static var estiloJ24negro = GoogleFonts.plusJakartaSans(
