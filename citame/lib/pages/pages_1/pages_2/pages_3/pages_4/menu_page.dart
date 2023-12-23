@@ -126,7 +126,10 @@ class MenuPage extends ConsumerWidget {
               servicios.isNotEmpty
                   ? SizedBox(
                       height: 210,
-                      child: ListView(shrinkWrap: true, children: servicios))
+                      child: SizedBox(
+                          height: 210,
+                          child:
+                              ListView(shrinkWrap: true, children: servicios)))
                   : Text(''),
               ElevatedButton.icon(
                 onPressed: () async {
