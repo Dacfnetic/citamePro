@@ -9,12 +9,12 @@ async function authWithToken(req,res){
 
 }
 
-async function getPublicInfo(req,res){
+async function getPublicInfo(req,res,next){
 
 
 }
 
-async function getPrivateInfo(req,res){
+async function getPrivateInfo(req,res,next){
 
 }
 

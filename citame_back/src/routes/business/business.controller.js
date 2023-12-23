@@ -176,7 +176,7 @@ async function updateArrayServices(req,res){
    });
 
     item = JSON.parse(JSON.stringify(previousService));
- item.push(req.body.idService);
+    item.push(req.body.idService);
 
   
     const modificaciones = {servicios: item}
@@ -216,6 +216,21 @@ async function updateBusiness(req,res){
 
 }
 
+
+async function getFavBusiness(req,res){
+    
+
+
+    await usuario.findById(req.body.idBusiness)
+    .then(async(docs)=>{
+
+        return res.status(200).json(docs.favoriteBusiness)
+    
+    })
+
+
+}
+
 //Exportar funciones
 module.exports = {
     getAllBusiness,
@@ -226,5 +241,6 @@ module.exports = {
     updateWorkersInBusinessbyCreateWorker,
     updateWorkers,
     updateArrayServices,
-    updateBusiness
+    updateBusiness,
+    getFavBusiness
 }
