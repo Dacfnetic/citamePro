@@ -9,6 +9,7 @@ import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BusinessInsidePage extends ConsumerWidget {
   BusinessInsidePage({
@@ -24,6 +25,7 @@ class BusinessInsidePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     List<Service> listaDeServicios =
         ref.watch(myBusinessStateProvider.notifier).getService();
+
     List<CajaDeServicios> servicios = listaDeServicios
         .map((servicio) => CajaDeServicios(
             nombre: servicio.nombreServicio,
@@ -31,9 +33,11 @@ class BusinessInsidePage extends ConsumerWidget {
             duracion: servicio.duracion))
         .toList();
 
-    ref.watch(reRenderProvider);
     List<Worker> workers =
         ref.watch(myBusinessStateProvider.notifier).obtenerWorkers();
+
+    ref.watch(reRenderProvider);
+
     List<WorkerBox> trabajadores = workers
         .map((e) => WorkerBox(
               worker: e,
@@ -41,6 +45,7 @@ class BusinessInsidePage extends ConsumerWidget {
               imagen: Uint8List.fromList(e.imgPath[0]),
             ))
         .toList();
+
     return DefaultTabController(
       length: 3,
       child: Scaffold(

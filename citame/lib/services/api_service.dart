@@ -58,18 +58,17 @@ abstract class API {
   }
 
   static Future<String> deleteWorkerInBusiness(
-      String businessName, String email, String id, String workerId) async {
+      String idBusiness, String id, String idWorker) async {
     final response =
         await http.delete(Uri.parse('$serverUrl/api/workers/delete'),
             headers: {'Content-Type': 'application/json'},
             body: jsonEncode({
-              'businessName': businessName,
-              'email': email,
-              'idWorker': workerId,
+              'idBusiness': idBusiness,
+              'idWorker': idWorker,
             }));
 
     if (response.statusCode == 200) {
-      API.updateWorkersInBusinessByDelete(businessName, email, id);
+      API.updateWorkersInBusinessByDelete(idBusiness, idWorker);
       return 'borrado';
     }
 
@@ -77,14 +76,27 @@ abstract class API {
   }
 
   static Future<String> updateWorkersInBusinessByDelete(
-      String businessName, String email, String id) async {
+      String idBusiness, String idWorker) async {
     final response =
         await http.put(Uri.parse('$serverUrl/api/business/workerupdate'),
             headers: {'Content-Type': 'application/json'},
             body: jsonEncode({
-              'idWorker': id,
-              'businessName': businessName,
-              'email': email,
+              'idWorker': idWorker,
+              'idBusiness': idBusiness,
+            }));
+
+    if (response.statusCode == 200) return 'Todo ok';
+    throw Exception('Failed to add item');
+  }
+
+  static Future<String> addToFavoritesBusiness(
+      String idUsuario, String idBusiness) async {
+    final response =
+        await http.put(Uri.parse('$serverUrl/api/user/favoriteBusiness'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({
+              'idUsuario': idUsuario,
+              'idBusiness': idBusiness,
             }));
 
     if (response.statusCode == 200) return 'Todo ok';
@@ -220,6 +232,7 @@ abstract class API {
         prefs.getString('googleId') != googleId) {
       prefs.setString('googleId', googleId);
     }
+
     if (prefs.getString('userName') == null ||
         prefs.getString('userName') != userName) {
       prefs.setString('userName', userName!);
@@ -241,8 +254,22 @@ abstract class API {
           'emailUser': emailUser,
           'avatar': avatar,
         }));
-    if (response.statusCode == 201) return 'Todo ok';
-    if (response.statusCode == 202) return 'Todo ok';
+    if (response.statusCode == 201) {
+      var contenido = jsonDecode(response.body);
+      if (prefs.getString('idUsuario') == null ||
+          prefs.getString('idUsuario') != contenido.idUsuario) {
+        prefs.setString('idUsuario', contenido.idUsuario);
+      }
+      return 'listo';
+    }
+    if (response.statusCode == 202) {
+      var contenido = jsonDecode(response.body);
+      if (prefs.getString('idUsuario') == null ||
+          prefs.getString('idUsuario') != contenido['_id']) {
+        prefs.setString('idUsuario', contenido['_id']);
+      }
+      return 'listo';
+    }
 
     throw Exception('Failed to adddsds item');
   }
@@ -300,6 +327,49 @@ abstract class API {
       }
       return negocios;
     }
+    throw Exception('Failed to get items');
+  }
+
+  static Future<List<Business>> getFavBusiness(
+      BuildContext context, WidgetRef ref) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var idUsuario = prefs.getString('idUsuario')!;
+    final response = await http
+        .get(Uri.parse('$serverUrl/api/business/FavBusiness'), headers: {
+      'idUsuario': idUsuario,
+    });
+
+    if (response.statusCode == 200) {
+      final List<dynamic> businessList = jsonDecode(response.body);
+      final List<Business> businesses = businessList.map((business) {
+        Business negocio = Business.fromJson(business);
+        return negocio;
+      }).toList();
+
+      ref.read(myBusinessStateProvider.notifier).cargar(businesses);
+
+      if (context.mounted) {
+        if (businesses.isEmpty) {
+          API.noHayPropios(context);
+        }
+      }
+
+      return businesses;
+    }
+
+    /*if (response.statusCode == 200) {
+      List<Business> negocios = prefs
+          .getStringList('negocios')!
+          .map((e) => Business.fromJson2(jsonDecode(e)))
+          .toList();
+      print(negocios);
+      if (context.mounted) {
+        if (prefs.getStringList('ownerBusiness')!.isEmpty) {
+          API.noHayPropios(context);
+        }
+      }
+      return negocios;
+    }*/
     throw Exception('Failed to get items');
   }
 
@@ -379,11 +449,14 @@ abstract class API {
 
   static Future<Usuario> getUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+
     print(auth);
     final response = await http.get(Uri.parse('$serverUrl/api/user/get'),
         headers: {'googleId': prefs.getString('googleId')!});
+
     if (response.statusCode == 200) {
       final Usuario usuario = Usuario(
+          idUsuario: prefs.getString('idUsuario')!,
           googleId: prefs.getString('googleId')!,
           userName: prefs.getString('userName')!,
           userEmail: prefs.getString('emailUser')!,
@@ -403,6 +476,9 @@ abstract class API {
         Worker negocio = Worker.fromJson(trabajador);
         return negocio;
       }).toList();
+      for (var element in trabajadores) {
+        element.imgPath[0] = await API.downloadImage(element.imgPath[0]);
+      }
       return trabajadores;
     }
     if (response.statusCode == 201) {

@@ -3,7 +3,7 @@ const express = require('express');
 const { getAllBusiness,getOwnerBusiness, 
     postBusiness, verifyOwnerBusiness, 
     deleteBusiness, updateWorkersInBusinessbyCreateWorker,
-    updateWorkers,updateArrayServices,updateBusiness } = require('./business.controller.js');
+    updateWorkers,updateArrayServices,updateBusiness, getFavBusiness } = require('./business.controller.js');
 //Creación de enrutador
 const businessRouter = express.Router();
 //Asignación de direcciones
@@ -16,6 +16,7 @@ businessRouter.put('/api/business/update',updateWorkersInBusinessbyCreateWorker)
 businessRouter.put('/api/business/workerupdate',updateWorkers);
 businessRouter.put('/api/business/serviceupdate',updateArrayServices);
 businessRouter.put('/api/business/updateBusiness',updateBusiness);
+businessRouter.get('/api/business/FavBusiness',getFavBusiness);
 
 //Exportar enrutador
 module.exports = businessRouter;

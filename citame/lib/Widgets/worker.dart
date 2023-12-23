@@ -79,7 +79,6 @@ class WorkerBox extends ConsumerWidget {
                   ref
                       .read(myBusinessStateProvider.notifier)
                       .getActualBusiness(),
-                  ref.read(myBusinessStateProvider.notifier).getActualEmail(),
                   worker.id,
                   worker.idWorker,
                 );
