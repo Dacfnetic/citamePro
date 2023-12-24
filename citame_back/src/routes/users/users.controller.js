@@ -1,7 +1,8 @@
 //Importación de modelos de objetos
 const usuario = require('../../models/users.model.js');
 const business = require('../../models/business.model.js');
-
+const jwt = require('jsonwebtoken');
+const config = require('../../config/configjson.js');
 //Función para obtener usuario
 async function getUser(req,res){
     try{
@@ -28,17 +29,24 @@ async function postUser(req,res){
         .then(async (docs)=>{
             if(docs == null){
                 console.log('Creando usuario');
-                const newUser = usuario({
+
+                const usuarioSave = await usuario({
+
                     googleId: req.body.googleId,
                     userName: req.body.userName,
                     emailUser: req.body.emailUser,
                     avatar: req.body.avatar,
                 });
-                newUser.save();
-                return res.status(201).json(newUser);
-            }else{
-                const existingUser = await usuario.findOne({emailUser: req.body.emailUser});
-                return res.status(202).json(existingUser);
+
+                usuarioSave.save();
+
+                const token = jwt.sign({idUser: usuarioSave._id},config.jwtSecret,{//Obtenemos y guardamos el id del usuario con su token
+                    algorithm: 'HS256',
+                    expiresIn: 60 * 60 * 24    //Expira en 1 dia
+                })
+
+                return res.status(201).json({auth: true, token, usuarioSave});
+
             }
 
             
