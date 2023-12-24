@@ -11,6 +11,7 @@ import 'package:citame/services/api_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class MenuPage extends ConsumerWidget {
   MenuPage({
@@ -87,40 +88,48 @@ class MenuPage extends ConsumerWidget {
               ),
               Text('Crea tu menú para que los clientes puedan darte su dinero',
                   style: API.estiloJ14gris),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15, vertical: 0),
+              /*Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 1),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    SizedBox(width: 01),
                     Expanded(
                         child: Text(
                       'Servicios',
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                     )),
-                    SizedBox(width: 15),
                     Expanded(
+                        child: Padding(
+                      padding: EdgeInsets.only(left: 29),
                       child: Text(
                         'Precios',
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 20),
                       ),
-                    ),
+                    )),
                     Expanded(
-                      child: Text(
-                        'Duracion',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20),
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 30),
+                        child: Text(
+                          'Duracion',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 20),
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
+              */
               servicios.isNotEmpty
-                  ? ListView(shrinkWrap: true, children: servicios)
+                  ? SizedBox(
+                      height: 210,
+                      child: SizedBox(
+                          height: 210,
+                          child:
+                              ListView(shrinkWrap: true, children: servicios)))
                   : Text(''),
               ElevatedButton.icon(
                 onPressed: () async {
@@ -147,7 +156,6 @@ class MenuPage extends ConsumerWidget {
                           Form(
                             key: validacion,
                             child: Column(
-                              mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
                                 Padding(
                                   padding: const EdgeInsets.all(8),
@@ -215,7 +223,7 @@ class MenuPage extends ConsumerWidget {
                                             String minutos =
                                                 minutos3.toStringAsFixed(0);
                                             enviar =
-                                                '   ${horario.inHours} horas con $minutos minutos';
+                                                '${horario.inHours} horas con $minutos minutos';
                                           } else {
                                             int minutos3 =
                                                 (((horario.inMinutes / 60) -
@@ -225,11 +233,11 @@ class MenuPage extends ConsumerWidget {
                                             String minutos =
                                                 minutos3.toStringAsFixed(0);
                                             enviar =
-                                                '   ${horario.inHours} hora con $minutos minutos';
+                                                '${horario.inHours} hr $minutos mins';
                                           }
                                         } else {
                                           enviar =
-                                              '   ${horario.inMinutes} minutos';
+                                              '${horario.inMinutes} minutos';
                                         }
 
                                         print(horario);
@@ -386,12 +394,74 @@ class CajaDeServicios extends StatelessWidget {
   final String duracion;
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Text(nombre),
-        Text(precio),
-        Text(duracion),
-      ],
+    return Slidable(
+      startActionPane: ActionPane(motion: ScrollMotion(), children: [
+        SlidableAction(
+          onPressed: (context) {},
+          icon: Icons.delete,
+          backgroundColor: Colors.red.withOpacity(0.4),
+        ),
+      ]),
+      endActionPane: ActionPane(motion: ScrollMotion(), children: [
+        SlidableAction(
+          onPressed: (context) {},
+          icon: Icons.edit,
+          backgroundColor: Colors.blue.withOpacity(0.4),
+        ),
+      ]),
+      child: Container(
+        padding: EdgeInsets.all(7),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: Colors.white, // Color de fondo del Container
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey, // Color de la sombra
+              offset: Offset(0.0, 3.0), // Desplazamiento de la sombra
+              blurRadius: 5.0, // Radio de desenfoque de la sombra
+            ),
+          ],
+        ),
+        margin: EdgeInsets.only(top: 5, bottom: 5),
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Container(
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
+              child: Padding(
+                  child: Icon(Icons.cut, size: 35), padding: EdgeInsets.all(2)),
+            ),
+            SizedBox(width: 10),
+            Expanded(
+              child: Padding(
+                padding:
+                    EdgeInsets.only(left: 10, top: 0, bottom: 0, right: 30),
+                //padding: EdgeInsetsDirectional.fromSTEB(10, 0, 0, 6),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      nombre,
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                    ),
+                    Text(
+                      duracion,
+                      style: TextStyle(
+                          color: Colors.grey.withOpacity(0.7),
+                          fontWeight: FontWeight.normal),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            //Spacer(flex: 3),
+            Text(precio, style: TextStyle(fontSize: 20, color: Colors.green)),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -49,11 +49,11 @@ class SignInPage extends ConsumerWidget {
                           final UserCredential userCredential =
                               await API.signInWithGoogle();
                           await API.postUser(
-                              userCredential.user!.uid,
-                              userCredential.user!.displayName,
-                              userCredential.user!.email,
-                              userCredential.user!.photoURL,
-                              ref);
+                            userCredential.user!.uid,
+                            userCredential.user!.displayName,
+                            userCredential.user!.email,
+                            userCredential.user!.photoURL,
+                          );
                           if (context.mounted) {
                             Navigator.push(
                                 context,

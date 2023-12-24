@@ -19,10 +19,6 @@ class MyBusinessStateNotifier extends StateNotifier<List<Business>> {
 
   void establecerWorkers(id, ref) async {
     workers = await API.getWorkers(id);
-
-    for (var element in workers) {
-      element.imgPath[0] = await API.downloadImage(element.imgPath[0]);
-    }
     API.reRender(ref);
   }
 
@@ -153,6 +149,14 @@ class MyBusinessStateNotifier extends StateNotifier<List<Business>> {
   Duration getDuration() {
     return duration;
   }
+
+  void setSocketState(valor) {
+    socketConectado = valor;
+  }
+
+  bool getSocketState() {
+    return socketConectado;
+  }
 }
 
 Map diasLaboralesGenerales = {
@@ -208,3 +212,5 @@ String actualBusiness = '';
 String actualEmail = '';
 
 Duration duration = const Duration(hours: 0, minutes: 30);
+
+bool socketConectado = false;

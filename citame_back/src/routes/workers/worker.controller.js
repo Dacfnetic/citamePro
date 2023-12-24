@@ -21,6 +21,7 @@ async function postWorkers(req,res){
                         console.log('Creando Trabajador');
                         const nuevo = new workersModel({
                             id: docs._id,
+                            workwith: req.body.id,
                             name: req.body.name,
                             email: req.body.email,
                             salary: req.body.salary,
@@ -49,6 +50,7 @@ async function postWorkers(req,res){
                                 console.log('Creando Trabajador');
                                 const nuevo = new workersModel({
                                     id: docs._id,
+                                    workwith: req.body.id,
                                     name: req.body.name,
                                     email: req.body.email,
                                     salary: req.body.salary,

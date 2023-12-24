@@ -29,7 +29,9 @@ async function postUser(req,res){
         .then(async (docs)=>{
             if(docs == null){
                 console.log('Creando usuario');
+
                 const usuarioSave = await usuario({
+
                     googleId: req.body.googleId,
                     userName: req.body.userName,
                     emailUser: req.body.emailUser,
@@ -43,9 +45,11 @@ async function postUser(req,res){
                     expiresIn: 60 * 60 * 24    //Expira en 1 dia
                 })
 
-                return res.status(201).json({auth: true, token});
+                return res.status(201).json({auth: true, token, usuarioSave});
+
             }
-            return res.status(202).send({'sms': 'El usuario ya existe'});
+
+            
         })
     }catch(e){
         return res.status(404).json('Errosillo');
@@ -77,6 +81,7 @@ async function FavoriteBusiness(req,res){
     
     let item = [];
     let previousBusiness  = '';
+   
 
     await usuario.findById(req.body.idUsuario)
     .then((docs)=>{
@@ -84,13 +89,13 @@ async function FavoriteBusiness(req,res){
         previousBusiness = docs.favoriteBusiness;
 
     });
-
+    const modelo = await business.findById(req.body.idBusiness);
     item = JSON.parse(JSON.stringify(previousBusiness));
-    item.push(req.body.idBusiness);
+    item.push(modelo);
 
     const mod = {favoriteBusiness: item};
 
-   await usuario.findByIdAndUpdate(req.body.idBusiness, {$set: mod});
+   await usuario.findByIdAndUpdate(req.body.idUsuario, {$set: mod});
 
 
     return res.status(200).send('Nitido');

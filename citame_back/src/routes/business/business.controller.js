@@ -141,12 +141,11 @@ async function updateWorkers(req,res){
     console.log('Actualizando trabajadores del usuario');
     let item = [];
     let previousWorkers = '';
-        let bId = '';
+      
         await business.findById(req.body.idBusiness)
             .then((docs) => {
                 previousWorkers = docs.workers;
-                bId = docs._id.toString();
-                console.log(docs);
+        
         });
          item = JSON.parse(JSON.stringify(previousWorkers));
 
@@ -157,7 +156,7 @@ async function updateWorkers(req,res){
 
         const modificaciones = {workers: arrayWorker};
         //console.log('Si prro');
-        let resultado = await business.findByIdAndUpdate(bId,{$set:modificaciones});
+        let resultado = await business.findByIdAndUpdate(req.body.idBusiness,{$set:modificaciones});
         console.log(resultado);
         return res.status(200).send('Todo ok');
 }
@@ -220,15 +219,12 @@ async function updateBusiness(req,res){
 
 async function getFavBusiness(req,res){
     
-
-
-    await usuario.findById(req.body.idBusiness)
+    await usuario.findById(req.get('idUsuario'))
     .then(async(docs)=>{
-
-        return res.status(200).json(docs.favoriteBusiness)
-    
-    })
-
+        const negocios = docs.favoriteBusiness;
+        const negociosFavoritos = JSON.parse(JSON.stringify(negocios));
+        return res.status(200).json(negociosFavoritos);
+    });
 
 }
 
