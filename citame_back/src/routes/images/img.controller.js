@@ -86,9 +86,34 @@ async function downloadImage(req,res){
 
 }
 
+async function deleteImage(req,res){
+
+    try {
+        
+        //Eliminar el modelo
+        const idImage = req.body.IdImage;
+        const deletedImage = await Imagen.findByIdAndDelete(idImage);
+        console.log(deletedImage);
+
+        if  (!deletedImage){
+            return res.status(202).json({message: 'Imagen no encontrada'});
+        }
+
+        //Eliminar el archivo fisico
+
+        const ruta = `src/img_CitaMe/${deleteImage}.png`;
+        await fs.unlink(ruta)
+        return res.status(200).json({message: 'Imagen eliminada exitosamente'});
+
+    } catch(e){
+        console.log(e);
+        return res.status(404).json('Errosillo');
+    }
+}
 
 
 module.exports = {
     uploadImage,
-    downloadImage
+    downloadImage,
+    deleteImage
 }
