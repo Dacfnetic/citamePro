@@ -5,6 +5,8 @@ const services = require('../../models/services.model.js');
 const path = require('path');
 const multer = require('multer');
 const app = require('../../app.js');
+const Imagen = require('../../models/image.model.js')
+const fss = require('fs');
 
 
 async function getAllBusiness(req,res){
@@ -105,8 +107,38 @@ async function postBusiness(req,res){
 async function deleteBusiness(req,res){
     console.log('Intentando borrar negocio');
     try{
-        let existe = true;    
+        let existe = true;   
+        
+        //Eliminar la imagen en el sistema de archivos y el modelo
+
+        let previaImagen = '';
+
+        await business.findById(req.body.businessId)
+        .then((docs)=>{
+            previaImagen = docs.imgPath;
+        });
+
+        item = JSON.parse(JSON.stringify(previaImagen));
+
+        for(const imagen in item){
+
+            const idImage = imagen;
+            const deletedImage = await Imagen.findByIdAndDelete(idImage);
+            console.log(deletedImage);
+            const rutaAlmacenamiento = deletedImage._doc.imgRuta;
+            const dir = __dirname.substring(0,__dirname.length-17)
+            const ruta = dir + rutaAlmacenamiento;
+
+            if  (!deletedImage){
+                return res.status(202).json({message: 'Imagen no encontrada'});
+            }
+            
+            await fs.unlink(ruta)
+        }
+
+
         await business.findOneAndDelete({businessName: req.body.businessName, email: req.body.email})//Cambiar y recibir el ID
+
         return res.status(200).json({message: 'Todo ok'});
     }catch(e){
         console.log(e);
@@ -225,6 +257,10 @@ async function getFavBusiness(req,res){
         const negociosFavoritos = JSON.parse(JSON.stringify(negocios));
         return res.status(200).json(negociosFavoritos);
     });
+
+}
+
+async function updateImage(req,res){
 
 }
 
