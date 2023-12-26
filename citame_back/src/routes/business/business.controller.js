@@ -106,7 +106,7 @@ async function deleteBusiness(req,res){
     console.log('Intentando borrar negocio');
     try{
         let existe = true;    
-        await business.findOneAndDelete({businessName: req.body.businessName, email: req.body.email})
+        await business.findOneAndDelete({businessName: req.body.businessName, email: req.body.email})//Cambiar y recibir el ID
         return res.status(200).json({message: 'Todo ok'});
     }catch(e){
         console.log(e);

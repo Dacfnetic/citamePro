@@ -84,6 +84,17 @@ class BusinessInsidePage extends ConsumerWidget {
                             fit: BoxFit.cover,
                           ),
                         ),
+                        ElevatedButton(
+                            onPressed: () async {
+                              SharedPreferences prefs =
+                                  await SharedPreferences.getInstance();
+                              API.addToFavoritesBusiness(
+                                  prefs.getString('idUsuario')!,
+                                  ref
+                                      .read(myBusinessStateProvider.notifier)
+                                      .getActualBusiness());
+                            },
+                            child: Icon(Icons.favorite)),
                         Text('Horario'),
                         Text('Descripción'),
                         Text(description, style: API.estiloJ14gris),
