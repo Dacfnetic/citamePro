@@ -97,13 +97,12 @@ async function FavoriteBusiness(req,res){
     //Una vez exista el JWT lo decodifica
     const decoded =  jwt.verify(token,config.jwtSecret);//Verifico en base al token
 
-    if(decoded.idUser == req.body.idUsuario){
-
+ 
         let item = [];
         let previousBusiness  = '';
     
 
-        await usuario.findById(req.body.idUsuario)
+        await usuario.findById(decoded.idUser)
         .then((docs)=>{
 
             previousBusiness = docs.favoriteBusiness;
@@ -135,13 +134,6 @@ async function FavoriteBusiness(req,res){
 
 
         return res.status(200).send('Nitido');
-
-    }else{
-        return res.status(401).json({
-            auth: false,
-            message: 'Mal'
-        });
-    }
     
 
 }
