@@ -91,16 +91,26 @@ abstract class API {
 
   static Future<String> addToFavoritesBusiness(
       String idUsuario, String idBusiness) async {
-    final response =
-        await http.put(Uri.parse('$serverUrl/api/user/favoriteBusiness'),
-            headers: {'Content-Type': 'application/json'},
-            body: jsonEncode({
-              'idUsuario': idUsuario,
-              'idBusiness': idBusiness,
-            }));
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    //bool isAuth = await API.verifyTokenUser();
 
-    if (response.statusCode == 200) return 'Todo ok';
-    throw Exception('Failed to add item');
+    if (true) {
+      final response =
+          await http.put(Uri.parse('$serverUrl/api/user/favoriteBusiness'),
+              headers: {
+                'Content-Type': 'application/json',
+                'x-access-token': prefs.getString('llaveDeUsuario')!
+              },
+              body: jsonEncode({
+                'idBusiness': idBusiness,
+              }));
+
+      if (response.statusCode == 200) return 'Todo ok';
+      throw Exception('Failed to add item');
+    } else {
+      print('as0');
+      return 'Todo mal';
+    }
   }
 
   static Future<String> updateWorkersInBusiness(
@@ -256,22 +266,41 @@ abstract class API {
         }));
     if (response.statusCode == 201) {
       var contenido = jsonDecode(response.body);
+      prefs.setString('llaveDeUsuario', contenido['token']);
       if (prefs.getString('idUsuario') == null ||
-          prefs.getString('idUsuario') != contenido.idUsuario) {
-        prefs.setString('idUsuario', contenido.idUsuario);
+          prefs.getString('idUsuario') != contenido['eXU']['_id']) {
+        prefs.setString('idUsuario', contenido['eXU']['_id']);
       }
+
       return 'listo';
     }
     if (response.statusCode == 202) {
       var contenido = jsonDecode(response.body);
+      prefs.setString('llaveDeUsuario', contenido['token']);
       if (prefs.getString('idUsuario') == null ||
-          prefs.getString('idUsuario') != contenido['_id']) {
-        prefs.setString('idUsuario', contenido['_id']);
+          prefs.getString('idUsuario') != contenido['eXU']['_id']) {
+        prefs.setString('idUsuario', contenido['eXU']['_id']);
       }
+
       return 'listo';
     }
 
     throw Exception('Failed to adddsds item');
+  }
+
+  static Future<bool> verifyTokenUser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    final response = await http.get(Uri.parse('$serverUrl/api/verifyTokenUser'),
+        headers: {'x-access-token': prefs.getString('llaveDeUsuario')!});
+
+    if (response.statusCode == 200) {
+      return true;
+    }
+    if (response.statusCode == 401) {
+      return false;
+    }
+    throw Exception('Failed to get items');
   }
 
   static Future pickImageFromGallery(WidgetRef ref) async {
