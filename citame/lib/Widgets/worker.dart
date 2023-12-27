@@ -12,7 +12,10 @@ class WorkerBox extends ConsumerWidget {
     required this.worker,
     required this.ref,
     required this.imagen,
+    required this.isDueno,
   });
+
+  final bool isDueno;
   final Worker worker;
   final Uint8List imagen;
   final WidgetRef ref;
@@ -20,72 +23,147 @@ class WorkerBox extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     String horas = worker.horario;
-    return Container(
-      margin: EdgeInsets.fromLTRB(0, 1, 0, 0),
-      //height: 300,
-      //padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
-      decoration: BoxDecoration(color: Colors.white, boxShadow: [
-        BoxShadow(
-          color: Colors.black,
-        )
-      ]),
-      child: Row(
-        children: [
-          Container(
-            margin: EdgeInsets.all(16),
-            alignment: Alignment.centerLeft,
-            decoration: BoxDecoration(
-              color: Color(0x4d39d2c0),
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: Color(0xff39d2c0),
-                width: 2,
-              ),
-            ),
-            child: SizedBox(
-              height: 90,
-              width: 90,
-              child: TextButton(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(16),
-                  child: Image.memory(
-                    imagen,
-                    width: double.infinity,
-                    height: 230,
-                    fit: BoxFit.cover,
-                  ),
+    if (isDueno) {
+      return Container(
+        margin: EdgeInsets.fromLTRB(0, 1, 0, 0),
+        //height: 300,
+        //padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
+
+        child: Row(
+          children: [
+            Container(
+              margin: EdgeInsets.all(16),
+              alignment: Alignment.centerLeft,
+              decoration: BoxDecoration(
+                color: Color(0x4d39d2c0),
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: Color(0xff39d2c0),
+                  width: 2,
                 ),
-                onPressed: () {
-                  API.pickImageFromGallery(ref);
-                },
+              ),
+              child: SizedBox(
+                height: 90,
+                width: 90,
+                child: TextButton(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: Image.memory(
+                      imagen,
+                      width: double.infinity,
+                      height: 230,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  onPressed: () {
+                    API.pickImageFromGallery(ref);
+                  },
+                ),
               ),
             ),
-          ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(worker.name, style: API.estiloJ16negro),
-                //Text(horas, style: API.estiloJ14gris),
-              ],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(worker.name, style: API.estiloJ16negro),
+                  Text('aca va algo interesante'),
+                  //Text(horas, style: API.estiloJ14gris),
+                ],
+              ),
             ),
-          ),
-          SizedBox(
-            width: 15,
-          ),
-          ElevatedButton(
-              onPressed: () {
-                API.deleteWorkerInBusiness(
-                  ref
-                      .read(myBusinessStateProvider.notifier)
-                      .getActualBusiness(),
-                  worker.id,
-                  worker.idWorker,
-                );
-              },
-              child: Text('Borrar')),
-        ],
-      ),
-    );
+            SizedBox(
+              width: 15,
+            ),
+            ElevatedButton(
+                onPressed: () {
+                  API.deleteWorkerInBusiness(
+                    ref
+                        .read(myBusinessStateProvider.notifier)
+                        .getActualBusiness(),
+                    worker.id,
+                    worker.idWorker,
+                  );
+                },
+                child: Text('Borrar')),
+          ],
+        ),
+      );
+    } else {
+      return Container(
+        margin: EdgeInsets.fromLTRB(5, 4, 5, 4),
+
+        //height: 300,
+        //padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.black),
+          borderRadius: BorderRadius.circular(12),
+          color: Colors.white, // Color de fondo del Container
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey, // Color de la sombra
+              offset: Offset(0.0, 3.0), // Desplazamiento de la sombra
+              blurRadius: 5.0, // Radio de desenfoque de la sombra
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              margin: EdgeInsets.all(10),
+              alignment: Alignment.centerLeft,
+              decoration: BoxDecoration(
+                color: Color(0x4d39d2c0),
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: Color(0xff39d2c0),
+                  width: 2,
+                ),
+              ),
+              child: SizedBox(
+                height: 90,
+                width: 90,
+                child: TextButton(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: Image.memory(
+                      imagen,
+                      width: double.infinity,
+                      height: 230,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  onPressed: () {
+                    //API.pickImageFromGallery(ref);
+                  },
+                ),
+              ),
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(worker.name, style: API.estiloJ24negro),
+                  //Text(horas, style: API.estiloJ14gris),
+                ],
+              ),
+            ),
+            SizedBox(
+              width: 15,
+            ),
+            /*ElevatedButton(
+                onPressed: () {
+                  API.deleteWorkerInBusiness(
+                    ref
+                        .read(myBusinessStateProvider.notifier)
+                        .getActualBusiness(),
+                    worker.id,
+                    worker.idWorker,
+                  );
+                },
+                child: Text('Borrar')),*/
+          ],
+        ),
+      );
+    }
   }
 }
