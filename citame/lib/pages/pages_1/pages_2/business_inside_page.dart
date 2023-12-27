@@ -28,9 +28,11 @@ class BusinessInsidePage extends ConsumerWidget {
 
     List<CajaDeServicios> servicios = listaDeServicios
         .map((servicio) => CajaDeServicios(
-            nombre: servicio.nombreServicio,
-            precio: servicio.precio.toStringAsFixed(2),
-            duracion: servicio.duracion))
+              nombre: servicio.nombreServicio,
+              precio: servicio.precio.toStringAsFixed(2),
+              duracion: servicio.duracion,
+              esDueno: false,
+            ))
         .toList();
 
     List<Worker> workers =
@@ -43,6 +45,7 @@ class BusinessInsidePage extends ConsumerWidget {
               worker: e,
               ref: ref,
               imagen: Uint8List.fromList(e.imgPath[0]),
+              isDueno: false,
             ))
         .toList();
 
@@ -53,17 +56,32 @@ class BusinessInsidePage extends ConsumerWidget {
         body: SafeArea(
           child: Column(
             children: [
-              TabBar(tabs: [
-                Tab(
-                  text: 'Informacion',
-                  icon: Icon(Icons.home),
-                ),
-                Tab(
-                  text: 'servicios',
-                  icon: Icon(Icons.menu),
-                ),
-                Tab(text: 'trabajadores', icon: Icon(Icons.person_3))
-              ]),
+              TabBar(
+                  labelColor: Colors.black,
+                  unselectedLabelColor: Colors.grey,
+                  tabs: [
+                    Tab(
+                      child: Text(
+                        'Informacion',
+                        style: TextStyle(fontSize: 14),
+                      ),
+                      icon: Icon(Icons.store, size: 30),
+                    ),
+                    Tab(
+                      child: Text('Servicios', style: TextStyle(fontSize: 14)),
+                      icon: Icon(
+                        Icons.menu,
+                        size: 30,
+                      ),
+                    ),
+                    Tab(
+                        child: Text('Trabajadores',
+                            style: TextStyle(fontSize: 14)),
+                        icon: Icon(
+                          Icons.group,
+                          size: 30,
+                        ))
+                  ]),
               Expanded(
                   child: TabBarView(children: [
                 Container(
