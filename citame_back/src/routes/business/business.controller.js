@@ -124,12 +124,11 @@ async function deleteBusiness(req,res){
 
         item = JSON.parse(JSON.stringify(previaImagen));
 
-
         deleteImagen(item);
 
         //Eliminar Workers del array y modelo
 
-        await business.findById(req.body.workerId)
+        await business.findById(req.body.businessId)
         .then((docs)=>{
             previousWorker = docs.workers;
         });
@@ -145,7 +144,7 @@ async function deleteBusiness(req,res){
 
         //Eliminar los servicios del array y Modelo
 
-        await business.findById(req.body.idService)
+        await business.findById(req.body.businessId)
         .then((docs)=>{
             previousService = docs.servicios;
         });
@@ -160,13 +159,13 @@ async function deleteBusiness(req,res){
 
         //Borrar el modelo entero de favouriteBusiness en el array del usuario
 
-        await usuario.findById(req.body.idUser)
+        /*await usuario.findById(req.body.idUser)
         .then((docs)=>{
             previousFav = docs.favoriteBusiness;
-        });
+        });*/
 
-        item4 = JSON.parse(JSON.stringify(previousFav));
-        item4.splice(0,item4.length);
+        /*item4 = JSON.parse(JSON.stringify(previousFav));
+        item4.splice(0,item4.length);*/
         /*for(const imagen of item){
 
             const idImage = imagen;
@@ -182,49 +181,6 @@ async function deleteBusiness(req,res){
             fss.rmSync(ruta);
             //await fss.unlink(ruta)
         }*/
-
-
-        //Eliminar Workers del array y modelo
-
-        await business.findById(req.body.workerId)
-        .then((docs)=>{
-            previousWorker = docs.workers;
-        });
-
-        item2 = JSON.parse(JSON.stringify(previousWorker));
-        const trabajador = workerModel.findById(req.body.workerId);
-        
-        item2.forEach((trabajador)=>{
-            business.workers.remove(trabajador);//Comprobar si es item2.remove
-            workerModel.deleteOne(req.body.idWorker);
-        });
-
-
-        //Eliminar los servicios del array y Modelo
-
-        await business.findById(req.body.idService)
-        .then((docs)=>{
-            previousService = docs.servicios;
-        });
-
-        item3 = JSON.parse(JSON.stringify(previousService));
-        const servicioInArray = workerModel.findById(req.body.idService);
-        
-        item3.forEach((servicioInArray)=>{
-            business.servicios.remove(servicioInArray);
-            services.deleteOne(req.body.idService);
-        });
-
-        //Borrar el modelo entero de favouriteBusiness en el array del usuario
-
-        await usuario.findById(req.body.idUser)
-        .then((docs)=>{
-            previousFav = docs.favoriteBusiness;
-        });
-
-        item4 = JSON.parse(JSON.stringify(previousFav));
-        item4.splice(0,item4.length);
-
 
         await business.findByIdAndDelete(req.body.businessId)//Cambiar y recibir el ID
 
@@ -337,7 +293,6 @@ async function updateBusiness(req,res){
 
 }
 
-
 async function getFavBusiness(req,res){
     
     await usuario.findById(req.get('idUsuario'))
@@ -356,7 +311,6 @@ async function updateImage(req,res){
 
 async function deleteImagen(item){
 
-
     const deletedImages = await Promise.all(
 
         item.map(async (imagen)=>{
@@ -369,9 +323,9 @@ async function deleteImagen(item){
             }
 
             const rutaAlmacenamiento = deletedImage._doc.imgRuta;
-            const dir = __dirname.substring(0,__dirname.length-17)
+            const dir = __dirname.substring(0,__dirname.length-19)
             const ruta = dir + rutaAlmacenamiento;
-            await fs.unlink(ruta);
+            fss.rmSync(ruta);
             return deletedImage;
         })
 
