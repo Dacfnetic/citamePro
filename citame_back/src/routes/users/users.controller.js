@@ -57,8 +57,6 @@ async function postUser(req,res){
                 return res.status(202).json({auth: true, token, eXU});
             }
             
-            
-            
         })
     }catch(e){
         return res.status(404).json('Errosillo');
@@ -130,7 +128,7 @@ async function FavoriteBusiness(req,res){
 
         const mod = {favoriteBusiness: item};
 
-        await usuario.findByIdAndUpdate(req.body.idUsuario, {$set: mod});
+        await usuario.findByIdAndUpdate(decoded.idUser, {$set: mod});
 
 
         return res.status(200).send('Nitido');

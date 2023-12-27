@@ -40,15 +40,13 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 abstract class API {
   static String server = 'https://ubuntu.citame.store';
 
-  static Future<String> deleteBusiness(
-      String businessName, String email) async {
+  static Future<String> deleteBusiness(String businessId) async {
     final response =
         await http.delete(Uri.parse('$serverUrl/api/business/delete'),
             headers: {'Content-Type': 'application/json'},
-            body: jsonEncode({
-              'businessName': businessName,
-              'email': email,
-            }));
+            body: utf8.encode(jsonEncode({
+              'businessId': businessId,
+            })));
 
     if (response.statusCode == 200) {
       return 'borrado';
@@ -62,10 +60,10 @@ abstract class API {
     final response =
         await http.delete(Uri.parse('$serverUrl/api/workers/delete'),
             headers: {'Content-Type': 'application/json'},
-            body: jsonEncode({
+            body: utf8.encode(jsonEncode({
               'idBusiness': idBusiness,
               'idWorker': idWorker,
-            }));
+            })));
 
     if (response.statusCode == 200) {
       API.updateWorkersInBusinessByDelete(idBusiness, idWorker);
@@ -80,10 +78,10 @@ abstract class API {
     final response =
         await http.put(Uri.parse('$serverUrl/api/business/workerupdate'),
             headers: {'Content-Type': 'application/json'},
-            body: jsonEncode({
+            body: utf8.encode(jsonEncode({
               'idWorker': idWorker,
               'idBusiness': idBusiness,
-            }));
+            })));
 
     if (response.statusCode == 200) return 'Todo ok';
     throw Exception('Failed to add item');
@@ -93,34 +91,28 @@ abstract class API {
       String idUsuario, String idBusiness) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     //bool isAuth = await API.verifyTokenUser();
+    final response =
+        await http.put(Uri.parse('$serverUrl/api/user/favoriteBusiness'),
+            headers: {
+              'Content-Type': 'application/json',
+              'x-access-token': prefs.getString('llaveDeUsuario')!
+            },
+            body: utf8.encode(jsonEncode({
+              'idBusiness': idBusiness,
+            })));
 
-    if (true) {
-      final response =
-          await http.put(Uri.parse('$serverUrl/api/user/favoriteBusiness'),
-              headers: {
-                'Content-Type': 'application/json',
-                'x-access-token': prefs.getString('llaveDeUsuario')!
-              },
-              body: jsonEncode({
-                'idBusiness': idBusiness,
-              }));
-
-      if (response.statusCode == 200) return 'Todo ok';
-      throw Exception('Failed to add item');
-    } else {
-      print('as0');
-      return 'Todo mal';
-    }
+    if (response.statusCode == 200) return 'Todo ok';
+    throw Exception('Failed to add item');
   }
 
   static Future<String> updateWorkersInBusiness(
       String businessId, String workerId) async {
     final response = await http.put(Uri.parse('$serverUrl/api/business/update'),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
+        body: utf8.encode(jsonEncode({
           'workerId': workerId,
           'businessId': businessId,
-        }));
+        })));
 
     if (response.statusCode == 200) return 'Todo ok';
     throw Exception('Failed to add item');
@@ -131,10 +123,10 @@ abstract class API {
     final response =
         await http.put(Uri.parse('$serverUrl/api/business/serviceupdate'),
             headers: {'Content-Type': 'application/json'},
-            body: jsonEncode({
+            body: utf8.encode(jsonEncode({
               'idService': idService,
               'idBusiness': idBusiness,
-            }));
+            })));
 
     if (response.statusCode == 200) return 'Todo ok';
     throw Exception('Failed to add item');
@@ -157,7 +149,7 @@ abstract class API {
 
     final response = await http.post(Uri.parse('$serverUrl/api/workers/create'),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
+        body: utf8.encode(jsonEncode({
           'name': name,
           'email': workerEmail,
           'businessName': businessName,
@@ -167,7 +159,7 @@ abstract class API {
           'horario': horario,
           'status': false,
           'puesto': puesto,
-        }));
+        })));
     if (response.statusCode == 201) {
       var workerData = jsonDecode(response.body);
       await API.postImagen(imgPath, workerData['_id'], 'worker');
@@ -206,14 +198,14 @@ abstract class API {
     final response =
         await http.post(Uri.parse('$serverUrl/api/services/post/service'),
             headers: {'Content-Type': 'application/json'},
-            body: jsonEncode({
+            body: utf8.encode(jsonEncode({
               'idBusiness': idBusiness,
               'nombreServicio': nombreServicio,
               'precio': precio,
               'imgPath': [],
               'duracion': duracion,
               'descripcion': descripcion
-            }));
+            })));
     if (response.statusCode == 201) {
       var serviceData = jsonDecode(response.body);
       //await API.postImagen(imgPath, serviceData['_id'], 'worker');
@@ -242,7 +234,6 @@ abstract class API {
         prefs.getString('googleId') != googleId) {
       prefs.setString('googleId', googleId);
     }
-
     if (prefs.getString('userName') == null ||
         prefs.getString('userName') != userName) {
       prefs.setString('userName', userName!);
@@ -258,12 +249,12 @@ abstract class API {
 
     final response = await http.post(Uri.parse('$serverUrl/api/user/create'),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
+        body: utf8.encode(jsonEncode({
           'googleId': googleId,
           'userName': userName,
           'emailUser': emailUser,
           'avatar': avatar,
-        }));
+        })));
     if (response.statusCode == 201) {
       var contenido = jsonDecode(response.body);
       prefs.setString('llaveDeUsuario', contenido['token']);
@@ -428,10 +419,10 @@ abstract class API {
     final response = await http.post(
         Uri.parse('$serverUrl/api/business/verify/owner/business'),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
+        body: utf8.encode(jsonEncode({
           "businessName": nombres,
           "email": email,
-        }));
+        })));
     if (response.statusCode == 201) {
       //No son iguales o no hay negocios
       prefs.setString('ownerBusinessStatus', '0');
@@ -599,7 +590,7 @@ abstract class API {
     final response =
         await http.post(Uri.parse('$serverUrl/api/business/create'),
             headers: {'Content-Type': 'application/json'},
-            body: jsonEncode({
+            body: utf8.encode(jsonEncode({
               "businessName": businessName,
               "category": category,
               "email": email,
@@ -610,7 +601,7 @@ abstract class API {
               "latitude": latitude,
               "longitude": longitude,
               "description": description,
-            }));
+            })));
     if (response.statusCode == 201) {
       var businessList = jsonDecode(response.body);
       await API.postImagen(imgPath, businessList['_id'], 'business');
@@ -831,7 +822,7 @@ abstract class API {
             ));
   }
 
-  static estasSeguro(BuildContext context, String businessName, String email) {
+  static estasSeguro(BuildContext context, String businessId) {
     showDialog(
         barrierDismissible: false,
         context: context,
@@ -850,7 +841,7 @@ abstract class API {
                       Navigator.pop(context);
                       Navigator.pop(context);
                       Navigator.pop(context);
-                      API.deleteBusiness(businessName, email);
+                      API.deleteBusiness(businessId);
                     },
                     child: Text('Si')),
                 TextButton(

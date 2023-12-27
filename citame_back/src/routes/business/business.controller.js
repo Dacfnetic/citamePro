@@ -124,7 +124,65 @@ async function deleteBusiness(req,res){
 
         item = JSON.parse(JSON.stringify(previaImagen));
 
+
         deleteImagen(item);
+
+        //Eliminar Workers del array y modelo
+
+        await business.findById(req.body.workerId)
+        .then((docs)=>{
+            previousWorker = docs.workers;
+        });
+
+        item2 = JSON.parse(JSON.stringify(previousWorker));
+        const trabajador = workerModel.findById(req.body.workerId);
+        
+        item2.forEach((trabajador)=>{
+            business.workers.remove(trabajador);//Comprobar si es item2.remove
+            workerModel.deleteOne(req.body.idWorker);
+        });
+
+
+        //Eliminar los servicios del array y Modelo
+
+        await business.findById(req.body.idService)
+        .then((docs)=>{
+            previousService = docs.servicios;
+        });
+
+        item3 = JSON.parse(JSON.stringify(previousService));
+        const servicioInArray = workerModel.findById(req.body.idService);
+        
+        item3.forEach((servicioInArray)=>{
+            business.servicios.remove(servicioInArray);
+            services.deleteOne(req.body.idService);
+        });
+
+        //Borrar el modelo entero de favouriteBusiness en el array del usuario
+
+        await usuario.findById(req.body.idUser)
+        .then((docs)=>{
+            previousFav = docs.favoriteBusiness;
+        });
+
+        item4 = JSON.parse(JSON.stringify(previousFav));
+        item4.splice(0,item4.length);
+        /*for(const imagen of item){
+
+            const idImage = imagen;
+            const deletedImage = await Imagen.findByIdAndDelete(idImage);
+            console.log(deletedImage);
+            const rutaAlmacenamiento = deletedImage._doc.imgRuta;
+            const dir = __dirname.substring(0,__dirname.length-19)
+            const ruta = dir + rutaAlmacenamiento;
+
+            if  (!deletedImage){
+                return res.status(202).json({message: 'Imagen no encontrada'});
+            }
+            fss.rmSync(ruta);
+            //await fss.unlink(ruta)
+        }*/
+
 
         //Eliminar Workers del array y modelo
 
@@ -168,7 +226,7 @@ async function deleteBusiness(req,res){
         item4.splice(0,item4.length);
 
 
-        await business.findOneAndDelete({businessName: req.body.businessName, email: req.body.email})//Cambiar y recibir el ID
+        await business.findByIdAndDelete(req.body.businessId)//Cambiar y recibir el ID
 
         return res.status(200).json({message: 'Todo ok'});
     }catch(e){

@@ -13,7 +13,7 @@ businessRouter.get('/api/business/get/all',getAllBusiness);
 businessRouter.get('/api/business/get/owner',getOwnerBusiness);
 businessRouter.post('/api/business/create',postBusiness);
 businessRouter.post('/api/business/verify/owner/business',verifyOwnerBusiness);
-businessRouter.delete('/api/business/delete',verifyBusinessToken,deleteBusiness);
+businessRouter.delete('/api/business/delete',deleteBusiness);
 businessRouter.put('/api/business/update',updateWorkersInBusinessbyCreateWorker);
 businessRouter.put('/api/business/workerupdate',updateWorkers);
 businessRouter.put('/api/business/serviceupdate',updateArrayServices);
