@@ -56,13 +56,19 @@ class MenuPage extends ConsumerWidget {
         .map((servicio) => CajaDeServicios(
             nombre: servicio.nombreServicio,
             precio: servicio.precio.toStringAsFixed(2),
-            duracion: servicio.duracion))
+            duracion: servicio.duracion,
+            esDueno: true))
         .toList();
     ReRenderNotifier reRender = ref.read(reRenderProvider.notifier);
     List<Worker> workers =
         ref.watch(myBusinessStateProvider.notifier).obtenerWorkers();
     List<WorkerBox> trabajadores = workers
-        .map((e) => WorkerBox(worker: e, ref: ref, imagen: e.imgPath[0]))
+        .map((e) => WorkerBox(
+              worker: e,
+              ref: ref,
+              imagen: e.imgPath[0],
+              isDueno: true,
+            ))
         .toList();
 
     return Scaffold(
@@ -88,41 +94,6 @@ class MenuPage extends ConsumerWidget {
               ),
               Text('Crea tu menú para que los clientes puedan darte su dinero',
                   style: API.estiloJ14gris),
-              /*Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 1),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Expanded(
-                        child: Text(
-                      'Servicios',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                    )),
-                    Expanded(
-                        child: Padding(
-                      padding: EdgeInsets.only(left: 29),
-                      child: Text(
-                        'Precios',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20),
-                      ),
-                    )),
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 30),
-                        child: Text(
-                          'Duracion',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 20),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              */
               servicios.isNotEmpty
                   ? SizedBox(
                       height: 210,
@@ -388,46 +359,97 @@ class CajaDeServicios extends StatelessWidget {
     required this.nombre,
     required this.precio,
     required this.duracion,
+    required this.esDueno,
   });
+  final bool esDueno;
   final String nombre;
   final String precio;
   final String duracion;
   @override
   Widget build(BuildContext context) {
-    return Slidable(
-      startActionPane: ActionPane(motion: ScrollMotion(), children: [
-        SlidableAction(
-          onPressed: (context) {},
-          icon: Icons.delete,
-          backgroundColor: Colors.red.withOpacity(0.4),
+    if (esDueno) {
+      return Slidable(
+        startActionPane: ActionPane(motion: ScrollMotion(), children: [
+          SlidableAction(
+            onPressed: (context) {},
+            icon: Icons.delete,
+            backgroundColor: Colors.red.withOpacity(0.4),
+          ),
+        ]),
+        endActionPane: ActionPane(motion: ScrollMotion(), children: [
+          SlidableAction(
+            onPressed: (context) {},
+            icon: Icons.edit,
+            backgroundColor: Colors.blue.withOpacity(0.4),
+          ),
+        ]),
+        child: Container(
+          padding: EdgeInsets.all(7),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            color: Colors.white, // Color de fondo del Container
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey, // Color de la sombra
+                offset: Offset(0.0, 3.0), // Desplazamiento de la sombra
+                blurRadius: 5.0, // Radio de desenfoque de la sombra
+              ),
+            ],
+          ),
+          margin: EdgeInsets.only(top: 5, bottom: 5),
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Container(
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(8)),
+                child: Padding(
+                    child: Icon(Icons.cut, size: 35),
+                    padding: EdgeInsets.all(2)),
+              ),
+              SizedBox(width: 10),
+              Expanded(
+                child: Padding(
+                  padding:
+                      EdgeInsets.only(left: 10, top: 0, bottom: 0, right: 30),
+                  //padding: EdgeInsetsDirectional.fromSTEB(10, 0, 0, 6),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        nombre,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 18),
+                      ),
+                      Text(
+                        duracion,
+                        style: TextStyle(
+                            color: Colors.grey.withOpacity(0.7),
+                            fontWeight: FontWeight.normal),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              //Spacer(flex: 3),
+              Text(precio, style: TextStyle(fontSize: 20, color: Colors.green)),
+            ],
+          ),
         ),
-      ]),
-      endActionPane: ActionPane(motion: ScrollMotion(), children: [
-        SlidableAction(
-          onPressed: (context) {},
-          icon: Icons.edit,
-          backgroundColor: Colors.blue.withOpacity(0.4),
-        ),
-      ]),
-      child: Container(
+      );
+    } else {
+      return Container(
         padding: EdgeInsets.all(7),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
+          border: Border(bottom: BorderSide(color: Colors.grey)),
           color: Colors.white, // Color de fondo del Container
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey, // Color de la sombra
-              offset: Offset(0.0, 3.0), // Desplazamiento de la sombra
-              blurRadius: 5.0, // Radio de desenfoque de la sombra
-            ),
-          ],
         ),
-        margin: EdgeInsets.only(top: 5, bottom: 5),
         child: Row(
           mainAxisSize: MainAxisSize.max,
           children: [
             Container(
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
               child: Padding(
                   child: Icon(Icons.cut, size: 35), padding: EdgeInsets.all(2)),
             ),
@@ -461,7 +483,7 @@ class CajaDeServicios extends StatelessWidget {
             Text(precio, style: TextStyle(fontSize: 20, color: Colors.green)),
           ],
         ),
-      ),
-    );
+      );
+    }
   }
 }
