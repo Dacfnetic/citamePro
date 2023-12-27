@@ -120,24 +120,24 @@ async function deleteBusiness(req,res){
 
         item = JSON.parse(JSON.stringify(previaImagen));
 
-        for(const imagen in item){
+        for(const imagen of item){
 
             const idImage = imagen;
             const deletedImage = await Imagen.findByIdAndDelete(idImage);
             console.log(deletedImage);
             const rutaAlmacenamiento = deletedImage._doc.imgRuta;
-            const dir = __dirname.substring(0,__dirname.length-17)
+            const dir = __dirname.substring(0,__dirname.length-19)
             const ruta = dir + rutaAlmacenamiento;
 
             if  (!deletedImage){
                 return res.status(202).json({message: 'Imagen no encontrada'});
             }
-            
-            await fs.unlink(ruta)
+            fss.rmSync(ruta);
+            //await fss.unlink(ruta)
         }
 
 
-        await business.findOneAndDelete({businessName: req.body.businessName, email: req.body.email})//Cambiar y recibir el ID
+        await business.findByIdAndDelete(req.body.businessId)//Cambiar y recibir el ID
 
         return res.status(200).json({message: 'Todo ok'});
     }catch(e){
