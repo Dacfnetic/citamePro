@@ -138,7 +138,9 @@ async function deleteWorkers(req,res){
      }
 };
 
-
+async function updateHorarioWorker(req,res){
+    
+}
 
 
 

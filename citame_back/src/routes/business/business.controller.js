@@ -2,6 +2,7 @@
 const usuario = require('../../models/users.model.js');
 const business = require('../../models/business.model.js');
 const services = require('../../models/services.model.js');
+const workerModel = require('../../models/worker.model.js');
 const path = require('path');
 const multer = require('multer');
 const app = require('../../app.js');
@@ -112,6 +113,9 @@ async function deleteBusiness(req,res){
         //Eliminar la imagen en el sistema de archivos y el modelo
 
         let previaImagen = '';
+        let previousWorker = '';
+        let previousService = '';
+        let previousFav = '';
 
         await business.findById(req.body.businessId)
         .then((docs)=>{
@@ -135,6 +139,47 @@ async function deleteBusiness(req,res){
             
             await fs.unlink(ruta)
         }
+
+        //Eliminar Workers del array y modelo
+
+        await business.findById(req.body.workerId)
+        .then((docs)=>{
+            previousWorker = docs.workers;
+        });
+
+        item2 = JSON.parse(JSON.stringify(previousWorker));
+        const trabajador = workerModel.findById(req.body.workerId);
+        
+        item2.forEach((trabajador)=>{
+            business.workers.remove(trabajador);//Comprobar si es item2.remove
+            workerModel.deleteOne(req.body.idWorker);
+        });
+
+
+        //Eliminar los servicios del array y Modelo
+
+        await business.findById(req.body.idService)
+        .then((docs)=>{
+            previousService = docs.servicios;
+        });
+
+        item3 = JSON.parse(JSON.stringify(previousService));
+        const servicioInArray = workerModel.findById(req.body.idService);
+        
+        item3.forEach((servicioInArray)=>{
+            business.servicios.remove(servicioInArray);
+            services.deleteOne(req.body.idService);
+        });
+
+        //Borrar el modelo entero de favouriteBusiness en el array del usuario
+
+        await usuario.findById(req.body.idUser)
+        .then((docs)=>{
+            previousFav = docs.favoriteBusiness;
+        });
+
+        item4 = JSON.parse(JSON.stringify(previousFav));
+        item4.splice(0,item4.length);
 
 
         await business.findOneAndDelete({businessName: req.body.businessName, email: req.body.email})//Cambiar y recibir el ID
