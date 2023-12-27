@@ -124,21 +124,7 @@ async function deleteBusiness(req,res){
 
         item = JSON.parse(JSON.stringify(previaImagen));
 
-        for(const imagen in item){
-
-            const idImage = imagen;
-            const deletedImage = await Imagen.findByIdAndDelete(idImage);
-            console.log(deletedImage);
-            const rutaAlmacenamiento = deletedImage._doc.imgRuta;
-            const dir = __dirname.substring(0,__dirname.length-17)
-            const ruta = dir + rutaAlmacenamiento;
-
-            if  (!deletedImage){
-                return res.status(202).json({message: 'Imagen no encontrada'});
-            }
-            
-            await fs.unlink(ruta)
-        }
+        deleteImagen(item);
 
         //Eliminar Workers del array y modelo
 
@@ -309,6 +295,50 @@ async function updateImage(req,res){
 
 }
 
+
+async function deleteImagen(item){
+
+
+    const deletedImages = await Promise.all(
+
+        item.map(async (imagen)=>{
+
+            const idImage = imagen;
+            const deletedImage = await Imagen.findByIdAndDelete(idImage);
+
+            if(!deletedImage){
+                return null;
+            }
+
+            const rutaAlmacenamiento = deletedImage._doc.imgRuta;
+            const dir = __dirname.substring(0,__dirname.length-17)
+            const ruta = dir + rutaAlmacenamiento;
+            await fs.unlink(ruta);
+            return deletedImage;
+        })
+
+    );
+
+        return deletedImages;
+
+    /*
+    for(const imagen in item){
+
+        const idImage = imagen;
+        const deletedImage = await Imagen.findByIdAndDelete(idImage);
+        console.log(deletedImage);
+        const rutaAlmacenamiento = deletedImage._doc.imgRuta;
+        const dir = __dirname.substring(0,__dirname.length-17)
+        const ruta = dir + rutaAlmacenamiento;
+
+        if  (!deletedImage){
+            return res.status(202).json({message: 'Imagen no encontrada'});
+        }
+        
+        await fs.unlink(ruta)
+    }*/
+}
+
 //Exportar funciones
 module.exports = {
     getAllBusiness,
@@ -322,3 +352,5 @@ module.exports = {
     updateBusiness,
     getFavBusiness
 }
+
+
