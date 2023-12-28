@@ -14,7 +14,7 @@ class WorkerDataVizPage extends StatelessWidget {
             DateTime.now().day, 14, 30),
         endTime: DateTime(DateTime.now().year, DateTime.now().month,
             DateTime.now().day, 17, 0),
-        color: Colors.green,
+        color: Colors.red,
         description: 'Cortarle el pelo al prro',
       ),
     ];
@@ -28,7 +28,7 @@ class WorkerDataVizPage extends StatelessWidget {
           eventDoneColor: Colors.green,
           selectedColor: Colors.pink,
           selectedTodayColor: Colors.red,
-          todayColor: Colors.blue,
+          todayColor: Colors.amber,
           eventColor: null,
           locale: 'es_ES',
           todayButtonText: 'Hoy',
@@ -40,11 +40,6 @@ class WorkerDataVizPage extends StatelessWidget {
           dayOfWeekStyle: TextStyle(
               color: Colors.black, fontWeight: FontWeight.w800, fontSize: 11),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(Icons.add),
-        backgroundColor: Colors.green,
       ),
       bottomNavigationBar: BarraInferiorBusiness(),
     );
