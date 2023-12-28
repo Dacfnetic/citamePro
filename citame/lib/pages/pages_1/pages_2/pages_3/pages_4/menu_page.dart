@@ -105,35 +105,37 @@ class MenuPage extends ConsumerWidget {
                 ]),
             Expanded(
                 child: TabBarView(children: [
-              Container(
-                padding: EdgeInsets.all(10),
-                color: Color.fromRGBO(240, 240, 240, 1),
-                child: ListView(
-                  physics: AlwaysScrollableScrollPhysics(),
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Expanded(
-                            child: Text('Menu', style: API.estiloJ24negro)),
-                        IconButton(
-                          onPressed: () {},
-                          icon: Icon(Icons.construction_sharp),
-                          color: Colors.black,
-                          style: ButtonStyle(
-                              backgroundColor:
-                                  MaterialStatePropertyAll(Colors.black)),
-                        )
-                      ],
-                    ),
-                    Text(
-                        'Crea tu menú para que los clientes puedan darte su dinero',
-                        style: API.estiloJ14gris),
-                    servicios.isNotEmpty
-                        ? ListView(shrinkWrap: true, children: servicios)
-                        : Text(''),
-                  ],
-                ),
+              Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Expanded(child: Text('Menu', style: API.estiloJ24negro)),
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(Icons.construction_sharp),
+                        color: Colors.black,
+                        style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStatePropertyAll(Colors.black)),
+                      )
+                    ],
+                  ),
+                  Text(
+                      'Crea tu menú para que los clientes puedan darte su dinero',
+                      style: API.estiloJ14gris),
+                  ListView(
+                    shrinkWrap: true,
+                    children: [
+                      servicios.isNotEmpty
+                          ? SizedBox(
+                              height: 300,
+                              child: ListView(
+                                  shrinkWrap: true, children: servicios))
+                          : Text(''),
+                    ],
+                  ),
+                ],
               ),
               Container(
                   child: ListView(
@@ -252,140 +254,6 @@ class MenuPage extends ConsumerWidget {
             ]))
           ]),
         ),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () async {
-            await showDialog<void>(
-              barrierDismissible: false,
-              context: context,
-              builder: (context2) => AlertDialog(
-                content: Stack(
-                  clipBehavior: Clip.none,
-                  children: <Widget>[
-                    Positioned(
-                      right: -40,
-                      top: -40,
-                      child: InkResponse(
-                        onTap: () {
-                          Navigator.of(context2).pop();
-                        },
-                        child: const CircleAvatar(
-                          backgroundColor: Colors.red,
-                          child: Icon(Icons.close),
-                        ),
-                      ),
-                    ),
-                    Form(
-                      key: validacion,
-                      child: Column(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Cuadro(control: servicio, texto: 'servicio'),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Cuadro(control: precio, texto: 'precio'),
-                          ),
-                          Padding(
-                              padding: const EdgeInsets.all(8),
-                              child: CupertinoButton(
-                                  // Display a CupertinoTimerPicker with hour/minute mode.
-                                  onPressed: () {
-                                    showDuracion(
-                                      CupertinoTimerPicker(
-                                        mode: CupertinoTimerPickerMode.hm,
-                                        initialTimerDuration: duration,
-
-                                        // This is called when the user changes the timer's
-                                        // duration.
-                                        onTimerDurationChanged:
-                                            (Duration newDuration) {
-                                          API.reRender(ref);
-                                          ref
-                                              .read(myBusinessStateProvider
-                                                  .notifier)
-                                              .setDuration(newDuration);
-                                          print('jaa');
-                                          ref
-                                              .read(duracionProvider.notifier)
-                                              .change(newDuration);
-                                        },
-                                      ),
-                                    );
-                                  },
-                                  child: Text(
-                                    'Escoger duración',
-                                    style: const TextStyle(
-                                      fontSize: 22.0,
-                                    ),
-                                  ))),
-                          Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: ElevatedButton(
-                              child: const Text('confirmar'),
-                              onPressed: () async {
-                                if (validacion.currentState!.validate()) {
-                                  Duration horario = ref
-                                      .read(myBusinessStateProvider.notifier)
-                                      .getDuration();
-                                  String enviar = '';
-                                  if (horario.inMinutes > 59) {
-                                    if (horario.inHours > 1) {
-                                      int minutos3 =
-                                          (((horario.inMinutes / 60) -
-                                                      horario.inHours) *
-                                                  60)
-                                              .round();
-                                      String minutos =
-                                          minutos3.toStringAsFixed(0);
-                                      enviar =
-                                          '${horario.inHours} horas con $minutos minutos';
-                                    } else {
-                                      int minutos3 =
-                                          (((horario.inMinutes / 60) -
-                                                      horario.inHours) *
-                                                  60)
-                                              .round();
-                                      String minutos =
-                                          minutos3.toStringAsFixed(0);
-                                      enviar =
-                                          '${horario.inHours} hr $minutos mins';
-                                    }
-                                  } else {
-                                    enviar = '${horario.inMinutes} minutos';
-                                  }
-
-                                  print(horario);
-                                  await API.postService(
-                                      context,
-                                      ref
-                                          .read(
-                                              myBusinessStateProvider.notifier)
-                                          .getActualBusiness(),
-                                      ref,
-                                      servicio.text,
-                                      double.parse(precio.text),
-                                      enviar,
-                                      '');
-                                  if (context.mounted) {
-                                    API.reRender(ref);
-                                    Navigator.pop(context);
-                                  }
-                                }
-                              },
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-          icon: Icon(Icons.add),
-          label: Text('Agregar servicio'),
-        ),
       ),
     );
   }
@@ -407,7 +275,7 @@ class CajaDeServicios extends StatelessWidget {
   Widget build(BuildContext context) {
     if (esDueno) {
       return Slidable(
-        //dragStartBehavior: DragStartBehavior.down,
+        dragStartBehavior: DragStartBehavior.start,
         startActionPane: ActionPane(motion: BehindMotion(), children: [
           SlidableAction(
             onPressed: (context) {},
