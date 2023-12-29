@@ -3,11 +3,9 @@ const usuario = require('../../models/users.model.js');
 const business = require('../../models/business.model.js');
 const services = require('../../models/services.model.js');
 const workerModel = require('../../models/worker.model.js');
-const path = require('path');
-const multer = require('multer');
-const app = require('../../app.js');
-const Imagen = require('../../models/image.model.js')
-const fss = require('fs');
+const Imagen = require('../../models/image.model.js');
+const mongoose = require('mongoose');
+const {deleteImagesOnArrayService,deleteImagesOnArrayWorkers,deleteImagen} = require('../../config/functions.js')
 
 
 async function getAllBusiness(req,res){
@@ -114,7 +112,9 @@ async function deleteBusiness(req,res){
 
         let previaImagen = '';
         let previousWorker = '';
+        let previousWorkerImage = '';
         let previousService = '';
+        let previousServiceImage = '';
         let previousFav = '';
 
         await business.findById(req.body.businessId)
@@ -126,7 +126,7 @@ async function deleteBusiness(req,res){
 
         deleteImagen(item);
 
-        //Eliminar Workers del array y modelo
+        //---Eliminar Workers del array y modelo---
 
         await business.findById(req.body.businessId)
         .then((docs)=>{
@@ -134,15 +134,17 @@ async function deleteBusiness(req,res){
         });
 
         item2 = JSON.parse(JSON.stringify(previousWorker));
-        const trabajador = workerModel.findById(req.body.workerId);
+
         
-        item2.forEach((trabajador)=>{
-            business.workers.remove(trabajador);//Comprobar si es item2.remove
-            workerModel.deleteOne(req.body.idWorker);
-        });
+        deleteImagesOnArrayWorkers(item2);
+
+        
+        const trabajador = await workerModel.find({ _id: { $in: item2 } });
+
+        await workerModel.deleteMany({_id: { $in: trabajador.map( (worker) => worker._id )} })
 
 
-        //Eliminar los servicios del array y Modelo
+        //---Eliminar los servicios del array y Modelo---
 
         await business.findById(req.body.businessId)
         .then((docs)=>{
@@ -150,38 +152,41 @@ async function deleteBusiness(req,res){
         });
 
         item3 = JSON.parse(JSON.stringify(previousService));
-        const servicioInArray = workerModel.findById(req.body.idService);
+
+        deleteImagesOnArrayService(item3);
         
-        item3.forEach((servicioInArray)=>{
-            business.servicios.remove(servicioInArray);
-            services.deleteOne(req.body.idService);
-        });
+        const servicioInArray = await services.find({ _id: { $in: item3 } });
+
+        await services.deleteMany( { _id: { $in: servicioInArray.map( (servicio) => servicio._id ) } } )
+        
+        
 
         //Borrar el modelo entero de favouriteBusiness en el array del usuario
 
-        /*await usuario.findById(req.body.idUser)
-        .then((docs)=>{
-            previousFav = docs.favoriteBusiness;
-        });*/
+        const idnegocio = req.body.idBusiness;
+        const tr = await mongoose.startSession();
+        tr.startTransaction();
+        
+        const usuarioWithFav = await usuario.find({ favoriteBusiness: { $in: idnegocio } })
 
-        /*item4 = JSON.parse(JSON.stringify(previousFav));
-        item4.splice(0,item4.length);*/
-        /*for(const imagen of item){
+        for await ( const fav of usuarioWithFav ){
 
-            const idImage = imagen;
-            const deletedImage = await Imagen.findByIdAndDelete(idImage);
-            console.log(deletedImage);
-            const rutaAlmacenamiento = deletedImage._doc.imgRuta;
-            const dir = __dirname.substring(0,__dirname.length-19)
-            const ruta = dir + rutaAlmacenamiento;
+            const negocioFav = fav.favoriteBusiness;
 
-            if  (!deletedImage){
-                return res.status(202).json({message: 'Imagen no encontrada'});
+            const index = negocioFav.findIndex(( negocio )=> negocio._id === idnegocio);
+
+            if(index !== -1){
+                negocioFav.splice(index,1);
             }
-            fss.rmSync(ruta);
-            //await fss.unlink(ruta)
-        }*/
 
+            //Actualiza el documento del usuario
+            await fav.save(tr)
+
+        }
+
+        await tr.commitTransaction();
+       
+        
         await business.findByIdAndDelete(req.body.businessId)//Cambiar y recibir el ID
 
         return res.status(200).json({message: 'Todo ok'});
@@ -308,48 +313,6 @@ async function updateImage(req,res){
 
 }
 
-
-async function deleteImagen(item){
-
-    const deletedImages = await Promise.all(
-
-        item.map(async (imagen)=>{
-
-            const idImage = imagen;
-            const deletedImage = await Imagen.findByIdAndDelete(idImage);
-
-            if(!deletedImage){
-                return null;
-            }
-
-            const rutaAlmacenamiento = deletedImage._doc.imgRuta;
-            const dir = __dirname.substring(0,__dirname.length-19)
-            const ruta = dir + rutaAlmacenamiento;
-            fss.rmSync(ruta);
-            return deletedImage;
-        })
-
-    );
-
-        return deletedImages;
-
-    /*
-    for(const imagen in item){
-
-        const idImage = imagen;
-        const deletedImage = await Imagen.findByIdAndDelete(idImage);
-        console.log(deletedImage);
-        const rutaAlmacenamiento = deletedImage._doc.imgRuta;
-        const dir = __dirname.substring(0,__dirname.length-17)
-        const ruta = dir + rutaAlmacenamiento;
-
-        if  (!deletedImage){
-            return res.status(202).json({message: 'Imagen no encontrada'});
-        }
-        
-        await fs.unlink(ruta)
-    }*/
-}
 
 //Exportar funciones
 module.exports = {
