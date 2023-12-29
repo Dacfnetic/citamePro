@@ -48,7 +48,14 @@ async function postUser(req,res){
 
             }else{
 
-                return res.status(202).send('El usuario ya existe');
+                const usuarioSave = await usuario.findOne({emailUser: req.body.emailUser});
+
+                const token = jwt.sign({idUser: usuarioSave._id},config.jwtSecret,{//Obtenemos y guardamos el id del usuario con su token
+                    algorithm: 'HS256',
+                    expiresIn: 60 * 60 * 24 * 7   //Expira en 1 dia
+                })
+
+                return res.status(201).json({auth: true, token});
 
             }
             
