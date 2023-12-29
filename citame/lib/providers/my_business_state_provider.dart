@@ -1,9 +1,11 @@
 import 'package:citame/models/business_model.dart';
 import 'package:citame/models/service_model.dart';
+import 'package:citame/models/user_model.dart';
 import 'package:citame/models/worker_moder.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final myBusinessStateProvider =
     StateNotifierProvider<MyBusinessStateNotifier, List<Business>>((ref) {
@@ -12,6 +14,19 @@ final myBusinessStateProvider =
 
 class MyBusinessStateNotifier extends StateNotifier<List<Business>> {
   MyBusinessStateNotifier() : super([]);
+
+  void setDatosUsuario() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    user = Usuario(
+        googleId: prefs.getString('googleId')!,
+        userName: prefs.getString('userName')!,
+        userEmail: prefs.getString('emailUser')!,
+        avatar: prefs.getString('avatar')!);
+  }
+
+  Usuario getDatosUsuario() {
+    return user!;
+  }
 
   void cargar(myBusiness) {
     state = myBusiness;
@@ -214,3 +229,5 @@ String actualEmail = '';
 Duration duration = const Duration(hours: 0, minutes: 30);
 
 bool socketConectado = false;
+
+Usuario? user;

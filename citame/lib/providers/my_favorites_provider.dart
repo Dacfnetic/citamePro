@@ -1,6 +1,7 @@
 import 'package:citame/Widgets/business_card.dart';
 import 'package:citame/models/business_model.dart';
 import 'package:citame/services/api_service.dart';
+import 'package:citame/services/api_user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -45,7 +46,8 @@ class BusinessListNotifier extends StateNotifier<List<BusinessCard>> {
   void cargar(BuildContext context, WidgetRef ref) async {
     List<Business> favoriteBusiness;
     List<BusinessCard> negocios = [];
-    favoriteBusiness = await API.getFavBusiness(context, ref);
+
+    favoriteBusiness = await userAPI.getFavBusiness(context, ref);
     if (favoriteBusiness.isNotEmpty) {
       for (var element in favoriteBusiness) {
         element.imgPath[0] = await API.downloadImage(element.imgPath[0]);
