@@ -108,11 +108,9 @@ class BusinessInsidePage extends ConsumerWidget {
                               SharedPreferences prefs =
                                   await SharedPreferences.getInstance();
 
-                              userAPI.addToFavoritesBusiness(
-                                  prefs.getString('idUsuario')!,
-                                  ref
-                                      .read(myBusinessStateProvider.notifier)
-                                      .getActualBusiness());
+                              userAPI.addToFavoritesBusiness(ref
+                                  .read(myBusinessStateProvider.notifier)
+                                  .getActualBusiness());
                             },
                             child: Icon(Icons.favorite)),
                         Text('Horario'),

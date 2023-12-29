@@ -11,8 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class userAPI {
   //este es put
-  static Future<String> addToFavoritesBusiness(
-      String idUsuario, String idBusiness) async {
+  static Future<String> addToFavoritesBusiness(String idBusiness) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     //bool isAuth = await API.verifyTokenUser();
     final response =
@@ -119,10 +118,10 @@ abstract class userAPI {
   static Future<List<Business>> getFavBusiness(
       BuildContext context, WidgetRef ref) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var idUsuario = prefs.getString('idUsuario')!;
     final response = await http
         .get(Uri.parse('$serverUrl/api/business/FavBusiness'), headers: {
-      'idUsuario': idUsuario,
+      'Content-Type': 'application/json',
+      'x-access-token': prefs.getString('llaveDeUsuario')!
     });
 
     if (response.statusCode == 200) {
@@ -143,19 +142,6 @@ abstract class userAPI {
       return businesses;
     }
 
-    /*if (response.statusCode == 200) {
-      List<Business> negocios = prefs
-          .getStringList('negocios')!
-          .map((e) => Business.fromJson2(jsonDecode(e)))
-          .toList();
-      print(negocios);
-      if (context.mounted) {
-        if (prefs.getStringList('ownerBusiness')!.isEmpty) {
-          API.noHayPropios(context);
-        }
-      }
-      return negocios;
-    }*/
     throw Exception('Failed to get items');
   }
 
