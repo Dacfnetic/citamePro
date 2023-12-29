@@ -136,19 +136,18 @@ async function deleteBusiness(req,res){
 
         item2 = JSON.parse(JSON.stringify(previousWorker));
 
-        //Optimizar
-        for(const trabajador of item2){
+        
+        const arrayWorker = item3.slice();
 
-            await workerModel.findById(trabajador)//Modificar el id 
-            .then((docs)=>{
-                previousWorkerImage = docs.imgPath;
-            })
+        const promiseWorker = arrayWorker.map(async(worker2)=>{
+            
+            const sworkerFind = await workerModel.findById(worker2);
+            previousWorkerImage = sworkerFind.imgPath;
+            await deleteImagen(previousWorkerImage);
+            
+        });
 
-            workerimg = JSON.parse(JSON.stringify(previousWorkerImage));
-
-            deleteImagen(workerimg);
-
-        };
+        await Promise.all(promiseWorker)
 
         
         const trabajador = await workerModel.find({ _id: { $in: item2 } });
@@ -165,20 +164,17 @@ async function deleteBusiness(req,res){
 
         item3 = JSON.parse(JSON.stringify(previousService));
 
-        //Optimizacion
-        for(const servicio2 of item3){
+        const arrayServicios = item3.slice();
 
-            await services.findById(servicio2)//Modificar el id 
-            .then((docs)=>{
-                previousServiceImage = docs.imgPath;
-            })
+        const promisesService = arrayServicios.map(async(servicio2)=>{
+            
+            const serviciotoFind = await services.findById(servicio2);
+            previousServiceImage = serviciotoFind.imgPath;
+            await deleteImagen(previousServiceImage);
+            
+        });
 
-            servicioimg = JSON.parse(JSON.stringify(previousServiceImage));
-
-            deleteImagen(servicioimg);
-
-        }
-
+        await Promise.all(promisesService)
         
         const servicioInArray = await servicesModel.find({ _id: { $in: item3 } });
 
@@ -187,14 +183,6 @@ async function deleteBusiness(req,res){
         
 
         //Borrar el modelo entero de favouriteBusiness en el array del usuario
-
-/*
-        await usuario.findById(req.body.idUser)
-        .then((docs)=>{
-            previousFav = docs.favoriteBusiness;
-        });
-
-        item4 = JSON.parse(JSON.stringify(previousFav));*/
 
         const idnegocio = req.body.idBusiness;
         const tr = await mongoose.startSession();
