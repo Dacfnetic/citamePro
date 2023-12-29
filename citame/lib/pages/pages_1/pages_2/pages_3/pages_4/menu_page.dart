@@ -124,7 +124,6 @@ class MenuPage extends ConsumerWidget {
                   Text(
                       'Crea tu menú para que los clientes puedan darte su dinero',
                       style: API.estiloJ14gris),
-
                   ListView(
                     shrinkWrap: true,
                     children: [
@@ -283,7 +282,6 @@ class MenuPage extends ConsumerWidget {
                     icon: Icon(Icons.add),
                     label: Text('Agregar servicio'),
                   ),
-
                 ],
               ),
               Container(
