@@ -3,10 +3,9 @@ const usuario = require('../../models/users.model.js');
 const business = require('../../models/business.model.js');
 const services = require('../../models/services.model.js');
 const workerModel = require('../../models/worker.model.js');
-const Imagen = require('../../models/image.model.js')
-const fss = require('fs');
-const servicesModel = require('../../models/services.model.js');
+const Imagen = require('../../models/image.model.js');
 const mongoose = require('mongoose');
+const {deleteImagesOnArrayService,deleteImagesOnArrayWorkers,deleteImagen} = require('../../config/functions.js')
 
 
 async function getAllBusiness(req,res){
@@ -137,17 +136,7 @@ async function deleteBusiness(req,res){
         item2 = JSON.parse(JSON.stringify(previousWorker));
 
         
-        const arrayWorker = item3.slice();
-
-        const promiseWorker = arrayWorker.map(async(worker2)=>{
-            
-            const sworkerFind = await workerModel.findById(worker2);
-            previousWorkerImage = sworkerFind.imgPath;
-            await deleteImagen(previousWorkerImage);
-            
-        });
-
-        await Promise.all(promiseWorker)
+        deleteImagesOnArrayWorkers(item2);
 
         
         const trabajador = await workerModel.find({ _id: { $in: item2 } });
@@ -164,21 +153,11 @@ async function deleteBusiness(req,res){
 
         item3 = JSON.parse(JSON.stringify(previousService));
 
-        const arrayServicios = item3.slice();
-
-        const promisesService = arrayServicios.map(async(servicio2)=>{
-            
-            const serviciotoFind = await services.findById(servicio2);
-            previousServiceImage = serviciotoFind.imgPath;
-            await deleteImagen(previousServiceImage);
-            
-        });
-
-        await Promise.all(promisesService)
+        deleteImagesOnArrayService(item3);
         
-        const servicioInArray = await servicesModel.find({ _id: { $in: item3 } });
+        const servicioInArray = await services.find({ _id: { $in: item3 } });
 
-        await servicesModel.deleteMany( { _id: { $in: servicioInArray.map( (servicio) => servicio._id ) } } )
+        await services.deleteMany( { _id: { $in: servicioInArray.map( (servicio) => servicio._id ) } } )
         
         
 
@@ -334,33 +313,6 @@ async function updateImage(req,res){
 
 }
 
-
-async function deleteImagen(item){
-
-    const deletedImages = await Promise.all(
-
-        item.map(async (imagen)=>{
-
-            const idImage = imagen;
-            const deletedImage = await Imagen.findByIdAndDelete(idImage);
-
-            if(!deletedImage){
-                return null;
-            }
-
-            const rutaAlmacenamiento = deletedImage._doc.imgRuta;
-            const dir = __dirname.substring(0,__dirname.length-19)
-            const ruta = dir + rutaAlmacenamiento;
-            fss.rmSync(ruta);
-            return deletedImage;
-        })
-
-    );
-
-        return deletedImages;
-
-    
-}
 
 //Exportar funciones
 module.exports = {
