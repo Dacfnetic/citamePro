@@ -9,7 +9,8 @@ const userSchema = new Schema({
     userName: {type: String, required: true},
     emailUser: {type: String, required: true, unique: true},
     avatar: {type: String, required: true},
-    favoriteBusiness:[{type: mongoose.Schema.Types.Mixed}],
+    //favoriteBusiness:[{type: mongoose.Schema.Types.Mixed}],
+    favoriteBusiness:[{type:Schema.Types.ObjectId,ref:'business'}],
     //status:{type:Boolean},
     //bussinessAsOwner: [String],
     //bussinessAsEmployer: [String]
