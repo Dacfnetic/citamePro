@@ -21,7 +21,7 @@ async function deleteImagen(item){
             }
 
             const rutaAlmacenamiento = deletedImage._doc.imgRuta;
-            const dir = __dirname.substring(0,__dirname.length-19)
+            const dir = __dirname.substring(0,__dirname.length-10)
             const ruta = dir + rutaAlmacenamiento;
             fss.rmSync(ruta);
             return deletedImage;
@@ -48,7 +48,6 @@ async function deleteImagesOnArrayWorkers(item){
 
         await Promise.all(promiseWorker)
 }
-
 
 async function deleteImagesOnArrayService(item){
 

@@ -3,8 +3,10 @@ const usuario = require('../../models/users.model.js');
 const business = require('../../models/business.model.js');
 const services = require('../../models/services.model.js');
 const workerModel = require('../../models/worker.model.js');
+const jwt = require('jsonwebtoken');
 const Imagen = require('../../models/image.model.js');
 const mongoose = require('mongoose');
+const config = require('../../config/configjson.js');
 const {deleteImagesOnArrayService,deleteImagesOnArrayWorkers,deleteImagen} = require('../../config/functions.js')
 
 
@@ -163,7 +165,7 @@ async function deleteBusiness(req,res){
 
         //Borrar el modelo entero de favouriteBusiness en el array del usuario
 
-        const idnegocio = req.body.idBusiness;
+        const idnegocio = req.body.businessId;
         const tr = await mongoose.startSession();
         tr.startTransaction();
         
@@ -173,11 +175,15 @@ async function deleteBusiness(req,res){
 
             const negocioFav = fav.favoriteBusiness;
 
-            const index = negocioFav.findIndex(( negocio )=> negocio._id === idnegocio);
+            item5 = JSON.parse(JSON.stringify(negocioFav));
+
+            const index = item5.findIndex(( negocio )=> negocio === idnegocio);
 
             if(index !== -1){
-                negocioFav.splice(index,1);
+                item5.splice(index,1);
             }
+
+            fav.favoriteBusiness = item5;
 
             //Actualiza el documento del usuario
             await fav.save(tr)
@@ -299,12 +305,36 @@ async function updateBusiness(req,res){
 }
 
 async function getFavBusiness(req,res){
-    
-    await usuario.findById(req.get('idUsuario'))
+
+    const token = req.headers['x-access-token'];//Buscar en los headers que me tienes que mandar, se tiene que llamar asi para que la reciba aca
+
+    if(!token){
+        return res.status(401).json({
+            auth: false,
+            message: 'No token'
+        });
+    }
+    //Una vez exista el JWT lo decodifica
+    const decoded =  jwt.verify(token,config.jwtSecret);//Verifico en base al token
+
+
+    await usuario.findById(decoded.idUser)
     .then(async(docs)=>{
         const negocios = docs.favoriteBusiness;
         const negociosFavoritos = JSON.parse(JSON.stringify(negocios));
-        return res.status(200).json(negociosFavoritos);
+        let enviar = [];
+        let contador = 0;
+        for(const negocio of negociosFavoritos){
+            enviar.push(await business.findById(negocio));
+            contador++;
+            if(contador == negociosFavoritos.length){
+                return res.status(200).json(enviar);
+            }
+        }
+        if(negociosFavoritos.length == 0){
+            return res.status(200).json([]);
+        }
+        
     });
 
 }

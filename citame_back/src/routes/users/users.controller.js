@@ -41,20 +41,15 @@ async function postUser(req,res){
 
                 const token = jwt.sign({idUser: usuarioSave._id},config.jwtSecret,{//Obtenemos y guardamos el id del usuario con su token
                     algorithm: 'HS256',
-                    expiresIn: 60 * 60 * 24    //Expira en 1 dia
+                    expiresIn: 60 * 60 * 24 * 7   //Expira en 1 dia
                 })
 
-                return res.status(201).json({auth: true, token, usuarioSave});
+                return res.status(201).json({auth: true, token});
 
             }else{
-                const eXU = await usuario.findOne({emailUser: req.body.emailUser});
 
-                const token = jwt.sign({idUser: eXU._id},config.jwtSecret,{//Obtenemos y guardamos el id del usuario con su token
-                    algorithm: 'HS256',
-                    expiresIn: 60 * 60 * 24    //Expira en 1 dia
-                })
-                console.log(token);
-                return res.status(202).json({auth: true, token, eXU});
+                return res.status(202).send('El usuario ya existe');
+
             }
             
         })
@@ -113,16 +108,21 @@ async function FavoriteBusiness(req,res){
         modelo = JSON.parse(JSON.stringify(modelo));
         item = JSON.parse(JSON.stringify(previousBusiness));
 
-        const mapOfIds = item.map((este)=>{
+       /* const mapOfIds = item.map((este)=>{
             return este._id;
-        })
+        })*/
 
-        const index = mapOfIds.indexOf(modelo._id);
+        const index = item.indexOf(modelo._id);
         if(index != -1){
-            item.splice(index,1);
+            if(item.length == 1){
+                item = [];
+            }else{
+                item.splice(index,1);
+            }
+            
         }else{
             const nuevoModeloBien = await business.findById(req.body.idBusiness);
-            item.push(nuevoModeloBien);
+            item.push(nuevoModeloBien._id);
         }
         
 
