@@ -87,8 +87,7 @@ abstract class API {
     throw Exception('Failed to add item');
   }
 
-  static Future<String> addToFavoritesBusiness(
-      String idUsuario, String idBusiness) async {
+  static Future<String> addToFavoritesBusiness(String idBusiness) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     //bool isAuth = await API.verifyTokenUser();
     final response =
@@ -266,13 +265,6 @@ abstract class API {
       return 'listo';
     }
     if (response.statusCode == 202) {
-      var contenido = jsonDecode(response.body);
-      prefs.setString('llaveDeUsuario', contenido['token']);
-      if (prefs.getString('idUsuario') == null ||
-          prefs.getString('idUsuario') != contenido['eXU']['_id']) {
-        prefs.setString('idUsuario', contenido['eXU']['_id']);
-      }
-
       return 'listo';
     }
 
@@ -353,10 +345,11 @@ abstract class API {
   static Future<List<Business>> getFavBusiness(
       BuildContext context, WidgetRef ref) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var idUsuario = prefs.getString('idUsuario')!;
+
     final response = await http
         .get(Uri.parse('$serverUrl/api/business/FavBusiness'), headers: {
-      'idUsuario': idUsuario,
+      'Content-Type': 'application/json',
+      'x-access-token': prefs.getString('llaveDeUsuario')!
     });
 
     if (response.statusCode == 200) {
@@ -476,7 +469,6 @@ abstract class API {
 
     if (response.statusCode == 200) {
       final Usuario usuario = Usuario(
-          idUsuario: prefs.getString('idUsuario')!,
           googleId: prefs.getString('googleId')!,
           userName: prefs.getString('userName')!,
           userEmail: prefs.getString('emailUser')!,

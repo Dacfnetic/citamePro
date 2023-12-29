@@ -8,12 +8,7 @@ final userProvider = StateNotifierProvider<UsuarioNotifier, Usuario>((ref) {
 
 class UsuarioNotifier extends StateNotifier<Usuario> {
   UsuarioNotifier()
-      : super(Usuario(
-            idUsuario: '',
-            googleId: '',
-            userName: '',
-            userEmail: '',
-            avatar: ''));
+      : super(Usuario(googleId: '', userName: '', userEmail: '', avatar: ''));
 
   void cargar() async {
     Usuario usuario;
