@@ -25,14 +25,18 @@ class WorkerBox extends ConsumerWidget {
     String horas = worker.horario;
     if (isDueno) {
       return Container(
-        margin: EdgeInsets.fromLTRB(0, 1, 0, 0),
-        //height: 300,
-        //padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
+        margin: EdgeInsets.all(5),
+        padding: EdgeInsets.all(4),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey, width: 3),
+          borderRadius: BorderRadius.circular(8),
+          color: Colors.white,
+        ), // Color de fondo del Container
 
         child: Row(
           children: [
             Container(
-              margin: EdgeInsets.all(16),
+              margin: EdgeInsets.all(10),
               alignment: Alignment.centerLeft,
               decoration: BoxDecoration(
                 color: Color(0x4d39d2c0),

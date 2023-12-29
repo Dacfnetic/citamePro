@@ -124,17 +124,12 @@ class MenuPage extends ConsumerWidget {
                   Text(
                       'Crea tu menú para que los clientes puedan darte su dinero',
                       style: API.estiloJ14gris),
-                  ListView(
-                    shrinkWrap: true,
-                    children: [
-                      servicios.isNotEmpty
-                          ? SizedBox(
-                              height: 300,
-                              child: ListView(
-                                  shrinkWrap: true, children: servicios))
-                          : Text(''),
-                    ],
-                  ),
+                  servicios.isNotEmpty
+                      ? Expanded(
+                          child:
+                              ListView(shrinkWrap: true, children: servicios))
+                      : Text(''),
+                  ElevatedButton(onPressed: () {}, child: Icon(Icons.add)),
                 ],
               ),
               Container(
@@ -232,7 +227,9 @@ class MenuPage extends ConsumerWidget {
                         'Crea los perfiles de tu personal para que tus clientes puedan conocerlos.',
                         style: API.estiloJ14gris),
                     workers.isNotEmpty
-                        ? ListView(shrinkWrap: true, children: trabajadores)
+                        ? Expanded(
+                            child: ListView(
+                                shrinkWrap: true, children: trabajadores))
                         : Container(),
                     ElevatedButton.icon(
                       onPressed: () {
