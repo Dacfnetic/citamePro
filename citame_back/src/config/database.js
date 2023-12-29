@@ -8,5 +8,7 @@ async function connect() {
 
 };
 
+const {deleteBusiness} = require('../routes/business/business.controller');
+
 module.exports = { connect };
 
