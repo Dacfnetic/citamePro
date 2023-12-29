@@ -135,6 +135,153 @@ class MenuPage extends ConsumerWidget {
                           : Text(''),
                     ],
                   ),
+                  ElevatedButton.icon(
+                    onPressed: () async {
+                      await showDialog<void>(
+                        barrierDismissible: false,
+                        context: context,
+                        builder: (context2) => AlertDialog(
+                          content: Stack(
+                            clipBehavior: Clip.none,
+                            children: <Widget>[
+                              Positioned(
+                                right: -40,
+                                top: -40,
+                                child: InkResponse(
+                                  onTap: () {
+                                    Navigator.of(context2).pop();
+                                  },
+                                  child: const CircleAvatar(
+                                    backgroundColor: Colors.red,
+                                    child: Icon(Icons.close),
+                                  ),
+                                ),
+                              ),
+                              Form(
+                                key: validacion,
+                                child: Column(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.all(8),
+                                      child: Cuadro(
+                                          control: servicio, texto: 'servicio'),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8),
+                                      child: Cuadro(
+                                          control: precio, texto: 'precio'),
+                                    ),
+                                    Padding(
+                                        padding: const EdgeInsets.all(8),
+                                        child: CupertinoButton(
+                                            // Display a CupertinoTimerPicker with hour/minute mode.
+                                            onPressed: () {
+                                              showDuracion(
+                                                CupertinoTimerPicker(
+                                                  mode: CupertinoTimerPickerMode
+                                                      .hm,
+                                                  initialTimerDuration:
+                                                      duration,
+
+                                                  // This is called when the user changes the timer's
+                                                  // duration.
+                                                  onTimerDurationChanged:
+                                                      (Duration newDuration) {
+                                                    API.reRender(ref);
+                                                    ref
+                                                        .read(
+                                                            myBusinessStateProvider
+                                                                .notifier)
+                                                        .setDuration(
+                                                            newDuration);
+                                                    print('jaa');
+                                                    ref
+                                                        .read(duracionProvider
+                                                            .notifier)
+                                                        .change(newDuration);
+                                                  },
+                                                ),
+                                              );
+                                            },
+                                            child: Text(
+                                              'Escoger duración',
+                                              style: const TextStyle(
+                                                fontSize: 22.0,
+                                              ),
+                                            ))),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8),
+                                      child: ElevatedButton(
+                                        child: const Text('confirmar'),
+                                        onPressed: () async {
+                                          if (validacion.currentState!
+                                              .validate()) {
+                                            Duration horario = ref
+                                                .read(myBusinessStateProvider
+                                                    .notifier)
+                                                .getDuration();
+                                            String enviar = '';
+                                            if (horario.inMinutes > 59) {
+                                              if (horario.inHours > 1) {
+                                                int minutos3 =
+                                                    (((horario.inMinutes / 60) -
+                                                                horario
+                                                                    .inHours) *
+                                                            60)
+                                                        .round();
+                                                String minutos =
+                                                    minutos3.toStringAsFixed(0);
+                                                enviar =
+                                                    '${horario.inHours} horas con $minutos minutos';
+                                              } else {
+                                                int minutos3 =
+                                                    (((horario.inMinutes / 60) -
+                                                                horario
+                                                                    .inHours) *
+                                                            60)
+                                                        .round();
+                                                String minutos =
+                                                    minutos3.toStringAsFixed(0);
+                                                enviar =
+                                                    '${horario.inHours} hr $minutos mins';
+                                              }
+                                            } else {
+                                              enviar =
+                                                  '${horario.inMinutes} minutos';
+                                            }
+
+                                            print(horario);
+                                            await API.postService(
+                                                context,
+                                                ref
+                                                    .read(
+                                                        myBusinessStateProvider
+                                                            .notifier)
+                                                    .getActualBusiness(),
+                                                ref,
+                                                servicio.text,
+                                                double.parse(precio.text),
+                                                enviar,
+                                                '');
+                                            if (context.mounted) {
+                                              API.reRender(ref);
+                                              Navigator.pop(context);
+                                            }
+                                          }
+                                        },
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                    icon: Icon(Icons.add),
+                    label: Text('Agregar servicio'),
+                  ),
                 ],
               ),
               Container(
