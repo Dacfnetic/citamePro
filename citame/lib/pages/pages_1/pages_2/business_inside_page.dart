@@ -6,6 +6,7 @@ import 'package:citame/pages/pages_1/pages_2/pages_3/reservation_page.dart';
 import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:citame/providers/re_render_provider.dart';
 import 'package:citame/services/api_service.dart';
+import 'package:citame/services/api_user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -106,7 +107,8 @@ class BusinessInsidePage extends ConsumerWidget {
                             onPressed: () async {
                               SharedPreferences prefs =
                                   await SharedPreferences.getInstance();
-                              API.addToFavoritesBusiness(
+
+                              userAPI.addToFavoritesBusiness(
                                   prefs.getString('idUsuario')!,
                                   ref
                                       .read(myBusinessStateProvider.notifier)

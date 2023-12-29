@@ -4,10 +4,11 @@ import 'package:citame/pages/pages_1/index_page.dart';
 import 'package:citame/pages/pages_1/profile_page.dart';
 import 'package:citame/providers/business_provider.dart';
 import 'package:citame/providers/categories_provider.dart';
+import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:citame/providers/navbar_provider.dart';
 import 'package:citame/providers/page_provider.dart';
-import 'package:citame/providers/user_provider.dart';
 import 'package:citame/services/api_service.dart';
+import 'package:citame/services/api_user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -23,6 +24,8 @@ class BarraInferior extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    MyBusinessStateNotifier controlador =
+        ref.read(myBusinessStateProvider.notifier);
     return NavigationBar(
         backgroundColor: Colors.white,
         indicatorColor: Colors.white,
@@ -32,6 +35,7 @@ class BarraInferior extends ConsumerWidget {
           if (value == 2) {
             if (context.mounted) {
               API.connect();
+              controlador.setDatosUsuario();
               ref.read(pageProvider.notifier).actualizar(ProfilePage());
               //API.emitir();
               Navigator.push(
@@ -43,7 +47,7 @@ class BarraInferior extends ConsumerWidget {
                 ref.read(pageProvider.notifier).actualizar(HomePage());
               });
             }
-            ref.read(userProvider.notifier).cargar();
+
             ref.read(businessProvider.notifier).inicializar();
             ref.read(categoriesProvider.notifier).inicializar();
             ref.read(pageProvider.notifier).actualizar(ProfilePage());
@@ -59,7 +63,8 @@ class BarraInferior extends ConsumerWidget {
                   MaterialPageRoute(
                     builder: (context) => IndexPage(),
                   ));
-              await API.getAllUsers();
+
+              await userAPI.getAllUsers();
             }
           }
         },

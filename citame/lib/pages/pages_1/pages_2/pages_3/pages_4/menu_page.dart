@@ -83,13 +83,13 @@ class MenuPage extends ConsumerWidget {
                 tabs: [
                   Tab(
                     child: Text(
-                      'Informacion',
+                      'Servicios',
                       style: TextStyle(fontSize: 14),
                     ),
-                    icon: Icon(Icons.store, size: 30),
+                    icon: Icon(Icons.menu_book, size: 30),
                   ),
                   Tab(
-                    child: Text('Servicios', style: TextStyle(fontSize: 14)),
+                    child: Text('Jornada', style: TextStyle(fontSize: 14)),
                     icon: Icon(
                       Icons.menu,
                       size: 30,
@@ -101,7 +101,7 @@ class MenuPage extends ConsumerWidget {
                       icon: Icon(
                         Icons.group,
                         size: 30,
-                      ))
+                      )),
                 ]),
             Expanded(
                 child: TabBarView(children: [
@@ -293,17 +293,10 @@ class CajaDeServicios extends StatelessWidget {
         child: Container(
           padding: EdgeInsets.all(7),
           decoration: BoxDecoration(
-            //borderRadius: BorderRadius.circular(12),
-            color: Colors.white, // Color de fondo del Container
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey, // Color de la sombra
-                offset: Offset(0.0, 3.0), // Desplazamiento de la sombra
-                blurRadius: 5.0, // Radio de desenfoque de la sombra
-              ),
-            ],
-          ),
-          margin: EdgeInsets.only(top: 5, bottom: 5),
+              border: Border.all(color: Colors.grey, width: 0.8),
+              //borderRadius: BorderRadius.circular(12),
+              color: Colors.white),
+          //margin: EdgeInsets.only(top: 5, bottom: 5),
           child: Row(
             mainAxisSize: MainAxisSize.max,
             children: [
@@ -311,7 +304,7 @@ class CajaDeServicios extends StatelessWidget {
                 decoration:
                     BoxDecoration(borderRadius: BorderRadius.circular(8)),
                 child: Padding(
-                    child: Icon(Icons.cut, size: 35),
+                    child: Icon(Icons.cut, size: 32),
                     padding: EdgeInsets.all(2)),
               ),
               SizedBox(width: 10),
