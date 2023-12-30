@@ -7,7 +7,7 @@ class WorkerDataVizPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<NeatCleanCalendarEvent> _eventList = [
+    final List<NeatCleanCalendarEvent> eventList = [
       NeatCleanCalendarEvent(
         'Corte de pelo',
         startTime: DateTime(DateTime.now().year, DateTime.now().month,
@@ -23,7 +23,7 @@ class WorkerDataVizPage extends StatelessWidget {
         child: Calendar(
           startOnMonday: true,
           weekDays: ['Lu', 'Ma', 'Mi', 'JU', 'Vi', 'Sa', 'Do'],
-          eventsList: _eventList,
+          eventsList: eventList,
           isExpandable: true,
           eventDoneColor: Colors.green,
           selectedColor: Colors.pink,
