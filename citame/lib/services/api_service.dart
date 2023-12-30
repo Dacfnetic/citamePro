@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+
 import 'package:citame/Widgets/cuadro.dart';
 import 'package:citame/firebase_options.dart';
 import 'package:citame/models/business_model.dart';
@@ -15,12 +16,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+// ignore: library_prefixes
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 String serverUrl = API.server;
@@ -190,9 +192,15 @@ abstract class API {
       //await API.postImagen(imgPath, serviceData['_id'], 'worker');
       if (context.mounted) {
         await API.updateServiceInBusiness(idBusiness, serviceData['_id']);
-        await API.mensaje(context, 'Aviso', 'El servicio fue creado');
-        ref.read(myBusinessStateProvider.notifier).setService(idBusiness, ref);
-        Navigator.pop(context);
+        if (context.mounted) {
+          await API.mensaje(context, 'Aviso', 'El servicio fue creado');
+          ref
+              .read(myBusinessStateProvider.notifier)
+              .setService(idBusiness, ref);
+          if (context.mounted) {
+            Navigator.pop(context);
+          }
+        }
         return 'Todo ok';
       }
     }
@@ -673,8 +681,8 @@ abstract class API {
     const AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails('channelId', 'channelName',
             importance: Importance.max, priority: Priority.high);
-    const DarwinNotificationDetails darwinNotificationDetails =
-        DarwinNotificationDetails();
+    /*const DarwinNotificationDetails darwinNotificationDetails =
+        DarwinNotificationDetails();*/
     const NotificationDetails notificationDetails =
         NotificationDetails(android: androidNotificationDetails);
 

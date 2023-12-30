@@ -2,7 +2,6 @@ import 'package:citame/pages/pages_1/pages_2/pages_3/pages_4/menu_page.dart';
 import 'package:citame/pages/pages_1/pages_2/pages_3/pages_4/pages_5/worker_data_viz_page.dart';
 import 'package:citame/providers/navbar_provider.dart';
 import 'package:citame/providers/page_provider.dart';
-import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

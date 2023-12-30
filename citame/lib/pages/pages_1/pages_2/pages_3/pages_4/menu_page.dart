@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 import 'package:citame/Widgets/cuadro.dart';
 import 'package:citame/Widgets/worker.dart';
 import 'package:citame/models/service_model.dart';
@@ -49,8 +48,6 @@ class MenuPage extends ConsumerWidget {
       API.reRender(ref);
     }
 
-    String horaDeDuracion = ref.watch(duracionProvider).toString();
-    bool caca = ref.watch(reRenderProvider);
     List<Service> listaDeServicios =
         ref.watch(myBusinessStateProvider.notifier).getService();
     List<CajaDeServicios> servicios = listaDeServicios
@@ -82,26 +79,19 @@ class MenuPage extends ConsumerWidget {
                 unselectedLabelColor: Colors.grey,
                 tabs: [
                   Tab(
-                    child: Text(
-                      'Servicios',
-                      style: TextStyle(fontSize: 14),
-                    ),
                     icon: Icon(Icons.menu_book, size: 30),
                   ),
                   Tab(
-                    child: Text('Jornada', style: TextStyle(fontSize: 14)),
                     icon: Icon(
                       Icons.menu,
                       size: 30,
                     ),
+                    child: Text('Jornada', style: TextStyle(fontSize: 14)),
                   ),
                   Tab(
-                      child:
-                          Text('Trabajadores', style: TextStyle(fontSize: 14)),
-                      icon: Icon(
-                        Icons.group,
-                        size: 30,
-                      )),
+                    icon: Icon(Icons.group, size: 30),
+                    child: Text('Trabajadores', style: TextStyle(fontSize: 14)),
+                  )
                 ]),
             Expanded(
                 child: TabBarView(children: [
@@ -284,8 +274,7 @@ class MenuPage extends ConsumerWidget {
                   ),
                 ],
               ),
-              Container(
-                  child: ListView(
+              ListView(
                 children: [
                   Text('Jornada de atención', style: API.estiloJ24negro),
                   Text(
@@ -370,35 +359,33 @@ class MenuPage extends ConsumerWidget {
                       },
                       title: Text('Domingo')),
                 ],
-              )),
-              Container(
-                child: ListView(
-                  children: [
-                    Text('Perfiles', style: API.estiloJ24negro),
-                    Text(
-                        'Crea los perfiles de tu personal para que tus clientes puedan conocerlos.',
-                        style: API.estiloJ14gris),
-                    workers.isNotEmpty
-                        ? Expanded(
-                            child: ListView(
-                                shrinkWrap: true, children: trabajadores))
-                        : Container(),
-                    ElevatedButton.icon(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ProfileInsidePage(),
-                            ));
-                      },
-                      icon: Icon(Icons.plus_one),
-                      label: Text('Agregar más'),
-                    ),
-                    SizedBox(
-                      height: 24,
-                    )
-                  ],
-                ),
+              ),
+              ListView(
+                children: [
+                  Text('Perfiles', style: API.estiloJ24negro),
+                  Text(
+                      'Crea los perfiles de tu personal para que tus clientes puedan conocerlos.',
+                      style: API.estiloJ14gris),
+                  workers.isNotEmpty
+                      ? Expanded(
+                          child: ListView(
+                              shrinkWrap: true, children: trabajadores))
+                      : Container(),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ProfileInsidePage(),
+                          ));
+                    },
+                    icon: Icon(Icons.plus_one),
+                    label: Text('Agregar más'),
+                  ),
+                  SizedBox(
+                    height: 24,
+                  )
+                ],
               )
             ]))
           ]),
@@ -453,12 +440,12 @@ class CajaDeServicios extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             children: [
               Container(
-                decoration:
-                    BoxDecoration(borderRadius: BorderRadius.circular(8)),
-                child: Padding(
+                  decoration:
+                      BoxDecoration(borderRadius: BorderRadius.circular(8)),
+                  child: Padding(
+                    padding: EdgeInsets.all(2),
                     child: Icon(Icons.cut, size: 32),
-                    padding: EdgeInsets.all(2)),
-              ),
+                  )),
               SizedBox(width: 10),
               Expanded(
                 child: Padding(
@@ -503,9 +490,9 @@ class CajaDeServicios extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.max,
           children: [
-            Container(
-              child: Padding(
-                  child: Icon(Icons.cut, size: 35), padding: EdgeInsets.all(2)),
+            Padding(
+              padding: EdgeInsets.all(2),
+              child: Icon(Icons.cut, size: 35),
             ),
             SizedBox(width: 10),
             Expanded(

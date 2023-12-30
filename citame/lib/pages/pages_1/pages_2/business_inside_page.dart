@@ -2,7 +2,6 @@ import 'package:citame/Widgets/worker.dart';
 import 'package:citame/models/service_model.dart';
 import 'package:citame/models/worker_moder.dart';
 import 'package:citame/pages/pages_1/pages_2/pages_3/pages_4/menu_page.dart';
-import 'package:citame/pages/pages_1/pages_2/pages_3/reservation_page.dart';
 import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:citame/providers/re_render_provider.dart';
 import 'package:citame/services/api_service.dart';
@@ -10,7 +9,6 @@ import 'package:citame/services/api_user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class BusinessInsidePage extends ConsumerWidget {
   BusinessInsidePage({
@@ -62,26 +60,21 @@ class BusinessInsidePage extends ConsumerWidget {
                   unselectedLabelColor: Colors.grey,
                   tabs: [
                     Tab(
+                      icon: Icon(Icons.store, size: 30),
                       child: Text(
                         'Informacion',
                         style: TextStyle(fontSize: 14),
                       ),
-                      icon: Icon(Icons.store, size: 30),
                     ),
                     Tab(
+                      icon: Icon(Icons.menu, size: 30),
                       child: Text('Servicios', style: TextStyle(fontSize: 14)),
-                      icon: Icon(
-                        Icons.menu,
-                        size: 30,
-                      ),
                     ),
                     Tab(
-                        child: Text('Trabajadores',
-                            style: TextStyle(fontSize: 14)),
-                        icon: Icon(
-                          Icons.group,
-                          size: 30,
-                        ))
+                      icon: Icon(Icons.group, size: 30),
+                      child:
+                          Text('Trabajadores', style: TextStyle(fontSize: 14)),
+                    ),
                   ]),
               Expanded(
                   child: TabBarView(children: [
@@ -105,9 +98,6 @@ class BusinessInsidePage extends ConsumerWidget {
                         ),
                         ElevatedButton(
                             onPressed: () async {
-                              SharedPreferences prefs =
-                                  await SharedPreferences.getInstance();
-
                               userAPI.addToFavoritesBusiness(ref
                                   .read(myBusinessStateProvider.notifier)
                                   .getActualBusiness());

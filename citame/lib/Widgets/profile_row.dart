@@ -31,9 +31,6 @@ class ProfileRow extends ConsumerWidget {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         if (method == 0) {
           try {
-            /*String? metodo =
-                FirebaseAuth.instance.currentUser?.providerData[0].providerId;*/
-
             await prefs.clear().then((value) {
               ref.read(ownBusinessProvider.notifier).limpiar();
               ref.read(myBusinessStateProvider.notifier).limpiar();

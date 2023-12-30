@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 class Schedule {
   final Map horario;
   Schedule({

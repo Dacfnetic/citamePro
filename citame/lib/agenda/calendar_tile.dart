@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:citame/agenda/platform_widgets.dart';
 import './date_utils.dart';
@@ -76,8 +75,8 @@ class NeatCleanCalendarTile extends StatelessWidget {
     // We decide, if this calendar tile should display a day name in the header row. If this is the
     // case, we return a widget, that contains a text widget with style property [dayOfWeekStyle]
     if (isDayOfWeek) {
-      return new GestureDetector(
-        child: new Container(
+      return GestureDetector(
+        child: Container(
           alignment: Alignment.center,
           child: Text(
             dayOfWeek ?? '',
@@ -100,10 +99,8 @@ class NeatCleanCalendarTile extends StatelessWidget {
                 ? BoxDecoration(
                     shape: BoxShape.circle,
                     color: selectedColor != null
-                        ? Utils.isSameDay(this.date!, DateTime.now())
-                            ? selectedTodayColor != null
-                                ? selectedTodayColor
-                                : Colors.red
+                        ? Utils.isSameDay(date!, DateTime.now())
+                            ? selectedTodayColor ?? Colors.red
                             : selectedColor
                         : Theme.of(context).primaryColor,
                     image: events != null && events!.isNotEmpty
@@ -138,26 +135,23 @@ class NeatCleanCalendarTile extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 14.0,
                     fontWeight: FontWeight.w400,
-                    color: isSelected && this.date != null
+                    color: isSelected && date != null
                         ? Colors.white
-                        : Utils.isSameDay(this.date!, DateTime.now())
+                        : Utils.isSameDay(date!, DateTime.now())
                             ? todayColor
                             : inMonth
-                                ? defaultDayColor != null
-                                    ? defaultDayColor
-                                    : events != null &&
+                                ? defaultDayColor ??
+                                    (events != null &&
                                             events!.isNotEmpty &&
                                             icon != ''
                                         ? Colors.white
-                                        : Colors.black
-                                : (defaultOutOfMonthDayColor != null
-                                    ? defaultOutOfMonthDayColor
-                                    : Colors.grey),
+                                        : Colors.black)
+                                : (defaultOutOfMonthDayColor ?? Colors.grey),
                   ),
                   // Grey color for previous or next months dates
                 ),
                 // Dots for the events
-                events != null && events!.length > 0
+                events != null && events!.isNotEmpty
                     ? Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: events!.map((event) {
@@ -200,16 +194,14 @@ class NeatCleanCalendarTile extends StatelessWidget {
 
   String? get icon => events!
       .firstWhere(
-        (element) => Utils.isSameDay(this.date!, element.startTime),
+        (element) => Utils.isSameDay(date!, element.startTime),
         orElse: () => NeatCleanCalendarEvent(
           '',
-          startTime: this.date!,
-          endTime: this.date!,
+          startTime: date!,
+          endTime: date!,
         ),
       )
       .icon;
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -217,8 +209,8 @@ class NeatCleanCalendarTile extends StatelessWidget {
     // be rendered to display weekday or date
     if (child != null) {
       return GestureDetector(
-        child: child,
         onTap: onDateSelected,
+        child: child,
       );
     }
     return Container(

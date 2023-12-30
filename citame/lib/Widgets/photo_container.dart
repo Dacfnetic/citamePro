@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:citame/providers/img_provider.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';

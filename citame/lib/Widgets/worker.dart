@@ -22,7 +22,6 @@ class WorkerBox extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    String horas = worker.horario;
     if (isDueno) {
       return Container(
         margin: EdgeInsets.all(5),

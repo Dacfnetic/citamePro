@@ -3,7 +3,6 @@ import 'package:citame/providers/re_render_provider.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:http/http.dart';
 
 class ReservationPage extends ConsumerWidget {
   ReservationPage({
@@ -91,7 +90,6 @@ class ReservationPage extends ConsumerWidget {
                                   color: Colors.grey.withOpacity(0.2),
                                 ),
                               ),
-
                               height: 125,
                               child: Column(
                                 children: [

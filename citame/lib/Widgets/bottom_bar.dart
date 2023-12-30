@@ -1,6 +1,5 @@
 import 'package:citame/pages/home_page.dart';
 import 'package:citame/pages/pages_1/index_page.dart';
-
 import 'package:citame/pages/pages_1/profile_page.dart';
 import 'package:citame/providers/business_provider.dart';
 import 'package:citame/providers/categories_provider.dart';

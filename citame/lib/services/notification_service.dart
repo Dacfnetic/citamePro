@@ -17,8 +17,8 @@ Future<void> showNot() async {
   const AndroidNotificationDetails androidNotificationDetails =
       AndroidNotificationDetails('channelId', 'channelName',
           importance: Importance.max, priority: Priority.high);
-  const DarwinNotificationDetails darwinNotificationDetails =
-      DarwinNotificationDetails();
+  /*const DarwinNotificationDetails darwinNotificationDetails =
+      DarwinNotificationDetails();*/
   const NotificationDetails notificationDetails =
       NotificationDetails(android: androidNotificationDetails);
 
