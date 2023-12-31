@@ -8,7 +8,7 @@ const Imagen = require('../../models/image.model.js');
 const mongoose = require('mongoose');
 const config = require('../../config/configjson.js');
 const {deleteImagesOnArrayService,deleteImagesOnArrayWorkers,deleteImagen} = require('../../config/functions.js')
-
+const io = require('../../../server.js');
 
 async function getAllBusiness(req,res){
     console.log('Intentando obtener negocios por categoria');
@@ -108,6 +108,9 @@ async function postBusiness(req,res){
 async function deleteBusiness(req,res){
     console.log('Intentando borrar negocio');
     try{
+
+ 
+
         let existe = true;   
         
         //Eliminar la imagen en el sistema de archivos y el modelo
@@ -161,7 +164,9 @@ async function deleteBusiness(req,res){
 
         await services.deleteMany( { _id: { $in: servicioInArray.map( (servicio) => servicio._id ) } } )
         
-        
+        //---Eliminar las citas y el modelo---
+
+
 
         //Borrar el modelo entero de favouriteBusiness en el array del usuario
 
@@ -196,6 +201,9 @@ async function deleteBusiness(req,res){
         await business.findByIdAndDelete(req.body.businessId)//Cambiar y recibir el ID
 
         return res.status(200).json({message: 'Todo ok'});
+       
+        
+
     }catch(e){
         console.log(e);
         return res.status(404).json('Errosillo');
@@ -320,20 +328,9 @@ async function getFavBusiness(req,res){
 
     await usuario.findById(decoded.idUser)
     .then(async(docs)=>{
-        const negocios = docs.favoriteBusiness;
-        const negociosFavoritos = JSON.parse(JSON.stringify(negocios));
-        let enviar = [];
-        let contador = 0;
-        for(const negocio of negociosFavoritos){
-            enviar.push(await business.findById(negocio));
-            contador++;
-            if(contador == negociosFavoritos.length){
-                return res.status(200).json(enviar);
-            }
-        }
-        if(negociosFavoritos.length == 0){
-            return res.status(200).json([]);
-        }
+        const negociosFavoritos = docs.favoriteBusiness;
+        const negocios = await Promise.all(negociosFavoritos.map( async (negocio)=> business.findById(negocio) ));
+        return res.status(200).json(negocios);
         
     });
 
