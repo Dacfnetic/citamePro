@@ -1,6 +1,7 @@
 import 'package:citame/pages/pages_1/business_search_page.dart';
 import 'package:citame/providers/business_provider.dart';
 import 'package:citame/providers/categories_provider.dart';
+import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:citame/providers/page_provider.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
@@ -51,6 +52,9 @@ class HomeRow extends ConsumerWidget {
               ));
             }).toList();*/
           //if (context.mounted) {
+          ref.read(myBusinessStateProvider.notifier).setPage(BusinessSearchPage(
+                categoria: categoria,
+              ).runtimeType);
           Navigator.push(
               context,
               MaterialPageRoute(

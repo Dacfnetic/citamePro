@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:citame/Widgets/bottom_bar.dart';
 import 'package:citame/Widgets/business_card.dart';
 import 'package:citame/providers/business_provider.dart';
 import 'package:citame/providers/geolocator_provider.dart';
+import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -19,9 +22,7 @@ class BusinessSearchPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     List<BusinessCard> negocios = ref.watch(businessProvider);
 
-    print(negocios);
-    print(negocios == []);
-    print(negocios.length);
+    log(ref.read(myBusinessStateProvider.notifier).getPage().toString());
 
     ref.watch(geoProvider.notifier).obtener();
 
@@ -108,8 +109,11 @@ class BusinessSearchPage extends ConsumerWidget {
           ),
         ),
       ),
-      bottomNavigationBar:
-          BarraInferior(searchBarController: searchBarController, tip: 1),
+      bottomNavigationBar: BarraInferior(
+        searchBarController: searchBarController,
+        tip: 1,
+        padre: context,
+      ),
     );
   }
 }

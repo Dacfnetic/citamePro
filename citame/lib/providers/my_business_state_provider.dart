@@ -2,6 +2,7 @@ import 'package:citame/models/business_model.dart';
 import 'package:citame/models/service_model.dart';
 import 'package:citame/models/user_model.dart';
 import 'package:citame/models/worker_moder.dart';
+import 'package:citame/pages/home_page.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -172,6 +173,14 @@ class MyBusinessStateNotifier extends StateNotifier<List<Business>> {
   bool getSocketState() {
     return socketConectado;
   }
+
+  void setPage(entrada) {
+    pagina = entrada;
+  }
+
+  Type getPage() {
+    return pagina;
+  }
 }
 
 Map diasLaboralesGenerales = {
@@ -231,3 +240,5 @@ Duration duration = const Duration(hours: 0, minutes: 30);
 bool socketConectado = false;
 
 Usuario? user;
+
+Type pagina = HomePage().runtimeType;

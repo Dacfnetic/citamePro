@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:citame/pages/home_page.dart';
+import 'package:citame/pages/pages_1/business_search_page.dart';
 import 'package:citame/pages/pages_1/index_page.dart';
 import 'package:citame/pages/pages_1/profile_page.dart';
 import 'package:citame/providers/business_provider.dart';
@@ -16,10 +19,12 @@ class BarraInferior extends ConsumerWidget {
     super.key,
     required this.searchBarController,
     required this.tip,
+    required this.padre,
   });
 
   final TextEditingController searchBarController;
   final int tip;
+  final BuildContext padre;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -43,6 +48,11 @@ class BarraInferior extends ConsumerWidget {
                     builder: (context) => ProfilePage(),
                   )).then((_) {
                 API.desconnect();
+                controlador.setPage(padre.widget.runtimeType);
+                log(controlador.getPage().toString());
+                if (padre.widget.runtimeType == BusinessSearchPage) {
+                  ref.read(businessProvider.notifier).cargar(context);
+                }
                 ref.read(pageProvider.notifier).actualizar(HomePage());
               });
             }

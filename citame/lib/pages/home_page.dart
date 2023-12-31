@@ -15,12 +15,15 @@ class HomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    MyBusinessStateNotifier controlador =
+        ref.read(myBusinessStateProvider.notifier);
     List<HomeRow> categorias = ref.watch(categoriesProvider);
     ref.watch(geoProvider.notifier).obtener();
     CategoristListNotifier categoriesController =
         ref.read(categoriesProvider.notifier);
-
-    ref.read(myBusinessStateProvider.notifier).setDatosUsuario();
+    controlador.setDatosUsuario();
+    controlador.setPage(runtimeType);
+    print(controlador.getPage());
 
     return Scaffold(
       body: SafeArea(
@@ -96,8 +99,8 @@ class HomePage extends ConsumerWidget {
           ),
         ),
       ),
-      bottomNavigationBar:
-          BarraInferior(searchBarController: searchBarController, tip: 1),
+      bottomNavigationBar: BarraInferior(
+          searchBarController: searchBarController, tip: 1, padre: context),
     );
   }
 }
