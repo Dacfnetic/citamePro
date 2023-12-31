@@ -1,7 +1,9 @@
+
 const citaModel = require('../../models/cita.model');
 const workerModel = require('../../models/worker.model');
-const business = require('../../models/business.model')
-import { Agenda } from '../../models/agenda';
+const business = require('../../models/business.model');
+const Agenda = require('../../models/agenda');
+//import { Agenda } from ('../../models/agenda');
 
 async function getCita(req,res){
     
@@ -19,8 +21,6 @@ async function getCita(req,res){
     
 
 }
-
-
 
 async function postCita(req,res){
 
@@ -70,28 +70,47 @@ async function postCita(req,res){
 
 }
 
-
 async function deleteCita(req,res){
 
+    try{
+        await citaModel.findByIdAndDelete(req.body.idCita);
+        return res.status(200).json({message: 'TodoOk'});
+    
+    }catch(e){
+        return res.status(404).json({message: 'No se puede borrar la cita'});
+    }
 
 
 }
-
 
 async function updateCita(req,res){
 
-    
+    let citaId = req.body.idCita;
 
+    const citaUpdate = {
+        creadaBy:  req.body._idCliente ,
+        recibidaPor: req.body._idWorker ,
+        descripcionCita: req.body.descripcionCita,
+        citaHorario: req.body.citaHorario,
+        statusCita: req.body.statusCita,
+        servicios: req.body.servicios
+    }
+    
+    await citaModel.findByIdAndUpdate(citaId, {$set: citaUpdate}, (err,citaUpdate)=>{
+
+        if(err){
+            return res.status(404).json('Error');
+        }
+
+        return res.status(200).json({citaModel: citaUpdate})
+
+    });
 }
 
 
-
-
-
-
 module.exports = {
-    postCita,
-    getCita,
     deleteCita,
-    updateCita
+    updateCita,
+    postCita,
+    getCita
 }
