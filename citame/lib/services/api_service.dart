@@ -48,6 +48,7 @@ abstract class API {
             })));
 
     if (response.statusCode == 200) {
+      emitir(businessId);
       return 'borrado';
     }
 
@@ -342,7 +343,9 @@ abstract class API {
     socket.disconnect();
   }
 
-  static Future<void> emitir() async {}
+  static Future<void> emitir(String id) async {
+    socket.emit("deleteBusiness", id);
+  }
 
   static Future<List<Service>> getService(String idBusiness) async {
     final response = await http.get(

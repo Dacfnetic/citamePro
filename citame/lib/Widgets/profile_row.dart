@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:citame/pages/pages_1/pages_2/favorites_business_page.dart';
 import 'package:citame/pages/pages_1/pages_2/my_businessess_page.dart';
+import 'package:citame/providers/img_provider.dart';
 import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:citame/providers/my_favorites_provider.dart';
 import 'package:citame/providers/own_business_provider.dart';
@@ -74,7 +77,9 @@ class ProfileRow extends ConsumerWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) => page,
-                ));
+                )).then((_) {
+              ref.read(imgProvider.notifier).changeState(File(''));
+            });
           }
         }
         if (method == 3) {
