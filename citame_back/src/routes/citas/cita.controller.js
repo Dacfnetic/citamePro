@@ -1,4 +1,4 @@
-
+const usuario = require('../../models/users.model')
 const citaModel = require('../../models/cita.model');
 const workerModel = require('../../models/worker.model');
 const business = require('../../models/business.model');
@@ -26,41 +26,70 @@ async function postCita(req,res){
 
     try{
             
-               const dateCreated = await citaModel.create({
-                    creadaBy:  req.body._idCliente ,
-                    recibidaPor: req.body._idWorker ,
-                    descripcionCita: req.body.descripcionCita,
-                    citaHorario: req.body.citaHorario,
-                    statusCita: 'Pendiente',
-                    servicios: req.body.servicios
-                });
+        //Usuario Actual
 
-                dateCreated.save();
+        const user = await usuario.findOne({emailUser: req.body.emailUser});
 
-                
-                await workerModel.findByIdAndUpdate(req.body._idWorker,{ $push: {citasHechas: dateCreated} });
+        //Creacion de la cita
 
+        const cita = new Cita({
+            creadaBy: user._id,
+            recibidaPor: req.body.worker,
+            descripcionCita: req.body.descripcion,
+            fecha: req.body.fecha,
+            hora: req.body.horario,
+        });
 
-                //Manipular agenda con horario cita y devolver horario disponible
+        //Verificar si la hora esta disponible
 
-                let agenda = new Agenda(horario);
+        const horaEnHorario = await workerModel.findOne(
+            {
+                _id: req.body.worker,
+                horario: {
+                  fecha: cita.fecha,
+                  hora: cita.hora,
+                },
+              },
+              {
+                $set: {
+                  estado: "reservada",
+                },
+              },
+              {
+                returnOriginal: true,
+              }
+            );
+        
+        //Si la hora no esta disponible mostrar error
 
-                await workerModel.findById(_idWorker).then((docs)=>{
+        if(!horaEnHorario || horaEnHorario.horario.estado === 'reservada'){
+            return res.status(400).send("La hora no esta disponible");
+        }
 
-                    agenda = docs.horarioDisponible
-                
-                    agenda.updateWorkerHorario(req.body.citaHorario)
-                    
+        //Servicios Obtenidos
 
-                })
+        const servicios = req.body.services;
 
+        //Guardar la cita
 
-                await workerModel.findByIdAndUpdate(req.body._idWorker,{ $set: {horarioDisponible: agenda} });
+        cita.save((err, cita)=>{
 
+            if(err){
+                return res.status(500).send(err)
+            };
 
+            //Guardar los servicios
 
-                return res.status(201).send({'sms':'cita creada'});
-            
+            cita.servicios = servicios;
+            cita.save((err, cita)=>{
+                if(err){
+                    return res.status(500).send(err);
+                };
+
+                return res.status(201).send(cita)
+            });
+
+        });
             
         
     }catch(e){
