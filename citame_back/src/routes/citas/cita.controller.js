@@ -52,7 +52,7 @@ async function postCita(req,res){
         // const user = await usuario.findOne({emailUser: req.body.emailUser});
 
         //Creacion de la cita
-
+ 
         const cita = new Cita({
             creadaBy: user,
             recibidaPor: req.body.worker,
