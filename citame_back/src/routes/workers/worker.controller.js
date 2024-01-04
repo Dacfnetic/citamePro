@@ -2,6 +2,7 @@
 const usuario = require('../../models/users.model.js');
 const business = require('../../models/business.model.js');
 const workersModel = require('../../models/worker.model.js');
+const citaModel = require('../../models/cita.model.js');
 
 async function postWorkers(req,res){
     try{       
@@ -142,12 +143,34 @@ async function updateHorarioWorker(req,res){
     
 }
 
+async function updateStatusCita(req,res){
 
+    let citaId = req.body.idCita;
+
+    const citaUpdate = {
+        
+        estado: req.body.estado
+
+    }
+    
+    await citaModel.findByIdAndUpdate(citaId, {$set: citaUpdate}, (err,citaUpdate)=>{
+
+        if(err){
+            return res.status(404).json('Error');
+        }
+
+        return res.status(200).json({citaModel: citaUpdate})
+
+    });
+
+
+}
 
 
 module.exports  = {
 
     getWorkers,
     postWorkers,
-    deleteWorkers
+    deleteWorkers,
+    updateStatusCita
 }
