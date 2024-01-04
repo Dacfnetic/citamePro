@@ -2,6 +2,8 @@ const usuario = require('../../models/users.model')
 const citaModel = require('../../models/cita.model');
 const workerModel = require('../../models/worker.model');
 const business = require('../../models/business.model');
+const jwt = require('jsonwebtoken');
+const config = require('../../config/configjson.js');
 const Agenda = require('../../models/agenda');
 //import { Agenda } from ('../../models/agenda');
 
@@ -25,17 +27,35 @@ async function getCita(req,res){
 async function postCita(req,res){
 
     try{
-            
+        
+        const token = req.headers['x-access-token'];//Buscar en los headers que me tienes que mandar, se tiene que llamar asi para que la reciba aca
+
+        if(!token){
+            return res.status(401).json({
+                auth: false,
+                message: 'No token'
+            });
+        }
+        //Una vez exista el JWT lo decodifica
+        const decoded =  jwt.verify(token,config.jwtSecret);//Verifico en base al token
+        const user = '';
+
+        await usuario.findById(decoded.idUser)
+        .then((docs)=>{
+
+            user = docs._id;
+
+        });
+
         //Usuario Actual
 
-        const user = await usuario.findOne({emailUser: req.body.emailUser});
+        // const user = await usuario.findOne({emailUser: req.body.emailUser});
 
         //Creacion de la cita
 
         const cita = new Cita({
-            creadaBy: user._id,
+            creadaBy: user,
             recibidaPor: req.body.worker,
-            descripcionCita: req.body.descripcion,
             fecha: req.body.fecha,
             hora: req.body.horario,
         });
@@ -94,7 +114,7 @@ async function postCita(req,res){
         
     }catch(e){
         return res.status(404).json('Errosillo');
-    }  
+    };  
 
 
 }
@@ -117,12 +137,13 @@ async function updateCita(req,res){
     let citaId = req.body.idCita;
 
     const citaUpdate = {
-        creadaBy:  req.body._idCliente ,
-        recibidaPor: req.body._idWorker ,
-        descripcionCita: req.body.descripcionCita,
-        citaHorario: req.body.citaHorario,
-        statusCita: req.body.statusCita,
+        
+        //Comentar acerca de que pasaria si un usuario quiere escoger otro worker
+        fecha: req.body.fecha,
+        hora: req.body.hora,
         servicios: req.body.servicios
+
+        
     }
     
     await citaModel.findByIdAndUpdate(citaId, {$set: citaUpdate}, (err,citaUpdate)=>{

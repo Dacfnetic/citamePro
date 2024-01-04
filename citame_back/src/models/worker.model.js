@@ -24,7 +24,10 @@ const workerSchema = new Schema({
             fecha: Date,
             hora: String,
         }
-    ]//Guardar el objeto de las citas
+    ],//Guardar el objeto de las citas
+
+    serviciosWorker: [{type: mongoose.Schema.Types.ObjectId, ref: 'services'}]
+
 
 });
 
