@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
-
+import 'package:url_launcher/url_launcher.dart';
 import 'package:citame/Widgets/cuadro.dart';
 import 'package:citame/firebase_options.dart';
 import 'package:citame/models/business_model.dart';
@@ -335,8 +336,14 @@ abstract class API {
   static Future<void> connect() async {
     socket.connect();
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    socket.on('CACA', (_) => API.showNot());
+    socket.on('negocioEliminado', (id) {
+      log('Se borró el negocio $id');
+    });
     socket.emit("UsuarioRegistrado", prefs.getString('emailUser'));
+  }
+
+  static void llamar(int numero) {
+    launchUrl(Uri.parse('tel://$numero'));
   }
 
   static Future<void> desconnect() async {

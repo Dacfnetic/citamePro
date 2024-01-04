@@ -107,9 +107,12 @@ class BusinessInsidePage extends ConsumerWidget {
                         Text('Descripción'),
                         Text(description, style: API.estiloJ14gris),
                         ElevatedButton(
-                            onPressed: ( ) {
-                              
-                            }, child: Text('Reservar cita'))
+
+                            onPressed: () {
+                              API.llamar(33074483);
+                            },
+                            child: Text('Reservar cita'))
+
                       ],
                     ),
                   ),
