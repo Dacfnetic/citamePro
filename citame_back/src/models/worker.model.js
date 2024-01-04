@@ -13,9 +13,50 @@ const workerSchema = new Schema({
     puesto: {type:String},
     horario: [
         {
-            fecha: Date,
-            hora: String,
-            estado: String
+           
+            lunes: [
+                {
+                    horaInicio: {type:String, required: true},
+                    horaFinal: {type:String, required: true}
+                },
+            ],
+            martes: [
+                {
+                    horaInicio: {type:String, required: true},
+                    horaFinal: {type:String, required: true}
+                },
+            ],
+            miercoles: [
+                {
+                    horaInicio: {type:String, required: true},
+                    horaFinal: {type:String, required: true}
+                },
+            ],
+            jueves: [
+                {
+                    horaInicio: {type:String, required: true},
+                    horaFinal: {type:String, required: true}
+                },
+            ],
+            viernes: [
+                {
+                    horaInicio: {type:String, required: true},
+                    horaFinal: {type:String, required: true}
+                },
+            ],
+            sabado: [
+                {
+                    horaInicio: {type:String, required: true},
+                    horaFinal: {type:String, required: true}
+                },
+            ],
+            domingo: [
+                {
+                    horaInicio: {type:String, required: true},
+                    horaFinal: {type:String, required: true}
+                },
+            ],
+
         }
     ],
     citasHechas:[
