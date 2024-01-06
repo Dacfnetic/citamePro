@@ -102,6 +102,49 @@ async function postCita(req,res){
 
 }
 
+async function postCita2(req,res){
+
+    const {workerId, idUser, horaInicio, horaFinal, servicioId} = req.body
+
+    const worker = await workerModel.findById(workerId);
+
+    if(!worker){
+        return res.status(400).send('No hay worker');
+    };
+
+    const user = await usuario.findById(idUser);
+
+    if(!user){
+        return res.status(400).send('Usuario no encontrado');
+    }
+
+    const isInWorkerHours = worker.disponibilidad.some(hours =>{
+        return horaInicio >= hours.horaInicio && horaFinal <= hours.horaFinal;
+    });
+
+    if (!isInWorkerHours) {
+        return res.status(400).send('La cita esta fuera del horario');
+      }
+    
+
+    const disponible = worker.citasHechas.every(cita => {
+        return cita.horaFinal <= horaInicio || cita.horaInicio >= horaFinal;
+    })
+
+    if(!disponible){
+        return res.status(400).send('El trabajador no esta disponible a esta hora.')
+    }
+
+    const cita = new Cita({horaInicio, horaFinal, servicioId});
+    
+    worker.citasHechas.push(cita);
+
+    await worker.save();
+
+    return res.status(200).send('Cita realizada con exito')
+
+
+}
 
 /*async function postCita(req,res){
 
