@@ -9,13 +9,15 @@ const workerSchema = new Schema({
     name: {type: String, required: true},
     email: {type: String, required: true},
     imgPath:[{type:Schema.Types.ObjectId,ref:'Imagen'}],
-    salary :{type: Number},
-    puesto: {type:String},
+    salary: {type: Number},
+    status: {type: String},
+    puesto: {type: String},
+
+    citasHechas:[{type: mongoose.Schema.Types.ObjectId, ref: 'cita'}],//Guardar el objeto de las citas
+    serviciosWorker: [{type: mongoose.Schema.Types.ObjectId, ref: 'services'}],
+
     disponibilidad: [{type:mongoose.Schema.Types.ObjectId, ref: 'horasworker'}],
-    citasHechas:[{type: mongoose.Schema.Types.ObjectId, ref: 'cita',required:true}],//Guardar el objeto de las citas
-    serviciosWorker: [{type: mongoose.Schema.Types.ObjectId, ref: 'services'}]
-
-
+    
 });
 
 module.exports = model('worker',workerSchema);
