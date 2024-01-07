@@ -5,6 +5,7 @@ const business = require('../../models/business.model');
 const jwt = require('jsonwebtoken');
 const config = require('../../config/configjson.js');
 const Agenda = require('../../models/agenda');
+const {verifyDisponibilidad} = require('../../config/functions.js');
 //import { Agenda } from ('../../models/agenda');
 
 async function getCita(req,res){
@@ -104,45 +105,61 @@ async function postCita(req,res){
 
 async function postCita2(req,res){
 
-    const {workerId, idUser, horaInicio, horaFinal, servicioId} = req.body
+    const token = req.headers['x-access-token'];//Buscar en los headers que me tienes que mandar, se tiene que llamar asi para que la reciba aca
 
-    const worker = await workerModel.findById(workerId);
+        if(!token){
+            return res.status(401).json({
+                auth: false,
+                message: 'No token'
+            });
+        }
+        //Una vez exista el JWT lo decodifica
+        const decoded =  jwt.verify(token,config.jwtSecret);//Verifico en base al token
 
-    if(!worker){
-        return res.status(400).send('No hay worker');
-    };
 
-    const user = await usuario.findById(idUser);
-
-    if(!user){
-        return res.status(400).send('Usuario no encontrado');
+    const user = decoded.idUser;
+    const worker = await workerModel.findById(req.body.workerId);
+    const services = req.body.servicioId;
+    const start = new Date(req.body.horaInicio);
+    const end = new Date(req.body.horaFinal);
+    //Dia de la cita
+    const dia = new Date().getDay();
+    
+    if(!verifyDisponibilidad(worker,start,end)){
+        res.status(400).json({message: 'El trabajador no está disponible en ese horario',});
+        return;
     }
 
-    const isInWorkerHours = worker.disponibilidad.some(hours =>{
-        return horaInicio >= hours.horaInicio && horaFinal <= hours.horaFinal;
-    });
+    //Calculo de la hora de la cita
 
-    if (!isInWorkerHours) {
-        return res.status(400).send('La cita esta fuera del horario');
-      }
-    
+    const duracionCita = services.reduce( ( acc, service ) => acc + service.duracion, 0 );
 
-    const disponible = worker.citasHechas.every(cita => {
-        return cita.horaFinal <= horaInicio || cita.horaInicio >= horaFinal;
+    //Verificar si la cita no excede el horario del worker
+
+    if(duracionCita > worker.horario[dia].duracionCita){
+
+        res.status(400).json({message: 'La cita excede el horario disponible del trabajador',});
+        return;
+
+    }
+
+    const cita = new Cita({
+
+        creadaBy: user,
+        recibidaPor: worker._id,
+        servicios: services,
+        fechaInicio: start,
+        fechaFinal: end
+
     })
 
-    if(!disponible){
-        return res.status(400).send('El trabajador no esta disponible a esta hora.')
-    }
+    await cita.save();
 
-    const cita = new Cita({horaInicio, horaFinal, servicioId});
-    
-    worker.citasHechas.push(cita);
-
+    worker.horario[dia].start = start;
+    worker.horario[dia].end = end;
     await worker.save();
 
-    return res.status(200).send('Cita realizada con exito')
-
+    res.status(200).json({message: 'cita creada con exito'});
 
 }
 
