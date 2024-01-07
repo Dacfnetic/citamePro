@@ -11,7 +11,45 @@ const workerSchema = new Schema({
     imgPath:[{type:Schema.Types.ObjectId,ref:'Imagen'}],
     salary :{type: Number},
     puesto: {type:String},
-    disponibilidad: [{type:mongoose.Schema.Types.ObjectId, ref: 'horasworker'}],
+    horario: {
+
+        lunes: {
+            start: { type: Date },
+            end: { type: Date },
+          },
+        martes: {
+            start: { type: Date },
+            end: { type: Date },
+          },
+        miercoles: {
+            start: { type: Date },
+            end: { type: Date },
+          },
+        jueves: {
+            start: { type: Date },
+            end: { type: Date },
+          },
+        viernes: {
+            start: { type: Date },
+            end: { type: Date },
+          },
+        sabado: {
+            start: { type: Date },
+            end: { type: Date },
+          },
+        domingo: {
+            start: { type: Date },
+            end: { type: Date },
+          },
+
+    },
+
+    horarioLibre: [{
+        
+        start: { type: Date },
+        end: { type: Date },
+        
+    }],
     citasHechas:[{type: mongoose.Schema.Types.ObjectId, ref: 'cita',required:true}],//Guardar el objeto de las citas
     serviciosWorker: [{type: mongoose.Schema.Types.ObjectId, ref: 'services'}]
 
