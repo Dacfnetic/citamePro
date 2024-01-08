@@ -99,7 +99,7 @@ class WorkerBox extends ConsumerWidget {
               context,
               MaterialPageRoute(
                   builder: (context) =>
-                      Details_Worker(imagen: imagen, trabajador: worker)));
+                      DetailsWorker(imagen: imagen, trabajador: worker)));
         },
         child: Container(
           margin: EdgeInsets.fromLTRB(5, 4, 5, 4),

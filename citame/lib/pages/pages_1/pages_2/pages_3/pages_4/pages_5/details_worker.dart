@@ -4,8 +4,8 @@ import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class Details_Worker extends ConsumerWidget {
-  const Details_Worker(
+class DetailsWorker extends ConsumerWidget {
+  const DetailsWorker(
       {super.key, required this.imagen, required this.trabajador});
 
   final Uint8List imagen;
