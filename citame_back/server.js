@@ -2,6 +2,7 @@ const http = require('http');
 const app = require('./src/app')
 const { Server } = require("socket.io");
 const user = require('./src/models/users.model');
+const {deleteBusiness} = require('./src/routes/business/business.controller');
 
 const { connect } = require('./src/config/database');
 const { setTimeout } = require('timers');
@@ -11,7 +12,7 @@ const server = http.createServer(app);
 const io = new Server(server);
 const PORT = process.env.PORT || 4000;
 const usuariosConectados = new Set();
-
+const arrayNegocios = [];
             
 async function update(){
     await io.emit('CACA', 'CACA');
@@ -50,6 +51,19 @@ async function main(){
             //update();
 
         });
+
+        //Refresh para el delete business.
+        socket.on('deleteBusiness', (id) => {
+
+            //Eliminar el negocio de la lista
+            arrayNegocios = arrayNegocios.filter( (n) => n.id !== id );
+
+            socket.broadcast('deleteBusiness',id);
+            socket.emit('negocioEliminado',id);
+
+        });
+
+        
      
         //Desconexion de usuarios
         socket.on('disconnect',()=>{
@@ -60,6 +74,7 @@ async function main(){
         })
     });
 
+    
     //Express app
     await server.listen(PORT ,() =>{
         console.log(`Server is running at port: ${PORT}`);

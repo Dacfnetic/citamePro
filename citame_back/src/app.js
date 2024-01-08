@@ -10,7 +10,7 @@ const workersRouter = require('./routes/workers/worker.router.js');
 const servicesRouter = require('./routes/services/services.router.js');
 const imgRouter = require('./routes/images/img.router.js');
 const notificationRouter = require('./routes/notification/notification.router.js');
-
+const citaRouter = require('./routes/citas/cita.router.js');
 //Creación de aplicación express
 const app = express();
 //Informacion del servidor
@@ -23,6 +23,7 @@ app.use(workersRouter);
 app.use(imgRouter);
 app.use(notificationRouter);
 app.use(servicesRouter);
-//app.use(servicesRouter);
+app.use(citaRouter);
+
 //Exportación de aplicación express
 module.exports = app;

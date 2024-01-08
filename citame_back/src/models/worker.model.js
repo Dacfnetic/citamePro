@@ -9,12 +9,57 @@ const workerSchema = new Schema({
     name: {type: String, required: true},
     email: {type: String, required: true},
     imgPath:[{type:Schema.Types.ObjectId,ref:'Imagen'}],
+
     salary :{type: Number},
-    horario: {type: String},
-    status: {type: Boolean},
     puesto: {type:String},
-    citasHechas:[{type: mongoose.Schema.Types.ObjectId,ref:'cita'}],//Guardar el objeto de las citas
-    horarioDisponible:{type:mongoose.Schema.Types.Mixed}
+    horario: {
+
+        lunes: {
+            start: { type: Date },
+            end: { type: Date },
+          },
+        martes: {
+            start: { type: Date },
+            end: { type: Date },
+          },
+        miercoles: {
+            start: { type: Date },
+            end: { type: Date },
+          },
+        jueves: {
+            start: { type: Date },
+            end: { type: Date },
+          },
+        viernes: {
+            start: { type: Date },
+            end: { type: Date },
+          },
+        sabado: {
+            start: { type: Date },
+            end: { type: Date },
+          },
+        domingo: {
+            start: { type: Date },
+            end: { type: Date },
+          },
+
+    },
+
+    horarioLibre: [{
+        
+        start: { type: Date },
+        end: { type: Date },
+        
+    }],
+    citasHechas:[{type: mongoose.Schema.Types.ObjectId, ref: 'cita',required:true}],//Guardar el objeto de las citas
+    serviciosWorker: [{type: mongoose.Schema.Types.ObjectId, ref: 'services'}]
+
+
+    citasHechas:[{type: mongoose.Schema.Types.ObjectId, ref: 'cita'}],//Guardar el objeto de las citas
+    serviciosWorker: [{type: mongoose.Schema.Types.ObjectId, ref: 'services'}],
+
+    disponibilidad: [{type:mongoose.Schema.Types.ObjectId, ref: 'horasworker'}],
+    
 });
 
 module.exports = model('worker',workerSchema);

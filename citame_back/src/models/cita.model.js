@@ -6,10 +6,10 @@ const citaSchema = new Schema({
 
     creadaBy:{type:mongoose.Schema.Types.ObjectId, ref:'usuario',required:true},
     recibidaPor: {type:mongoose.Schema.Types.ObjectId, ref:'worker'},
-    descripcionCita: {type: String, required: true},
-    citaHorario:{type:String, required:true},
-    statusCita:{type:String,required:true},
-    servicios:[{type:mongoose.Schema.ObjectId, ref:'services',required:true}]
+    fechaInicio: {type: Date, required:true},
+    fechaFinal: {type: Date, required:true},
+    //estado:{type:String,required:true},
+    servicios:[{type:mongoose.Schema.ObjectId, ref:'services',required:true}],
     
 });
 

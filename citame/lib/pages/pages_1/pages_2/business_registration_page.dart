@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:citame/Widgets/cuadro.dart';
 import 'package:citame/Widgets/photo_container.dart';
 import 'package:citame/pages/pages_1/pages_2/map_page.dart';
@@ -31,111 +33,126 @@ class BusinessRegisterPage extends ConsumerWidget {
       fontSize: 14,
       fontWeight: FontWeight.w500,
     );
-    return Scaffold(
-      body: Form(
-        key: signUpKey,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ListView(
-            children: [
-              /*FotoConTexto(mensaje: 'No recuerdo', estilo: letraBlanca),
-              SizedBox(height: 12),
-              FotoConTexto(mensaje: mensaje, estilo: letraBlancaSmall),
-             
-             
-                 */
-              //media query
-              Row(
-                children: [
-                  Text(
-                    'Datos del negocio',
-                    style: MediaQuery.of(context).size.width < 100
-                        ? API.estiloJ14negro
-                        : API.estiloJ24negro,
-                  ),
-                  IconButton(onPressed: () {}, icon: Icon(Icons.info)),
-                ],
-              ),
-
-              Text('Foto del negocio (obligatorio)', style: indicaciones),
-              EspacioParaSubirFotoDeNegocio(),
-              Text('Llene los siguientes campos', style: indicaciones),
-              SizedBox(height: 12),
-              Cuadro(control: businessName, texto: 'Nombre del negocio'),
-              SizedBox(height: 12),
-              Text('Categoría del negocio', style: indicaciones),
-              Cuadro(control: category, texto: 'Categoría del negocio'),
-              SizedBox(height: 12),
-              Cuadro(control: email, texto: 'Correo (opcional)'),
-              SizedBox(height: 12),
-              Cuadro(control: cel, texto: 'Número de contacto'),
-              SizedBox(height: 12),
-              Cuadro(control: physicalDirection, texto: 'Dirección'),
-              SizedBox(height: 12),
-              //El siguiente botón abre el google maps para ubicar el negocio
-              ElevatedButton(
-                onPressed: () async {
-                  try {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => MapPage(),
-                        ));
-                  } catch (e) {
-                    print(e.toString());
-                  }
-                },
-                child: TextFormField(
-                  controller: geographicalDirection,
-                  enabled: false,
-                  decoration: InputDecoration(
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 0, horizontal: 8),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(12)),
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (didPop) {
+        businessName.text = '';
+        cel.text = '';
+        physicalDirection.text = '';
+        description.text = '';
+        ref.read(imgProvider.notifier).changeState(File(''));
+      },
+      child: Scaffold(
+        body: Form(
+          key: signUpKey,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ListView(
+              children: [
+                /*FotoConTexto(mensaje: 'No recuerdo', estilo: letraBlanca),
+                SizedBox(height: 12),
+                FotoConTexto(mensaje: mensaje, estilo: letraBlancaSmall),
+               
+               
+                   */
+                //media query
+                Row(
+                  children: [
+                    Text(
+                      'Datos del negocio',
+                      style: MediaQuery.of(context).size.width < 100
+                          ? API.estiloJ14negro
+                          : API.estiloJ24negro,
                     ),
-                    label: Text(
-                        'Dirección geográfica ${negocio.position.latitude}, ${negocio.position.longitude}'),
+                    IconButton(onPressed: () {}, icon: Icon(Icons.info)),
+                  ],
+                ),
+
+                Text('Foto del negocio (obligatorio)', style: indicaciones),
+                EspacioParaSubirFotoDeNegocio(),
+                Text('Llene los siguientes campos', style: indicaciones),
+                SizedBox(height: 12),
+                Cuadro(control: businessName, texto: 'Nombre del negocio'),
+                SizedBox(height: 12),
+                Text('Categoría del negocio', style: indicaciones),
+                Cuadro(control: category, texto: 'Categoría del negocio'),
+                SizedBox(height: 12),
+                Cuadro(control: email, texto: 'Correo (opcional)'),
+                SizedBox(height: 12),
+                Cuadro(control: cel, texto: 'Número de contacto'),
+                SizedBox(height: 12),
+                Cuadro(control: physicalDirection, texto: 'Dirección'),
+                SizedBox(height: 12),
+                //El siguiente botón abre el google maps para ubicar el negocio
+                ElevatedButton(
+                  onPressed: () async {
+                    try {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MapPage(),
+                          ));
+                    } catch (e) {
+                      print(e.toString());
+                    }
+                  },
+                  child: TextFormField(
+                    controller: geographicalDirection,
+                    enabled: false,
+                    decoration: InputDecoration(
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 0, horizontal: 8),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12)),
+                      ),
+                      label: Text(
+                          'Dirección geográfica ${negocio.position.latitude}, ${negocio.position.longitude}'),
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(height: 12),
-              Cuadro(control: description, texto: 'Descripción'),
-              SizedBox(height: 12),
+                SizedBox(height: 12),
+                Cuadro(control: description, texto: 'Descripción'),
+                SizedBox(height: 12),
 
-              ElevatedButton(
-                onPressed: () async {
-                  try {
-                    SharedPreferences prefs =
-                        await SharedPreferences.getInstance();
-                    if (signUpKey.currentState!.validate()) {
-                      //var resultado = '';
-                      await API.postBusiness(
-                        businessName.text,
-                        API.getCat(),
-                        prefs.getString('emailUser')!,
-                        //auth.currentUser!.uid,
-                        [],
-                        cel.text,
-                        physicalDirection.text,
-                        negocio.position.latitude.toString(),
-                        negocio.position.longitude.toString(),
-                        description.text,
-                        ref.read(imgProvider),
-                      );
+                ElevatedButton(
+                  onPressed: () async {
+                    try {
+                      SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
+                      if (signUpKey.currentState!.validate()) {
+                        //var resultado = '';
+                        await API.postBusiness(
+                          businessName.text,
+                          API.getCat(),
+                          prefs.getString('emailUser')!,
+                          //auth.currentUser!.uid,
+                          [],
+                          cel.text,
+                          physicalDirection.text,
+                          negocio.position.latitude.toString(),
+                          negocio.position.longitude.toString(),
+                          description.text,
+                          ref.read(imgProvider),
+                        );
 
-                      if (context.mounted) {
-                        Navigator.pop(context);
+                        if (context.mounted) {
+                          businessName.text = '';
+                          cel.text = '';
+                          physicalDirection.text = '';
+                          description.text = '';
+                          ref.read(imgProvider.notifier).changeState(File(''));
+                          Navigator.pop(context);
+                        }
                       }
+                    } catch (e) {
+                      print(e.toString());
                     }
-                  } catch (e) {
-                    print(e.toString());
-                  }
-                },
-                child: Text('Registrar negocio'),
-              ),
-              SizedBox(height: 12),
-            ],
+                  },
+                  child: Text('Registrar negocio'),
+                ),
+                SizedBox(height: 12),
+              ],
+            ),
           ),
         ),
       ),

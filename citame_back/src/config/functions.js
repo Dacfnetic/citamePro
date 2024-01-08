@@ -5,6 +5,8 @@ const services = require('../models/services.model.js');
 const workerModel = require('../models/worker.model.js');
 const Imagen = require('../models/image.model.js')
 const fss = require('fs');
+const horarioworker = require('../models/horarioworker.js');
+const luxon = require('luxon');
 
 
 async function deleteImagen(item){
@@ -65,11 +67,29 @@ async function deleteImagesOnArrayService(item){
 
 }
 
+async function verifyDisponibilidad(worker, start, end){
+
+    const horarioWorker = worker.horario;
+    const hoy = new Date();
+    const dia = hoy.getDay();
+
+    const horaInicioWorker = horarioworker[dia].start;
+    const horaFinalWorker = horarioworker[dia].end;
+
+    const intervaloHorario = luxon.Interval.fromDateTimes(horaInicioWorker, horaFinalWorker);
+    const intervaloDescanso = horarioWorker[dia].horarioLibre.map(libre => luxon.Interval.fromDateTimes(libre.start, libre.end));
+
+    return intervaloHorario.contains(start) && intervaloHorario.contains(end) && intervaloDescanso.every(
+        intervaloLibre => !intervaloLibre.contains(start) && !intervaloLibre.contains(end));
+
+
+}
 
 
 module.exports = {
     deleteImagesOnArrayWorkers,
     deleteImagesOnArrayService,
-    deleteImagen
+    deleteImagen,
+    verifyDisponibilidad
 
 }

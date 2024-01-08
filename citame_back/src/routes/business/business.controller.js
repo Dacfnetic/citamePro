@@ -3,12 +3,13 @@ const usuario = require('../../models/users.model.js');
 const business = require('../../models/business.model.js');
 const services = require('../../models/services.model.js');
 const workerModel = require('../../models/worker.model.js');
+const citaModel = require('../../models/cita.model.js');
 const jwt = require('jsonwebtoken');
 const Imagen = require('../../models/image.model.js');
 const mongoose = require('mongoose');
 const config = require('../../config/configjson.js');
 const {deleteImagesOnArrayService,deleteImagesOnArrayWorkers,deleteImagen} = require('../../config/functions.js')
-
+const io = require('../../../server.js');
 
 async function getAllBusiness(req,res){
     console.log('Intentando obtener negocios por categoria');
@@ -108,12 +109,16 @@ async function postBusiness(req,res){
 async function deleteBusiness(req,res){
     console.log('Intentando borrar negocio');
     try{
+
+ 
+
         let existe = true;   
         
         //Eliminar la imagen en el sistema de archivos y el modelo
 
         let previaImagen = '';
         let previousWorker = '';
+        let previousCita = '';
         let previousWorkerImage = '';
         let previousService = '';
         let previousServiceImage = '';
@@ -161,8 +166,45 @@ async function deleteBusiness(req,res){
 
         await services.deleteMany( { _id: { $in: servicioInArray.map( (servicio) => servicio._id ) } } )
         
-        
+        //---Eliminar las citas y el modelo---
 
+        await citaModel.findById(req.body.idCita)
+        .then((docs)=>{
+            previousCita = docs.citas;
+        });
+
+        item4 = JSON.parse(JSON.stringify(previousCita));
+
+        const citaInArray = await citaModel.find( { _id: {$in: item4 } });
+        await citaModel.deleteMany({ _id: {$in: citaInArray.map( (cita) =>cita._id ) } } );
+
+        //Borrar la cita del array del usuario
+
+        const idDate = req.body.idCita;
+        const tr2 = await mongoose.startSession();
+        tr2.startTransaction();
+
+        const citaInUser = await usuario.find({ citas: {$in: idDate} })
+
+        for await (const cit of citaInUser){
+
+            const citaCheck = cit.citas;
+            item5 = JSON.parse(JSON.stringify(citaCheck));
+            const index2 = item5.findIndex(( citaU ) => citaU === idDate)
+            
+            if(index2 !== -1){
+                item5.splice(index2,1);
+            }
+
+            cit.citas = item5;
+
+            await cit.save(tr2)
+
+        }
+    
+        await tr2.commitTransaction();
+
+        
         //Borrar el modelo entero de favouriteBusiness en el array del usuario
 
         const idnegocio = req.body.businessId;
@@ -175,15 +217,15 @@ async function deleteBusiness(req,res){
 
             const negocioFav = fav.favoriteBusiness;
 
-            item5 = JSON.parse(JSON.stringify(negocioFav));
+            item6 = JSON.parse(JSON.stringify(negocioFav));
 
-            const index = item5.findIndex(( negocio )=> negocio === idnegocio);
+            const index = item6.findIndex(( negocio )=> negocio === idnegocio);
 
             if(index !== -1){
-                item5.splice(index,1);
+                item6.splice(index,1);
             }
 
-            fav.favoriteBusiness = item5;
+            fav.favoriteBusiness = item6;
 
             //Actualiza el documento del usuario
             await fav.save(tr)
@@ -196,6 +238,9 @@ async function deleteBusiness(req,res){
         await business.findByIdAndDelete(req.body.businessId)//Cambiar y recibir el ID
 
         return res.status(200).json({message: 'Todo ok'});
+       
+        
+
     }catch(e){
         console.log(e);
         return res.status(404).json('Errosillo');
@@ -320,20 +365,9 @@ async function getFavBusiness(req,res){
 
     await usuario.findById(decoded.idUser)
     .then(async(docs)=>{
-        const negocios = docs.favoriteBusiness;
-        const negociosFavoritos = JSON.parse(JSON.stringify(negocios));
-        let enviar = [];
-        let contador = 0;
-        for(const negocio of negociosFavoritos){
-            enviar.push(await business.findById(negocio));
-            contador++;
-            if(contador == negociosFavoritos.length){
-                return res.status(200).json(enviar);
-            }
-        }
-        if(negociosFavoritos.length == 0){
-            return res.status(200).json([]);
-        }
+        const negociosFavoritos = docs.favoriteBusiness;
+        const negocios = await Promise.all(negociosFavoritos.map( async (negocio)=> business.findById(negocio) ));
+        return res.status(200).json(negocios);
         
     });
 
