@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:citame/models/worker_moder.dart';
+import 'package:citame/pages/pages_1/pages_2/pages_3/pages_4/pages_5/select_service.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -96,17 +97,25 @@ class DetailsWorker extends ConsumerWidget {
                                 color: Color(0xFFE0E3E7),
                               ),
                             ),
-                            Container(
-                              decoration: BoxDecoration(),
-                              padding: EdgeInsets.only(
-                                  top: 5, bottom: 5, left: 10, right: 10),
-                              child: Row(
-                                children: [
-                                  Icon(Icons.menu_book,
-                                      color: Color(0xFF4B39EF), size: 30),
-                                  SizedBox(width: 5),
-                                  Text('Agendar Cita'),
-                                ],
+                            InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => SelectService()));
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(),
+                                padding: EdgeInsets.only(
+                                    top: 5, bottom: 5, left: 10, right: 10),
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.menu_book,
+                                        color: Color(0xFF4B39EF), size: 30),
+                                    SizedBox(width: 5),
+                                    Text('Agendar Cita'),
+                                  ],
+                                ),
                               ),
                             ),
                           ],
