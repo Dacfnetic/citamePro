@@ -136,7 +136,7 @@ async function postCita(req,res){
 
     //Verificar si la cita no excede el horario del worker
 
-    if(duracionCita > worker.horario[dia].duracionCita){
+    if(duracionCita > worker.horario[start.getDay()].end - start){
 
         res.status(400).json({message: 'La cita excede el horario disponible del trabajador',});
         return;
@@ -147,16 +147,17 @@ async function postCita(req,res){
 
         creadaBy: user,
         recibidaPor: worker._id,
-        servicios: services,
         fechaInicio: start,
-        fechaFinal: end
+        fechaFinal: end,
+        servicios: services,
+        duracion: duracionCita
 
     })
 
     await cita.save();
 
-    worker.horario[dia].start = start;
-    worker.horario[dia].end = end;
+    worker.horario[start.getDay()].start = start;
+    worker.horario[start.getDay()].end = end;
     await worker.save();
 
     res.status(200).json({message: 'cita creada con exito'});

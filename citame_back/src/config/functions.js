@@ -69,18 +69,21 @@ async function deleteImagesOnArrayService(item){
 
 async function verifyDisponibilidad(worker, start, end){
 
-    const horarioWorker = worker.horario;
-    const hoy = new Date();
-    const dia = hoy.getDay();
+   const day = start.getDay();
 
-    const horaInicioWorker = horarioworker[dia].start;
-    const horaFinalWorker = horarioworker[dia].end;
+   if(!worker.horario[day].start <= start && start <= worker.horario[day].end){
+        return false;
+   }
 
-    const intervaloHorario = luxon.Interval.fromDateTimes(horaInicioWorker, horaFinalWorker);
-    const intervaloDescanso = horarioWorker[dia].horarioLibre.map(libre => luxon.Interval.fromDateTimes(libre.start, libre.end));
+   for(const breakTime of worker.horario[day].horarioLibre){
 
-    return intervaloHorario.contains(start) && intervaloHorario.contains(end) && intervaloDescanso.every(
-        intervaloLibre => !intervaloLibre.contains(start) && !intervaloLibre.contains(end));
+    if(breakTime.start <= start && end <= breakTime.end){
+        return false;
+    }
+    
+    return true;
+
+   }
 
 
 }
