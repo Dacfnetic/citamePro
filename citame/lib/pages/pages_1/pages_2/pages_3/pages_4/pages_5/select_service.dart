@@ -6,6 +6,9 @@ import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+bool isChecked = false;
+List<Text> serviciosSeleccionados = [];
+
 class SelectService extends ConsumerWidget {
   const SelectService({super.key});
 
@@ -17,11 +20,13 @@ class SelectService extends ConsumerWidget {
     List<CajaDeServicios> servicios = listaDeServicios
         .map((servicio) => CajaDeServicios(
               nombre: servicio.nombreServicio,
+              idServicio: servicio.id,
               //precio: servicio.precio.toStringAsFixed(2),
               //duracion: servicio.duracion,
               //esDueno: true
             ))
         .toList();
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -53,6 +58,8 @@ class SelectService extends ConsumerWidget {
                       : Text(''),
                 ],
               ),
+              ListView(shrinkWrap: true, children: serviciosSeleccionados),
+              //ElevatedButton(onPressed: onPressed, child: child)
             ],
           ),
         )),
@@ -65,25 +72,34 @@ class CajaDeServicios extends StatefulWidget {
   const CajaDeServicios({
     Key? key,
     required this.nombre,
+    required this.idServicio,
   }) : super(key: key);
 
   final String nombre;
-
+  final String idServicio;
   @override
   _CajaDeServiciosState createState() => _CajaDeServiciosState();
 }
 
 class _CajaDeServiciosState extends State<CajaDeServicios> {
-  bool isChecked = false;
-
   @override
   Widget build(BuildContext context) {
     return CheckboxListTile(
+      //visualDensity: VisualDensity(horizontal: -4.0, vertical: -3.0),
+      activeColor: Colors.green,
+      checkboxShape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
       title: Text(widget.nombre),
       value: isChecked,
       onChanged: (bool? value) {
         setState(() {
           isChecked = value!;
+          if (isChecked) {
+            serviciosSeleccionados.add(Text(widget.nombre));
+          } else {
+            serviciosSeleccionados.remove(Text(widget.nombre));
+          }
         });
       },
     );
