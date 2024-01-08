@@ -10,7 +10,7 @@ const citaSchema = new Schema({
     fechaFinal: {type: Date, required:true},
     //estado:{type:String,required:true},
     servicios:[{type:mongoose.Schema.ObjectId, ref:'services',required:true}],
-    
+    duracion: {type: Number}
 });
 
 module.exports = model('cita',citaSchema);

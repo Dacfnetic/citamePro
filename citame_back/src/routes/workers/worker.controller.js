@@ -34,8 +34,46 @@ async function postWorkers(req,res){
                             email: req.body.email,
                             salary: req.body.salary,
                             puesto: req.body.puesto,
-                            horario: req.body.horario,
-                            horarioLibre: req.body.horarioLibre,
+                            horario: {
+
+                                lunes: {
+                                    start: new Date(req.body.lunes.start),
+                                    end: new Date(req.body.lunes.end),
+                                    horarioLibre: req.body.lunes.horarioLibre,
+                                },
+                                martes: {
+                                    start: new Date(req.body.martes.start),
+                                    end: new Date(req.body.martes.end),
+                                    horarioLibre: req.body.martes.horarioLibre,
+                                },
+                                miercoles: {
+                                    start: new Date(req.body.miercoles.start),
+                                    end: new Date(req.body.miercoles.end),
+                                    horarioLibre: req.body.miercoles.horarioLibre,
+                                },
+                                jueves: {
+                                    start: new Date(req.body.jueves.start),
+                                    end: new Date(req.body.jueves.end),
+                                    horarioLibre: req.body.jueves.horarioLibre,
+                                },
+                                viernes: {
+                                    start: new Date(req.body.viernes.start),
+                                    end: new Date(req.body.viernes.end),
+                                    horarioLibre: req.body.viernes.horarioLibre,
+                                },
+                                sabado: {
+                                    start: new Date(req.body.sabado.start),
+                                    end: new Date(req.body.sabado.end),
+                                    horarioLibre: req.body.sabado.horarioLibre,
+                                },
+                                domingo: {
+                                    start: new Date(req.body.domingo.start),
+                                    end: new Date(req.body.domingo.end),
+                                    horarioLibre: req.body.domingo.horarioLibre,
+                                },
+
+
+                            }
                         });
                         await nuevo.save();
                         return res.status(201).json(nuevo);    
@@ -63,8 +101,46 @@ async function postWorkers(req,res){
                                     email: req.body.email,
                                     salary: req.body.salary,
                                     puesto: req.body.puesto,
-                                    horario: req.body.horario,
-                                    horarioLibre: req.body.horarioLibre,
+                                    horario: {
+
+                                        lunes: {
+                                            start: new Date(req.body.lunes.start),
+                                            end: new Date(req.body.lunes.end),
+                                            horarioLibre: req.body.lunes.horarioLibre,
+                                        },
+                                        martes: {
+                                            start: new Date(req.body.martes.start),
+                                            end: new Date(req.body.martes.end),
+                                            horarioLibre: req.body.martes.horarioLibre,
+                                        },
+                                        miercoles: {
+                                            start: new Date(req.body.miercoles.start),
+                                            end: new Date(req.body.miercoles.end),
+                                            horarioLibre: req.body.miercoles.horarioLibre,
+                                        },
+                                        jueves: {
+                                            start: new Date(req.body.jueves.start),
+                                            end: new Date(req.body.jueves.end),
+                                            horarioLibre: req.body.jueves.horarioLibre,
+                                        },
+                                        viernes: {
+                                            start: new Date(req.body.viernes.start),
+                                            end: new Date(req.body.viernes.end),
+                                            horarioLibre: req.body.viernes.horarioLibre,
+                                        },
+                                        sabado: {
+                                            start: new Date(req.body.sabado.start),
+                                            end: new Date(req.body.sabado.end),
+                                            horarioLibre: req.body.sabado.horarioLibre,
+                                        },
+                                        domingo: {
+                                            start: new Date(req.body.domingo.start),
+                                            end: new Date(req.body.domingo.end),
+                                            horarioLibre: req.body.domingo.horarioLibre,
+                                        },
+
+
+                                    }
                                 });
                                 await nuevo.save();
                                 return res.status(201).json(nuevo); 
