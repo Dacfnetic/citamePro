@@ -2,6 +2,7 @@
 const usuario = require('../../models/users.model.js');
 const business = require('../../models/business.model.js');
 const workersModel = require('../../models/worker.model.js');
+const horasworkerModel = require('../../models/horarioworker.js');
 const citaModel = require('../../models/cita.model.js');
 
 async function postWorkers(req,res){
@@ -20,15 +21,21 @@ async function postWorkers(req,res){
                 .then(async (docs)=>{
                     if(docs != null){
                         console.log('Creando Trabajador');
+
+                        const horaaaaa = new horasworkerModel({
+                            horaInicio: Date,
+                            horaFinal: Date
+                        });
+
                         const nuevo = new workersModel({
                             id: docs._id,
                             workwith: req.body.id,
                             name: req.body.name,
                             email: req.body.email,
                             salary: req.body.salary,
+                            puesto: req.body.puesto,
                             horario: req.body.horario,
-                            status: req.body.status,
-                            puesto: req.body.puesto
+                            horarioLibre: req.body.horarioLibre,
                         });
                         await nuevo.save();
                         return res.status(201).json(nuevo);    
@@ -55,9 +62,9 @@ async function postWorkers(req,res){
                                     name: req.body.name,
                                     email: req.body.email,
                                     salary: req.body.salary,
+                                    puesto: req.body.puesto,
                                     horario: req.body.horario,
-                                    status: req.body.status,
-                                    puesto: req.body.puesto
+                                    horarioLibre: req.body.horarioLibre,
                                 });
                                 await nuevo.save();
                                 return res.status(201).json(nuevo); 
