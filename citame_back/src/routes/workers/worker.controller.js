@@ -26,9 +26,9 @@ async function postWorkers(req,res){
                             name: req.body.name,
                             email: req.body.email,
                             salary: req.body.salary,
-                            puesto: req.body.puesto,
                             horario: req.body.horario,
-                            horarioLibre: req.body.horarioLibre,
+                            status: req.body.status,
+                            puesto: req.body.puesto
                         });
                         await nuevo.save();
                         return res.status(201).json(nuevo);    
@@ -55,9 +55,9 @@ async function postWorkers(req,res){
                                     name: req.body.name,
                                     email: req.body.email,
                                     salary: req.body.salary,
-                                    puesto: req.body.puesto,
                                     horario: req.body.horario,
-                                    horarioLibre: req.body.horarioLibre,
+                                    status: req.body.status,
+                                    puesto: req.body.puesto
                                 });
                                 await nuevo.save();
                                 return res.status(201).json(nuevo); 

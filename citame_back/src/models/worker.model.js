@@ -9,6 +9,7 @@ const workerSchema = new Schema({
     name: {type: String, required: true},
     email: {type: String, required: true},
     imgPath:[{type:Schema.Types.ObjectId,ref:'Imagen'}],
+
     salary :{type: Number},
     puesto: {type:String},
     horario: {
@@ -54,6 +55,11 @@ const workerSchema = new Schema({
     serviciosWorker: [{type: mongoose.Schema.Types.ObjectId, ref: 'services'}]
 
 
+    citasHechas:[{type: mongoose.Schema.Types.ObjectId, ref: 'cita'}],//Guardar el objeto de las citas
+    serviciosWorker: [{type: mongoose.Schema.Types.ObjectId, ref: 'services'}],
+
+    disponibilidad: [{type:mongoose.Schema.Types.ObjectId, ref: 'horasworker'}],
+    
 });
 
 module.exports = model('worker',workerSchema);
