@@ -103,9 +103,7 @@ class DetailsWorker extends ConsumerWidget {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => ReservationPage(
-                                              trabajador: trabajador,
-                                            )));
+                                        builder: (context) => SelectService()));
                               },
                               child: Container(
                                 decoration: BoxDecoration(),
