@@ -47,7 +47,7 @@ class Worker {
         email: json['email'],
         imgPath: json['imgPath'],
         salary: json['salary'].toDouble(),
-        horario: json['horario'],
+        horario: '',
         status: json['status'],
         id: json['id'],
         idWorker: json['_id'],
