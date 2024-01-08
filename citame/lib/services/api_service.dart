@@ -218,6 +218,36 @@ abstract class API {
     throw Exception('Failed to add item');
   }
 
+  static Future<String> postCita(
+    BuildContext context,
+    WidgetRef ref,
+    Map cita,
+    String idUsuario,
+    String idWorker,
+  ) async {
+    final response = await http.post(Uri.parse('$serverUrl/api/cita/create'),
+        headers: {
+          'Content-Type': 'application/json',
+          'x-access-token': idUsuario
+        },
+        body: utf8.encode(jsonEncode({
+          'cita': cita,
+          'idWorker': idWorker,
+        })));
+    if (response.statusCode == 201) {
+      mensaje(context, 'Cita enviada',
+          'Su cita fue enviada al trabajador, le enviaremos una notificación cuando este la acepte');
+      return 'Todo ok';
+    }
+    if (response.statusCode == 202) {
+      mensaje(context, 'Horario no disponible',
+          'El horario no está disponible, desea intentar hacer la cita aunque esté fuera del horario, le recordamos que lo más probable es que no acepten su cita');
+      return 'Todo ok';
+    }
+
+    throw Exception('Failed to add item');
+  }
+
   static Future<bool> verifyTokenUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
