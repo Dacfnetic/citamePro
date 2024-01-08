@@ -30,7 +30,7 @@ String serverUrl = API.server;
 FirebaseAuth auth = FirebaseAuth.instance;
 String actualCat = '';
 String categoriaABuscar = '';
-IO.Socket socket = IO.io('http://win.citame.store/', <String, dynamic>{
+IO.Socket socket = IO.io('http://ubuntu.citame.store/', <String, dynamic>{
   "transports": ["websocket"],
   "autoConnect": false,
 });
@@ -38,7 +38,7 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
 abstract class API {
-  static String server = 'https://win.citame.store';
+  static String server = 'https://ubuntu.citame.store';
 
   static Future<String> deleteBusiness(String businessId) async {
     final response =
@@ -120,12 +120,13 @@ abstract class API {
       String workerEmail,
       File imgPath,
       double salary,
-      String horario,
+      Map horario,
       String businessName,
       String businessId,
       String email,
       BuildContext context,
-      String puesto) async {
+      String puesto,
+      String horarioLibre) async {
     /* String imgConv = await API.convertTo64(imgPath);
     Uint8List casi = API.decode64(imgConv);
     List<int> imagen = casi.toList();*/
@@ -140,6 +141,7 @@ abstract class API {
           'businessEmail': email,
           'salary': salary,
           'horario': horario,
+          'horarioLibre': horarioLibre,
           'status': false,
           'puesto': puesto,
         })));
