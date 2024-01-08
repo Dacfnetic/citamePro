@@ -25,7 +25,7 @@ async function getCita(req,res){
 
 }
 
-async function postCita(req,res){
+async function postCita3(req,res){
 
     const token = req.headers['x-access-token'];//Buscar en los headers que me tienes que mandar, se tiene que llamar asi para que la reciba aca
 
@@ -103,7 +103,7 @@ async function postCita(req,res){
 
 }
 
-async function postCita2(req,res){
+async function postCita(req,res){
 
     const token = req.headers['x-access-token'];//Buscar en los headers que me tienes que mandar, se tiene que llamar asi para que la reciba aca
 
