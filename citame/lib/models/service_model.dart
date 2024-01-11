@@ -5,6 +5,7 @@ class Service {
   final String descripcion;
   final String businessCreatedBy;
   final String duracion;
+  final String id;
   Map toJson() => {
         'nombreServicio': nombreServicio,
         'imgPath': imgPath,
@@ -19,7 +20,8 @@ class Service {
       required this.precio,
       required this.descripcion,
       required this.duracion,
-      required this.businessCreatedBy});
+      required this.businessCreatedBy,
+      required this.id});
 
   factory Service.fromJson(Map<String, dynamic> json) {
     double aEnviar = 0.00;
@@ -34,6 +36,7 @@ class Service {
         precio: aEnviar,
         duracion: json['duracion'],
         descripcion: json['descripcion'],
-        businessCreatedBy: json['businessCreatedBy']);
+        businessCreatedBy: json['businessCreatedBy'],
+        id: json['_id']);
   }
 }

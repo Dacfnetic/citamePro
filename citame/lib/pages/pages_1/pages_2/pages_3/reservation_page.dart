@@ -1,17 +1,21 @@
+import 'package:citame/models/worker_moder.dart';
 import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:citame/providers/re_render_provider.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ReservationPage extends ConsumerWidget {
   ReservationPage({
     super.key,
+    required this.trabajador,
   });
 
   final TextEditingController workerName = TextEditingController();
   final TextEditingController workerEmail = TextEditingController();
   final GlobalKey<FormState> signUpKey = GlobalKey<FormState>();
+  final Worker trabajador;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -156,6 +160,8 @@ class ReservationPage extends ConsumerWidget {
                       ),
                       ElevatedButton(
                           onPressed: () async {
+                            SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
                             ref.read(myBusinessStateProvider.notifier).setCita(
                               fecha: ref
                                   .read(myBusinessStateProvider.notifier)
@@ -168,9 +174,19 @@ class ReservationPage extends ConsumerWidget {
                                   .getHoraFinal(),
                               servicios: [],
                             );
-                            //API.postCita(ref.read(myBusinessStateProvider.notifier).getCita());
-                            API.mensaje(context, 'Aviso',
-                                'Solicitud de cita enviada, puedes acceder a el estado de la cita en la sección de citas que es el boton central de la barra inferor, también recibiras una notificación cuando esta sea aceptada.');
+                            if (context.mounted) {
+                              API.postCita(
+                                  context,
+                                  ref,
+                                  ref
+                                      .read(myBusinessStateProvider.notifier)
+                                      .getCita(),
+                                  prefs.getString('llaveDeUsuario')!,
+                                  trabajador.idWorker);
+                            }
+
+                            // API.mensaje(context, 'Aviso',
+                            //     'Solicitud de cita enviada, puedes acceder a el estado de la cita en la sección de citas que es el boton central de la barra inferor, también recibiras una notificación cuando esta sea aceptada.');
                           },
                           child: Text('Solicitar cita')),
                     ],

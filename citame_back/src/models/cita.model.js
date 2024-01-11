@@ -10,7 +10,6 @@ const citaSchema = new Schema({
     citaHorario:{type:Object, required:true},
     statusCita:{type:String,required:true},
     servicios:[{type:mongoose.Schema.ObjectId, ref:'services',required:true}]
-    
 });
 
 module.exports = model('cita',citaSchema);

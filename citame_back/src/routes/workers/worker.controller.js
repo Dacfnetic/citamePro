@@ -4,6 +4,7 @@ const business = require('../../models/business.model.js');
 const workersModel = require('../../models/worker.model.js');
 const Agenda = require('../../models/agenda.js');
 
+
 async function postWorkers(req,res){
     try{       
         let existe = true;
@@ -22,6 +23,7 @@ async function postWorkers(req,res){
                         console.log('Creando Trabajador');
                         const horasQueVaATrabajarElEsclavo = new Agenda();
                         horasQueVaATrabajarElEsclavo.construirHorarioInicial(req.body.horario);
+
                         const nuevo = new workersModel({
                             id: docs._id,
                             workwith: req.body.id,
@@ -32,6 +34,7 @@ async function postWorkers(req,res){
                             horarioDisponible: horasQueVaATrabajarElEsclavo,
                             status: req.body.status,
                             puesto: req.body.puesto
+
                         });
                         await nuevo.save();
                         console.log('No hay error');
@@ -150,12 +153,34 @@ async function updateHorarioWorker(req,res){
     
 }
 
+async function updateStatusCita(req,res){
 
+    let citaId = req.body.idCita;
+
+    const citaUpdate = {
+        
+        estado: req.body.estado
+
+    }
+    
+    await citaModel.findByIdAndUpdate(citaId, {$set: citaUpdate}, (err,citaUpdate)=>{
+
+        if(err){
+            return res.status(404).json('Error');
+        }
+
+        return res.status(200).json({citaModel: citaUpdate})
+
+    });
+
+
+}
 
 
 module.exports  = {
 
     getWorkers,
     postWorkers,
-    deleteWorkers
+    deleteWorkers,
+    updateStatusCita
 }

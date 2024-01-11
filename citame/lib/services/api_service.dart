@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
-
+import 'package:url_launcher/url_launcher.dart';
 import 'package:citame/Widgets/cuadro.dart';
 import 'package:citame/firebase_options.dart';
 import 'package:citame/models/business_model.dart';
@@ -119,12 +120,13 @@ abstract class API {
       String workerEmail,
       File imgPath,
       double salary,
-      String horario,
+      Map horario,
       String businessName,
       String businessId,
       String email,
       BuildContext context,
-      String puesto) async {
+      String puesto,
+      String horarioLibre) async {
     /* String imgConv = await API.convertTo64(imgPath);
     Uint8List casi = API.decode64(imgConv);
     List<int> imagen = casi.toList();*/
@@ -139,6 +141,7 @@ abstract class API {
           'businessEmail': email,
           'salary': salary,
           'horario': horario,
+          'horarioLibre': horarioLibre,
           'status': false,
           'puesto': puesto,
         })));
@@ -210,6 +213,36 @@ abstract class API {
         API.mensaje(context, 'Aviso', 'El servicio se repite');
         return 'Todo ok';
       }
+    }
+
+    throw Exception('Failed to add item');
+  }
+
+  static Future<String> postCita(
+    BuildContext context,
+    WidgetRef ref,
+    Map cita,
+    String idUsuario,
+    String idWorker,
+  ) async {
+    final response = await http.post(Uri.parse('$serverUrl/api/cita/create'),
+        headers: {
+          'Content-Type': 'application/json',
+          'x-access-token': idUsuario
+        },
+        body: utf8.encode(jsonEncode({
+          'cita': cita,
+          'idWorker': idWorker,
+        })));
+    if (response.statusCode == 201) {
+      mensaje(context, 'Cita enviada',
+          'Su cita fue enviada al trabajador, le enviaremos una notificación cuando este la acepte');
+      return 'Todo ok';
+    }
+    if (response.statusCode == 202) {
+      mensaje(context, 'Horario no disponible',
+          'El horario no está disponible, desea intentar hacer la cita aunque esté fuera del horario, le recordamos que lo más probable es que no acepten su cita');
+      return 'Todo ok';
     }
 
     throw Exception('Failed to add item');
@@ -335,8 +368,14 @@ abstract class API {
   static Future<void> connect() async {
     socket.connect();
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    socket.on('CACA', (_) => API.showNot());
+    socket.on('negocioEliminado', (id) {
+      log('Se borró el negocio $id');
+    });
     socket.emit("UsuarioRegistrado", prefs.getString('emailUser'));
+  }
+
+  static void llamar(int numero) {
+    launchUrl(Uri.parse('tel://$numero'));
   }
 
   static Future<void> desconnect() async {

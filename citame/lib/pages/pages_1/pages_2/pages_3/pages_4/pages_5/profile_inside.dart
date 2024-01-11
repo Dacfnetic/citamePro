@@ -30,6 +30,7 @@ class ProfileInsidePage extends ConsumerWidget {
     Map horario =
         ref.watch(myBusinessStateProvider.notifier).obtenerDiasWorker();
     Schedule horas = Schedule(horario: horario);
+
     print(TimeOfDay.now().format(context));
 
     return Scaffold(
@@ -240,7 +241,15 @@ class ProfileInsidePage extends ConsumerWidget {
                           onPressed: () async {
                             SharedPreferences prefs =
                                 await SharedPreferences.getInstance();
-                            var enviar = jsonEncode(horas.toJson().toString());
+                            //var enviar = jsonEncode(horas.toJson().toString());
+
+                            var horarioLibre = '';
+                            ref
+                                .read(myBusinessStateProvider.notifier)
+                                .setHorarioParaEnviar(horas.toJson());
+                            Map enviar = ref
+                                .read(myBusinessStateProvider.notifier)
+                                .getHorarioParaEnviar();
                             if (signUpKey.currentState!.validate()) {
                               if (context.mounted) {
                                 API.postWorker(
@@ -255,7 +264,8 @@ class ProfileInsidePage extends ConsumerWidget {
                                         .getActualBusiness(),
                                     prefs.getString('emailUser')!,
                                     context,
-                                    workerJob.text);
+                                    workerJob.text,
+                                    horarioLibre);
                               }
                             }
                           },

@@ -1,10 +1,12 @@
-
+const usuario = require('../../models/users.model')
 const citaModel = require('../../models/cita.model');
 const workerModel = require('../../models/worker.model');
 const business = require('../../models/business.model');
 const jwt = require('jsonwebtoken');
+
 const Agenda = require('../../models/agenda');
 const config = require('../../config/configjson.js');
+
 //import { Agenda } from ('../../models/agenda');
 
 async function getCita(req,res){
@@ -24,8 +26,85 @@ async function getCita(req,res){
 
 }
 
+async function postCita3(req,res){
+
+    const token = req.headers['x-access-token'];//Buscar en los headers que me tienes que mandar, se tiene que llamar asi para que la reciba aca
+
+        if(!token){
+            return res.status(401).json({
+                auth: false,
+                message: 'No token'
+            });
+        }
+        //Una vez exista el JWT lo decodifica
+        const decoded =  jwt.verify(token,config.jwtSecret);//Verifico en base al token
+
+
+    const user = decoded.idUser;
+    const worker = req.body.workerId;
+    const fecha = req.body.fecha;
+    const horaInicio = req.body.horaInicio;
+    const duracion = req.body.duracion;
+    const servicio = req.body.servicioId;
+
+    const fechaY = fecha.split("T")[0];
+
+    const workerFind = await workerModel.findOne({  _id: worker });
+
+    //Si el worker no existe
+    if (!workerFind) {
+        res.status(404).json({
+          success: false,
+          message: "El worker no existe",
+        });
+        return;
+      }
+
+
+    const horario = workerFind.horario[fechaY];
+
+    //Si el horario no esta disponible
+    if (!horario) {
+        res.status(404).json({
+          success: false,
+          message: "El worker no está disponible en esa fecha",
+        });
+        return;
+      }
+
+      //Buscar el intervalo disponible
+      const intervalo = horario.find((intervalo) => intervalo.horaInicio <= horaInicio && horaInicio < intervalo.horaFin);
+
+      if(intervalo){
+
+        const cita = new Cita({
+
+            user,
+            worker,
+            fecha,
+            horaInicio,
+            servicio,
+            duracion,
+        
+        });
+
+        await cita.save();
+
+        res.status(400).json({
+            success: true,
+            message: 'Cita creada'
+        })
+
+    }
+
+    res.status(400).json({
+        success: false,
+        message: 'El intervalo de hora no esta disponible'
+    })
+
+}
+
 async function postCita(req,res){
-    
 
     try{
 
@@ -71,13 +150,12 @@ async function postCita(req,res){
                 }else{
                     return res.status(202).send('Mal, muy mal');
                 }   
-
     }catch(e){
         return res.status(404).json('Errosillo');
-    }  
+    };  
 
 
-}
+}*/
 
 async function deleteCita(req,res){
 
@@ -97,12 +175,13 @@ async function updateCita(req,res){
     let citaId = req.body.idCita;
 
     const citaUpdate = {
-        creadaBy:  req.body._idCliente ,
-        recibidaPor: req.body._idWorker ,
-        descripcionCita: req.body.descripcionCita,
-        citaHorario: req.body.citaHorario,
-        statusCita: req.body.statusCita,
+        
+        //Comentar acerca de que pasaria si un usuario quiere escoger otro worker
+        fecha: req.body.fecha,
+        hora: req.body.hora,
         servicios: req.body.servicios
+
+        
     }
     
     await citaModel.findByIdAndUpdate(citaId, {$set: citaUpdate}, (err,citaUpdate)=>{
