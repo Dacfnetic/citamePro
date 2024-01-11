@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:citame/models/service_model.dart';
 import 'package:citame/models/worker_moder.dart';
 import 'package:citame/providers/my_business_state_provider.dart';
@@ -117,20 +119,19 @@ class ReservationPage extends ConsumerWidget {
                                             duracion;
                                         final horaCalculada =
                                             calculoDeHora.truncate();
+
                                         final minutoCalculado =
-                                            (calculoDeHora - horaCalculada) *
-                                                60;
-                                        TimeOfDay dado = TimeOfDay(
+                                            ((calculoDeHora - horaCalculada) *
+                                                    60)
+                                                .round();
+                                        TimeOfDay horaFinal = TimeOfDay(
                                             hour: horaCalculada,
-                                            minute: minutoCalculado.toInt());
-                                        if (context.mounted) {
-                                          TimeOfDay horaFinal = await API
-                                              .timePicker(context, 'Horario');
-                                          ref
-                                              .read(myBusinessStateProvider
-                                                  .notifier)
-                                              .setHoraFinal(horaFinal);
-                                        }
+                                            minute: minutoCalculado);
+                                        log(horaFinal.toString());
+                                        ref
+                                            .read(myBusinessStateProvider
+                                                .notifier)
+                                            .setHoraFinal(horaFinal);
                                       },
                                       child: Icon(
                                         Icons.access_time,

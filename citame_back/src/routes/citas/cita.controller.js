@@ -155,7 +155,7 @@ async function postCita(req,res){
     };  
 
 
-}*/
+}
 
 async function deleteCita(req,res){
 

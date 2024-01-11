@@ -57,7 +57,8 @@ async function postServices(req,res){
                     precio: req.body.precio,
                     imgPath: req.body.imgPath,
                     descripcion: req.body.descripcion,
-                    duracion: req.body.duracion
+                    duracion: req.body.duracion,
+                    time: req.body.time,
                 })
 
 

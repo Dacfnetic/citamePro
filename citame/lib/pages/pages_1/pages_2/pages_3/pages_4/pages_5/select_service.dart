@@ -22,6 +22,7 @@ class SelectService extends ConsumerWidget {
         .map((servicio) => CajaDeServicios(
               nombre: servicio.nombreServicio,
               idServicio: servicio.id,
+              servicio: servicio,
               ref: ref,
               //precio: servicio.precio.toStringAsFixed(2),
               //duracion: servicio.duracion,
@@ -100,11 +101,13 @@ class CajaDeServicios extends StatefulWidget {
     Key? key,
     required this.nombre,
     required this.idServicio,
+    required this.servicio,
     required this.ref,
   }) : super(key: key);
 
   final String nombre;
   final String idServicio;
+  final Service servicio;
   final WidgetRef ref;
 
   @override
@@ -133,13 +136,9 @@ class _CajaDeServiciosState extends State<CajaDeServicios> {
         setState(() {
           isChecked = value!;
           if (isChecked!) {
-            widget.ref
-                .read(servicesProvider.notifier)
-                .anadir(Text(widget.nombre));
+            widget.ref.read(servicesProvider.notifier).anadir(widget.servicio);
           } else {
-            widget.ref
-                .read(servicesProvider.notifier)
-                .remover(Text(widget.nombre));
+            widget.ref.read(servicesProvider.notifier).remover(widget.servicio);
           }
         });
       },

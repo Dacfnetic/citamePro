@@ -9,7 +9,8 @@ const servicesSchema = new Schema({
     precio: {type: Number},
     imgPath:[{type:Schema.Types.ObjectId,ref:'Imagen'}],
     descripcion:{type:String},
-    duracion:{type:String}
+    duracion:{type:String},
+    time:{type:Number}
 
 
 });
