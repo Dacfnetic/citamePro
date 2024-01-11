@@ -10,11 +10,11 @@ const workerSchema = new Schema({
     email: {type: String, required: true},
     imgPath:[{type:Schema.Types.ObjectId,ref:'Imagen'}],
     salary :{type: Number},
-    horario: {type: String},
+    //horario: {type: String},
     status: {type: Boolean},
     puesto: {type:String},
     citasHechas:[{type: mongoose.Schema.Types.ObjectId,ref:'cita'}],//Guardar el objeto de las citas
-    horarioDisponible:{type:mongoose.Schema.Types.Mixed}
+    horarioDisponible:{type: Object, blackbox: true}
 });
 
 module.exports = model('worker',workerSchema);

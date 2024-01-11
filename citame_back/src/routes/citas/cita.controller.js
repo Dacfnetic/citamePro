@@ -2,7 +2,9 @@
 const citaModel = require('../../models/cita.model');
 const workerModel = require('../../models/worker.model');
 const business = require('../../models/business.model');
+const jwt = require('jsonwebtoken');
 const Agenda = require('../../models/agenda');
+const config = require('../../config/configjson.js');
 //import { Agenda } from ('../../models/agenda');
 
 async function getCita(req,res){
@@ -23,46 +25,53 @@ async function getCita(req,res){
 }
 
 async function postCita(req,res){
+    
 
     try{
-            
-               const dateCreated = await citaModel.create({
-                    creadaBy:  req.body._idCliente ,
-                    recibidaPor: req.body._idWorker ,
-                    descripcionCita: req.body.descripcionCita,
-                    citaHorario: req.body.citaHorario,
+
+        const token = req.headers['x-access-token'];//Buscar en los headers que me tienes que mandar, se tiene que llamar asi para que la reciba aca
+
+        if(!token){
+            return res.status(401).json({
+                auth: false,
+                message: 'No token'
+            });
+        }
+        //Una vez exista el JWT lo decodifica
+        const decoded =  jwt.verify(token,config.jwtSecret);//Verifico en base al token
+    
+                const cita = req.body.cita;
+                const dateCreated = new citaModel({
+                    creadaBy:  decoded.idUser,
+                    recibidaPor: req.body.idWorker ,
+                    //descripcionCita: req.body.descripcionCita,
+                    citaHorario: cita,
                     statusCita: 'Pendiente',
                     servicios: req.body.servicios
                 });
 
-                dateCreated.save();
-
                 
-                await workerModel.findByIdAndUpdate(req.body._idWorker,{ $push: {citasHechas: dateCreated} });
+                const trabajador = await workerModel.findById(req.body.idWorker);
+                
+                
 
 
                 //Manipular agenda con horario cita y devolver horario disponible
 
-                let agenda = new Agenda(horario);
+                let agenda = new Agenda();
+                agenda.establecerHorarios(trabajador._doc.horarioDisponible);
+                const funciona = agenda.updateWorkerHorario(cita);
 
-                await workerModel.findById(_idWorker).then((docs)=>{
+                if(funciona){
+                    dateCreated.save();
+                    await workerModel.findByIdAndUpdate(req.body.idWorker,{$push: {citasHechas: dateCreated}});
+                    await workerModel.findByIdAndUpdate(req.body.idWorker,{$set: {horarioDisponible: agenda}});
 
-                    agenda = docs.horarioDisponible
-                
-                    agenda.updateWorkerHorario(req.body.citaHorario)
-                    
+                    return res.status(201).send('Todo ok');
+                }else{
+                    return res.status(202).send('Mal, muy mal');
+                }   
 
-                })
-
-
-                await workerModel.findByIdAndUpdate(req.body._idWorker,{ $set: {horarioDisponible: agenda} });
-
-
-
-                return res.status(201).send({'sms':'cita creada'});
-            
-            
-        
     }catch(e){
         return res.status(404).json('Errosillo');
     }  

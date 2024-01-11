@@ -2,6 +2,7 @@
 const usuario = require('../../models/users.model.js');
 const business = require('../../models/business.model.js');
 const workersModel = require('../../models/worker.model.js');
+const Agenda = require('../../models/agenda.js');
 
 async function postWorkers(req,res){
     try{       
@@ -19,17 +20,21 @@ async function postWorkers(req,res){
                 .then(async (docs)=>{
                     if(docs != null){
                         console.log('Creando Trabajador');
+                        const horasQueVaATrabajarElEsclavo = new Agenda();
+                        horasQueVaATrabajarElEsclavo.construirHorarioInicial(req.body.horario);
                         const nuevo = new workersModel({
                             id: docs._id,
                             workwith: req.body.id,
                             name: req.body.name,
                             email: req.body.email,
                             salary: req.body.salary,
-                            horario: req.body.horario,
+                            //horario: req.body.horario,
+                            horarioDisponible: horasQueVaATrabajarElEsclavo,
                             status: req.body.status,
                             puesto: req.body.puesto
                         });
                         await nuevo.save();
+                        console.log('No hay error');
                         return res.status(201).json(nuevo);    
                     }
                 return res.status(202).send('Correo no registrado');
@@ -48,13 +53,16 @@ async function postWorkers(req,res){
                         .then(async (docs)=>{
                             if(docs != null){
                                 console.log('Creando Trabajador');
+                                const horasQueVaATrabajarElEsclavo = new Agenda();
+                                horasQueVaATrabajarElEsclavo.construirHorarioInicial(req.body.horario);
                                 const nuevo = new workersModel({
                                     id: docs._id,
                                     workwith: req.body.id,
                                     name: req.body.name,
                                     email: req.body.email,
                                     salary: req.body.salary,
-                                    horario: req.body.horario,
+                                    //horario: req.body.horario,
+                                    horarioDisponible: horasQueVaATrabajarElEsclavo,
                                     status: req.body.status,
                                     puesto: req.body.puesto
                                 });
