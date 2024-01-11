@@ -1,56 +1,68 @@
-
-let diasConCitas = [];
-let lun = [];
-let ma = [];
-let mie = [];
-let jue = [];
-let vie = [];
-let sab = [];
-let dom = [];
-
-
 class Agenda {
-    constructor(horario){
-        const horarioJson = JSON.parse(horario);
-        lun = horarioJson.lunes.map((h) => {
-            const hinicial = new Date(2020,1,2,h.hora_inicial,h.minuto_inicial);
-            const hfinal = new Date(2020,1,2,h.hora_final,h.minuto_final);
+    constructor(){
+        this.lun = [];
+        this.ma = [];
+        this.mie = [];
+        this.jue = [];
+        this.vie = [];
+        this.sab = [];
+        this.dom = [];
+        this.diasConCitas = [];
+    }
+
+    construirHorarioInicial(horario){
+        const horarioJson = horario;
+       
+        this.lun = horarioJson.lunes.map((h) => {
+            const hinicial = h.hora_inicial+(h.minuto_inicial/60);
+            const hfinal = h.hora_final+(h.minuto_final/60);
             return {'HoraInicial': hinicial, 'HoraFinal': hfinal};
         });
-        ma = horarioJson.martes.map((h) => {
-            const hinicial = new Date(2020,1,2,h.hora_inicial,h.minuto_inicial);
-            const hfinal = new Date(2020,1,2,h.hora_final,h.minuto_final);
+        this.ma = horarioJson.martes.map((h) => {
+            const hinicial = h.hora_inicial+(h.minuto_inicial/60);
+            const hfinal = h.hora_final+(h.minuto_final/60);
             return {'HoraInicial': hinicial, 'HoraFinal': hfinal};
         });
-        mie = horarioJson.miercoles.map((h) => {
-            const hinicial = new Date(2020,1,2,h.hora_inicial,h.minuto_inicial);
-            const hfinal = new Date(2020,1,2,h.hora_final,h.minuto_final);
+        this.mie = horarioJson.miercoles.map((h) => {
+            const hinicial = h.hora_inicial+(h.minuto_inicial/60);
+            const hfinal = h.hora_final+(h.minuto_final/60);
             return {'HoraInicial': hinicial, 'HoraFinal': hfinal};
         });
-        jue = horarioJson.jueves.map((h) => {
-            const hinicial = new Date(2020,1,2,h.hora_inicial,h.minuto_inicial);
-            const hfinal = new Date(2020,1,2,h.hora_final,h.minuto_final);
+        this.jue = horarioJson.jueves.map((h) => {
+            const hinicial = h.hora_inicial+(h.minuto_inicial/60);
+            const hfinal = h.hora_final+(h.minuto_final/60);
             return {'HoraInicial': hinicial, 'HoraFinal': hfinal};
         });
-        vie = horarioJson.viernes.map((h) => {
-            const hinicial = new Date(2020,1,2,h.hora_inicial,h.minuto_inicial);
-            const hfinal = new Date(2020,1,2,h.hora_final,h.minuto_final);
+        this.vie = horarioJson.viernes.map((h) => {
+            const hinicial = h.hora_inicial+(h.minuto_inicial/60);
+            const hfinal = h.hora_final+(h.minuto_final/60);
             return {'HoraInicial': hinicial, 'HoraFinal': hfinal};
         });
-        sab = horarioJson.sabado.map((h) => {
-            const hinicial = new Date(2020,1,2,h.hora_inicial,h.minuto_inicial);
-            const hfinal = new Date(2020,1,2,h.hora_final,h.minuto_final);
+        this.sab = horarioJson.sabado.map((h) => {
+            const hinicial = h.hora_inicial+(h.minuto_inicial/60);
+            const hfinal = h.hora_final+(h.minuto_final/60);
             return {'HoraInicial': hinicial, 'HoraFinal': hfinal};
         });
-        dom = horarioJson.domingo.map((h) => {
-            const hinicial = new Date(2020,1,2,h.hora_inicial,h.minuto_inicial);
-            const hfinal = new Date(2020,1,2,h.hora_final,h.minuto_final);
+        this.dom = horarioJson.domingo.map((h) => {
+            const hinicial = h.hora_inicial+(h.minuto_inicial/60);
+            const hfinal = h.hora_final+(h.minuto_final/60);
             return {'HoraInicial': hinicial, 'HoraFinal': hfinal};
         });
+        this.diasConCitas = [];
 
     }
 
-
+    establecerHorarios(objeto){
+        this.lun= objeto['lun'];
+        this.ma = objeto['ma'];
+        this.mie = objeto['mie'];
+        this.jue = objeto['jue'];
+        this.vie = objeto['vie'];
+        this.sab = objeto['sab'];
+        this.dom = objeto['dom'];
+        this.diasConCitas = objeto['diasConCitas'];
+    }
+  
     agregarDiaNoDisponible(dia){
         this.diaNoDisponible.push(dia);
     }
@@ -59,58 +71,54 @@ class Agenda {
 
     updateWorkerHorario(citaJson){
 
-        const cita = JSON.parse(citaJson);
-        const fecha = `${cita.dia}/${cita.mes}/${cita.year}`
-        const index = diasConCitas.findIndex((fecha)=> fecha.Fecha === fecha)
-
+        const cita = citaJson;
+        const fecha = `${cita.dia}/${cita.mes}/${cita.year}`;
+        let index = this.diasConCitas.findIndex((dia)=> dia.fecha === fecha);
+        let horarioD = [];
         
         if(index === -1){
             
-            let fechaFront = new Date(cita.year,cita.mes,cita.dia);
-            fechaFront.getDay();
-            fechaFront.getHours();
-
-
+            let fechaFront = new Date(cita.year,cita.mes-1,cita.dia);
             const dia = fechaFront.getDay(); //obtener fecha con getDate
-            let horarioD;
+            
 
             switch (dia) {
 
                     case 1: 
 
-                    horarioD = lun;
+                    horarioD = [...this.lun];
 
                     break;
 
                     case 2: 
 
-                    horarioD = ma;
+                    horarioD = [...this.ma];
 
                     break;
 
                     case 3: 
 
-                    horarioD = mie;
+                    horarioD = [...this.mie];
 
                     break;
                     case 4: 
 
-                    horarioD = jue;
+                    horarioD = [...this.jue];
 
                     break;
                     case 5: 
 
-                    horarioD = vie;
+                    horarioD = [...this.vie];
 
                     break;
                     case 6: 
 
-                    horarioD = sab;
+                    horarioD = [...this.sab];
 
                     break;
                     case 0: 
 
-                    horarioD = dom;
+                    horarioD = [...this.dom];
 
                     break;
             
@@ -118,36 +126,39 @@ class Agenda {
                     break;
             }
 
-            
-            diasConCitas.push({'Fecha':fecha,'HorarioDisp': horarioD });
-
+            this.diasConCitas.push({'fecha':fecha,'HorarioDisp': horarioD});
+           
         }else{
+            horarioD = this.diasConCitas[index].HorarioDisp;
+        }
+        index = this.diasConCitas.findIndex((dia)=> dia.fecha === fecha);
             
-            const horaInicio = new Date(2020,1,2,cita.hora_inicial,cita.minuto_inicial,0);
-            const horaFinal = new Date(2020,1,2,cita.hora_final,cita.minuto_final,0);
-            const indexH = diasConCitas[index].HorarioDisp.findIndex((horaD)=>  horaD.horaInicio.getHours() <= horaInicio.getHours() && horaD.horaFinal.getHours() >= horaFinal.getHours())  
+        const horaInicio = cita.hora_inicial + (cita.minuto_inicial/60);
+        const horaFinal = cita.hora_final+(cita.minuto_final/60);
+        const indexH = this.diasConCitas[index].HorarioDisp.findIndex((horaD)=>  horaD.HoraInicial <= horaInicio && horaD.HoraFinal >= horaFinal);  
 
-            const horario1A = new Date (2020,1,2,diasConCitas[index].HorarioDisp[indexH].horaInicio.getHours(),diasConCitas[index].HorarioDisp[indexH].horaInicio.getMinutes()) ;
-            const horario2A = new Date (2020,1,2,horaInicio.getHours(),horaInicio.getMinutes());
-
-            const horarioA = {'HoraInicial':horario1A,'HoraFinal' : horario2A};
-
-
-            const horario1B = new Date (2020,1,2,horaFinal.getHours(),horaFinal.getMinutes());
-            const horario2B = new Date (2020,1,2,diasConCitas[index].HorarioDisp[indexH].horaFinal.getHours(),diasConCitas[index].HorarioDisp[indexH].horaFinal.getMinutes()) ;
-
-            const horarioB = {'HoraInicial':horario1B,'HoraFinal' : horario2B};
-
-
-
-
-           // if (horarioinicial del indice del horario disponible es menor que el horario de inicio && el horario final del indice del horario disponible es mayor que el horario final){
-
-            diasConCitas[index].HorarioDisp.splice(indexH,1,horarioA,horarioB);
-        
-
+        if(indexH === -1){
+            console.log('Horario no disponible');
+            return false;
         }
 
+        const horario1A = this.diasConCitas[index].HorarioDisp[indexH].HoraInicial;
+        const horario2A =  horaInicio;
+
+        const horarioA = {'HoraInicial':horario1A,'HoraFinal': horario2A};
+
+
+        const horario1B = horaFinal;
+        const horario2B = this.diasConCitas[index].HorarioDisp[indexH].HoraFinal;
+
+        const horarioB = {'HoraInicial':horario1B,'HoraFinal' : horario2B};
+
+
+        // if (horarioinicial del indice del horario disponible es menor que el horario de inicio && el horario final del indice del horario disponible es mayor que el horario final){
+
+        this.diasConCitas[index].HorarioDisp.splice(indexH,1,horarioA,horarioB);
+        
+        return true;
     }
 
 
@@ -156,6 +167,4 @@ class Agenda {
 }
 
 
-module.exports = {
-    Agenda
-}
+module.exports = Agenda;
