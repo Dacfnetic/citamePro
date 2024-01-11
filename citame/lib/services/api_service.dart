@@ -30,7 +30,7 @@ String serverUrl = API.server;
 FirebaseAuth auth = FirebaseAuth.instance;
 String actualCat = '';
 String categoriaABuscar = '';
-IO.Socket socket = IO.io('http://ubuntu.citame.store/', <String, dynamic>{
+IO.Socket socket = IO.io('http://win.citame.store/', <String, dynamic>{
   "transports": ["websocket"],
   "autoConnect": false,
 });
@@ -38,7 +38,7 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
 abstract class API {
-  static String server = 'https://ubuntu.citame.store';
+  static String server = 'https://win.citame.store';
 
   static Future<String> deleteBusiness(String businessId) async {
     final response =
@@ -179,7 +179,8 @@ abstract class API {
       String nombreServicio,
       double precio,
       String duracion,
-      String descripcion) async {
+      String descripcion,
+      double time) async {
     final response =
         await http.post(Uri.parse('$serverUrl/api/services/post/service'),
             headers: {'Content-Type': 'application/json'},
@@ -189,24 +190,20 @@ abstract class API {
               'precio': precio,
               'imgPath': [],
               'duracion': duracion,
-              'descripcion': descripcion
+              'descripcion': descripcion,
+              'time': time
             })));
     if (response.statusCode == 201) {
       var serviceData = jsonDecode(response.body);
       //await API.postImagen(imgPath, serviceData['_id'], 'worker');
-      if (context.mounted) {
-        await API.updateServiceInBusiness(idBusiness, serviceData['_id']);
-        if (context.mounted) {
-          await API.mensaje(context, 'Aviso', 'El servicio fue creado');
-          ref
-              .read(myBusinessStateProvider.notifier)
-              .setService(idBusiness, ref);
-          if (context.mounted) {
-            Navigator.pop(context);
-          }
-        }
-        return 'Todo ok';
-      }
+
+      await API.updateServiceInBusiness(idBusiness, serviceData['_id']);
+
+      await API.mensaje(context, 'Aviso', 'El servicio fue creado');
+      ref.read(myBusinessStateProvider.notifier).setService(idBusiness, ref);
+      Navigator.pop(context);
+
+      return 'Todo ok';
     }
     if (response.statusCode == 202) {
       if (context.mounted) {

@@ -239,7 +239,7 @@ class MenuPage extends ConsumerWidget {
                                               enviar =
                                                   '${horario.inMinutes} minutos';
                                             }
-
+                                            final time = horario.inMinutes / 60;
                                             print(horario);
                                             await API.postService(
                                                 context,
@@ -252,7 +252,8 @@ class MenuPage extends ConsumerWidget {
                                                 servicio.text,
                                                 double.parse(precio.text),
                                                 enviar,
-                                                '');
+                                                '',
+                                                time);
                                             if (context.mounted) {
                                               API.reRender(ref);
                                               Navigator.pop(context);

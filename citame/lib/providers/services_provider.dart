@@ -1,23 +1,30 @@
+import 'package:citame/models/service_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final servicesProvider =
-    StateNotifierProvider<ServicesNotifier, List<Text>>((ref) {
+    StateNotifierProvider<ServicesNotifier, List<Service>>((ref) {
   return ServicesNotifier();
 });
 
-class ServicesNotifier extends StateNotifier<List<Text>> {
+class ServicesNotifier extends StateNotifier<List<Service>> {
   ServicesNotifier() : super([]);
 
   void anadir(entrada) {
-    state = [...state, Text(entrada.data)];
+    state = [...state, entrada];
+    /*List<double> x = [];
+    x = lista.where((servicio) => servicio.nombreServicio != entrada.data);
+    servicios = List.from(x);*/
   }
 
   void remover(entrada) {
-    List<Text> nueva =
-        state.where((element) => element.data != entrada.data).toList();
+    List<Service> nueva = state.where((element) => element != entrada).toList();
 
     state = nueva;
+  }
+
+  void limpiar() {
+    state = [];
   }
 
   /*void eliminar(entrada) {
@@ -25,3 +32,5 @@ class ServicesNotifier extends StateNotifier<List<Text>> {
     state = state.removeAt(index);
   }*/
 }
+
+List<double> servicios = [];
