@@ -1,6 +1,8 @@
+import 'package:citame/models/service_model.dart';
 import 'package:citame/models/worker_moder.dart';
 import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:citame/providers/re_render_provider.dart';
+import 'package:citame/providers/services_provider.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,6 +22,8 @@ class ReservationPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(reRenderProvider);
+    List<Service> serviciosSeleccionados2 = ref.watch(servicesProvider);
+
     print(TimeOfDay.now().format(context));
 
     return Scaffold(
@@ -41,41 +45,6 @@ class ReservationPage extends ConsumerWidget {
                         color: Colors.black,
                       )
                     ]),
-                    child: Row(
-                      children: [
-                        Container(
-                          margin: EdgeInsets.all(16),
-                          alignment: Alignment.centerLeft,
-                          decoration: BoxDecoration(
-                            color: Color(0x4d39d2c0),
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: Colors.green,
-                              width: 2,
-                            ),
-                            /*image: DecorationImage(
-                          image: NetworkImage(user.avatar),
-                          fit: BoxFit.fill,
-                        ),*/
-                          ),
-                          child: SizedBox(
-                            height: 90,
-                            width: 90,
-                          ),
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('ricky ricon',
-                                textAlign: TextAlign.left,
-                                style: API.estiloJ24negro),
-                            Text('barbero',
-                                textAlign: TextAlign.left,
-                                style: API.estiloJ14gris),
-                          ],
-                        ),
-                      ],
-                    ),
                   ),
                 ),
                 Padding(
@@ -137,6 +106,23 @@ class ReservationPage extends ConsumerWidget {
                                             .read(myBusinessStateProvider
                                                 .notifier)
                                             .setHora(inicio);
+
+                                        var duracion = 0.00;
+                                        for (var servicio
+                                            in serviciosSeleccionados2) {
+                                          duracion = duracion + servicio.time;
+                                        }
+                                        final calculoDeHora = (inicio.hour +
+                                                (inicio.minute / 60)) +
+                                            duracion;
+                                        final horaCalculada =
+                                            calculoDeHora.truncate();
+                                        final minutoCalculado =
+                                            (calculoDeHora - horaCalculada) *
+                                                60;
+                                        TimeOfDay dado = TimeOfDay(
+                                            hour: horaCalculada,
+                                            minute: minutoCalculado.toInt());
                                         if (context.mounted) {
                                           TimeOfDay horaFinal = await API
                                               .timePicker(context, 'Horario');
