@@ -295,7 +295,16 @@ Map diasLaboralesGenerales = {
 };
 
 Map workerDaysAvailable = {
-  'lunes': [],
+  'lunes': [
+    {
+      'inicio': TimeOfDay(hour: 7, minute: 0),
+      'fin': TimeOfDay(hour: 13, minute: 0)
+    },
+    {
+      'inicio': TimeOfDay(hour: 14, minute: 0),
+      'fin': TimeOfDay(hour: 17, minute: 0)
+    }
+  ],
   'martes': [],
   'miercoles': [],
   'jueves': [],

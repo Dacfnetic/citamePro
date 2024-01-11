@@ -1,6 +1,7 @@
 import 'package:citame/models/service_model.dart';
 import 'package:citame/models/worker_moder.dart';
 import 'package:citame/pages/pages_1/pages_2/pages_3/reservation_page.dart';
+import 'package:citame/providers/event_provider.dart';
 import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:citame/providers/services_provider.dart';
 import 'package:citame/services/api_service.dart';
@@ -80,6 +81,9 @@ class SelectService extends ConsumerWidget {
                 ),
                 ElevatedButton(
                     onPressed: () {
+                      ref
+                          .read(eventsProvider.notifier)
+                          .inicializar(trabajador, DateTime.now());
                       Navigator.push(
                           context,
                           MaterialPageRoute(

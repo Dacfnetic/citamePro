@@ -30,7 +30,7 @@ String serverUrl = API.server;
 FirebaseAuth auth = FirebaseAuth.instance;
 String actualCat = '';
 String categoriaABuscar = '';
-IO.Socket socket = IO.io('http://win.citame.store/', <String, dynamic>{
+IO.Socket socket = IO.io('http://ubuntu.citame.store/', <String, dynamic>{
   "transports": ["websocket"],
   "autoConnect": false,
 });
@@ -38,7 +38,7 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
 abstract class API {
-  static String server = 'https://win.citame.store';
+  static String server = 'https://ubuntu.citame.store';
 
   static Future<String> deleteBusiness(String businessId) async {
     final response =
@@ -239,6 +239,7 @@ abstract class API {
     if (response.statusCode == 202) {
       mensaje(context, 'Horario no disponible',
           'El horario no está disponible, desea intentar hacer la cita aunque esté fuera del horario, le recordamos que lo más probable es que no acepten su cita');
+
       return 'Todo ok';
     }
 

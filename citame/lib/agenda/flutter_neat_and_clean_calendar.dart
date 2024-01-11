@@ -2,6 +2,9 @@
 
 library flutter_neat_and_clean_calendar;
 
+import 'dart:math';
+import 'dart:developer' as dev;
+import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:citame/agenda/date_picker_config.dart';
 import 'package:citame/agenda/platform_widgets.dart';
@@ -360,6 +363,7 @@ class _CalendarState extends State<Calendar> {
                       onChanged: (DateTime dateTime) {
                         // close the dialog when year is selected.
                         onJumpToDateSelected(dateTime);
+                        dev.log(selectedDate.toString());
                         Navigator.pop(context);
 
                         // Do something with the dateTime selected.
@@ -896,6 +900,7 @@ class _CalendarState extends State<Calendar> {
           Utils.daysInRange(firstDayOfCurrentWeek, lastDayOfCurrentWeek)
               .toList();
       selectedMonthsDays = _daysInMonth(_selectedDate);
+      dev.log(selectedMonthsDays.toString());
       var monthFormat =
           DateFormat('MMMM yyyy', widget.locale).format(_selectedDate);
       displayMonth =
@@ -941,6 +946,8 @@ class _CalendarState extends State<Calendar> {
 
   void handleSelectedDateAndUserCallback(DateTime day) {
     print('daySelected: $day');
+    dev.log('${day.year}/${day.month}/${day.day}');
+
     // Fire onDateSelected callback and onMonthChanged callback.
     _launchDateSelectionCallback(day);
 

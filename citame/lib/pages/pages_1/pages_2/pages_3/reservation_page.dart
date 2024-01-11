@@ -1,7 +1,9 @@
 import 'dart:developer';
 
+import 'package:citame/agenda/flutter_neat_and_clean_calendar.dart';
 import 'package:citame/models/service_model.dart';
 import 'package:citame/models/worker_moder.dart';
+import 'package:citame/providers/event_provider.dart';
 import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:citame/providers/re_render_provider.dart';
 import 'package:citame/providers/services_provider.dart';
@@ -28,6 +30,8 @@ class ReservationPage extends ConsumerWidget {
 
     print(TimeOfDay.now().format(context));
 
+    List<NeatCleanCalendarEvent> eventList = ref.watch(eventsProvider);
+
     return Scaffold(
       appBar: AppBar(),
       body: SafeArea(
@@ -35,18 +39,42 @@ class ReservationPage extends ConsumerWidget {
           key: signUpKey,
           child: Container(
             color: Colors.white,
-            child: ListView(
+            child: Column(
               children: [
-                //  WorkerBox(ruta: ruta, ref: ref),
                 Expanded(
-                  child: Container(
-                    margin: EdgeInsets.fromLTRB(0, 1, 0, 0),
-                    //padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
-                    decoration: BoxDecoration(color: Colors.white, boxShadow: [
-                      BoxShadow(
+                  child: Calendar(
+                    startOnMonday: true,
+                    onMonthChanged: (value) {},
+                    weekDays: ['Lu', 'Ma', 'Mi', 'JU', 'Vi', 'Sa', 'Do'],
+                    eventsList: eventList,
+                    isExpandable: true,
+                    eventDoneColor: Colors.green,
+                    selectedColor: Colors.pink,
+                    onDateSelected: (value) {
+                      ref
+                          .read(myBusinessStateProvider.notifier)
+                          .setFecha(value);
+                      ref.read(eventsProvider.notifier).inicializar(
+                          trabajador,
+                          ref
+                              .read(myBusinessStateProvider.notifier)
+                              .getFecha());
+                    },
+                    selectedTodayColor: Colors.red,
+                    defaultDayColor: Colors.black,
+                    todayColor: Colors.amber,
+                    eventColor: null,
+                    locale: 'es_ES',
+                    todayButtonText: 'Hoy',
+                    allDayEventText: 'Inicio',
+                    multiDayEndText: 'Fin',
+                    isExpanded: false,
+                    expandableDateFormat: 'EEEE, dd. MMMM yyyy',
+                    datePickerType: DatePickerType.date,
+                    dayOfWeekStyle: TextStyle(
                         color: Colors.black,
-                      )
-                    ]),
+                        fontWeight: FontWeight.w800,
+                        fontSize: 11),
                   ),
                 ),
                 Padding(
@@ -55,38 +83,6 @@ class ReservationPage extends ConsumerWidget {
                     children: [
                       Row(
                         children: [
-                          Expanded(
-                            child: Container(
-                              margin: EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(
-                                  width: 5,
-                                  color: Colors.grey.withOpacity(0.2),
-                                ),
-                              ),
-                              height: 125,
-                              child: Column(
-                                children: [
-                                  TextButton(
-                                      onPressed: () async {
-                                        DateTime dia =
-                                            await API.datePicker(context);
-                                        ref
-                                            .read(myBusinessStateProvider
-                                                .notifier)
-                                            .setFecha(dia);
-                                      },
-                                      child: Icon(
-                                        Icons.calendar_month,
-                                        size: 60,
-                                        color: Colors.blueGrey,
-                                      )),
-                                  Text('Fecha'),
-                                ],
-                              ),
-                            ),
-                          ),
                           Expanded(
                             child: Container(
                               margin: EdgeInsets.all(8),
@@ -128,6 +124,16 @@ class ReservationPage extends ConsumerWidget {
                                             hour: horaCalculada,
                                             minute: minutoCalculado);
                                         log(horaFinal.toString());
+                                        ref
+                                            .read(eventsProvider.notifier)
+                                            .anadir(
+                                                inicio,
+                                                ref
+                                                    .read(
+                                                        myBusinessStateProvider
+                                                            .notifier)
+                                                    .getFecha(),
+                                                horaFinal);
                                         ref
                                             .read(myBusinessStateProvider
                                                 .notifier)

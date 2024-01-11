@@ -315,13 +315,12 @@ class ContenedorDeHorario extends StatelessWidget {
 
     void getSchedule(String dia) async {
       TimeOfDay inicio = await API.timePicker(context, 'Horario de inicio');
-      if (context.mounted) {
-        TimeOfDay fin = await API.timePicker(context, 'Horario de fin');
-        ref
-            .read(myBusinessStateProvider.notifier)
-            .setDiasWorker(dia, inicio, fin);
-        ref.read(reRenderProvider.notifier).reRender();
-      }
+
+      TimeOfDay fin = await API.timePicker(context, 'Horario de fin');
+      ref
+          .read(myBusinessStateProvider.notifier)
+          .setDiasWorker(dia, inicio, fin);
+      ref.read(reRenderProvider.notifier).reRender();
     }
 
     return Container(
