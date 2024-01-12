@@ -36,63 +36,73 @@ class SelectService extends ConsumerWidget {
       onPopInvoked: (didPop) {
         ref.read(servicesProvider.notifier).limpiar();
       },
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'Detalles',
-            style: API.estiloJ16negro,
-          ),
-        ),
-        body: SafeArea(
-          child: SingleChildScrollView(
-              child: Padding(
-            padding: EdgeInsets.all(20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text('Selecciona los servicios que quieres'),
-                Divider(
-                  color: Colors.grey,
-                  thickness: 1,
-                ),
-                SizedBox(height: 10),
-                ListView(
-                  shrinkWrap: true,
-                  children: [
-                    servicios.isNotEmpty
-                        ? SizedBox(
-                            height: 300,
-                            child:
-                                ListView(shrinkWrap: true, children: servicios))
-                        : Text(''),
-                  ],
-                ),
-                ListView(
-                  shrinkWrap: true,
-                  children: [
-                    servicios.isNotEmpty
-                        ? SizedBox(
-                            height: 300,
-                            child: ListView(
-                                shrinkWrap: true,
-                                children: serviciosSeleccionados))
-                        : Text(''),
-                  ],
-                ),
-                ElevatedButton(
-                    onPressed: () {
-                      ref
-                          .read(eventsProvider.notifier)
-                          .inicializar(trabajador, DateTime.now());
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  ReservationPage(trabajador: trabajador)));
-                    },
-                    child: Text('siguiente'))
-              ],
+      child: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text(
+              'Servicios',
+              style: API.estiloJ16negro,
             ),
+          ),
+          body: SafeArea(
+              child: Column(
+            children: [
+              TabBar(
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  indicator: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: Colors.cyan),
+                  labelColor: Colors.black,
+                  unselectedLabelColor: Colors.grey,
+                  tabs: [
+                    Tab(
+                      icon: Icon(Icons.list_alt),
+                    ),
+                    Tab(
+                      icon: Icon(Icons.check_box_rounded),
+                    )
+                  ]),
+              Expanded(
+                child: TabBarView(children: [
+                  ListView(
+                    shrinkWrap: true,
+                    children: [
+                      servicios.isNotEmpty
+                          ? SizedBox(
+                              height: 300,
+                              child: ListView(
+                                  shrinkWrap: true, children: servicios))
+                          : Text(''),
+                    ],
+                  ),
+                  ListView(
+                    shrinkWrap: true,
+                    children: [
+                      servicios.isNotEmpty
+                          ? SizedBox(
+                              height: 300,
+                              child: ListView(
+                                  shrinkWrap: true,
+                                  children: serviciosSeleccionados))
+                          : Text(''),
+                    ],
+                  ),
+                  ElevatedButton(
+                      onPressed: () {
+                        ref
+                            .read(eventsProvider.notifier)
+                            .inicializar(trabajador, DateTime.now());
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    ReservationPage(trabajador: trabajador)));
+                      },
+                      child: Text('siguiente'))
+                ]),
+              ),
+            ],
           )),
         ),
       ),

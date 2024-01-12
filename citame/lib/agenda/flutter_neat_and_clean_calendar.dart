@@ -315,6 +315,7 @@ class _CalendarState extends State<Calendar> {
         onPressed: isExpanded ? previousMonth : previousWeek,
         icon: Icon(Icons.chevron_left),
       );
+
       rightArrow = PlatformIconButton(
         onPressed: isExpanded ? nextMonth : nextWeek,
         icon: Icon(Icons.chevron_right),
@@ -336,7 +337,7 @@ class _CalendarState extends State<Calendar> {
     if (widget.datePickerType != null &&
         widget.datePickerType != DatePickerType.hidden) {
       jumpDateIcon = GestureDetector(
-        child: Icon(Icons.date_range_outlined),
+        child: Icon(Icons.date_range_sharp), //aca el icono de calendario
         onTap: () {
           if (widget.datePickerType == DatePickerType.year) {
             // show year picker
