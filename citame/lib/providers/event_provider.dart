@@ -13,7 +13,7 @@ class EventsNotifier extends StateNotifier<List<NeatCleanCalendarEvent>> {
 
   void anadir(inicial, fecha, fin) {
     String des = state[state.length - 1].description;
-    if (des == 'S)x¿4l') {
+    if (des == 'Tu cita') {
       state.removeLast();
     }
     state = [
@@ -25,7 +25,7 @@ class EventsNotifier extends StateNotifier<List<NeatCleanCalendarEvent>> {
         endTime:
             DateTime(fecha.year, fecha.month, fecha.day, fin.hour, fin.minute),
         color: Colors.orange,
-        description: 'S)x¿4l',
+        description: 'Tu cita',
       )
     ];
     /*List<double> x = [];

@@ -19,17 +19,26 @@ class SelectService extends ConsumerWidget {
         serviciosSeleccionados2.map((e) => Text(e.nombreServicio)).toList();
     List<Service> listaDeServicios =
         ref.watch(myBusinessStateProvider.notifier).getService();
-    List<CajaDeServicios> servicios = listaDeServicios
-        .map((servicio) => CajaDeServicios(
-              nombre: servicio.nombreServicio,
-              idServicio: servicio.id,
-              servicio: servicio,
-              ref: ref,
-              //precio: servicio.precio.toStringAsFixed(2),
-              //duracion: servicio.duracion,
-              //esDueno: true
-            ))
-        .toList();
+    List<CajaDeServicios> servicios = listaDeServicios.map((servicio) {
+      //Averiguar si es true o false
+      bool estado = false;
+
+      if (serviciosSeleccionados2.contains(servicio)) {
+        estado = true;
+      }
+
+      //Retornar
+      return CajaDeServicios(
+        nombre: servicio.nombreServicio,
+        idServicio: servicio.id,
+        servicio: servicio,
+        ref: ref,
+        estadoInicial: estado,
+        //precio: servicio.precio.toStringAsFixed(2),
+        //duracion: servicio.duracion,
+        //esDueno: true
+      );
+    }).toList();
 
     return PopScope(
       canPop: true,
@@ -65,41 +74,47 @@ class SelectService extends ConsumerWidget {
                   ]),
               Expanded(
                 child: TabBarView(children: [
-                  ListView(
-                    shrinkWrap: true,
-                    children: [
-                      servicios.isNotEmpty
-                          ? SizedBox(
-                              height: 300,
-                              child: ListView(
-                                  shrinkWrap: true, children: servicios))
-                          : Text(''),
-                    ],
+                  Container(
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: [
+                        servicios.isNotEmpty
+                            ? SizedBox(
+                                height: 300,
+                                child: ListView(
+                                    shrinkWrap: true, children: servicios))
+                            : Text(''),
+                      ],
+                    ),
                   ),
-                  ListView(
-                    shrinkWrap: true,
-                    children: [
-                      servicios.isNotEmpty
-                          ? SizedBox(
-                              height: 300,
-                              child: ListView(
-                                  shrinkWrap: true,
-                                  children: serviciosSeleccionados))
-                          : Text(''),
-                    ],
+                  Container(
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: [
+                        servicios.isNotEmpty
+                            ? SizedBox(
+                                height: 300,
+                                child: ListView(
+                                    shrinkWrap: true,
+                                    children: serviciosSeleccionados))
+                            : Text(''),
+                        serviciosSeleccionados.isNotEmpty
+                            ? ElevatedButton(
+                                onPressed: () {
+                                  ref
+                                      .read(eventsProvider.notifier)
+                                      .inicializar(trabajador, DateTime.now());
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => ReservationPage(
+                                              trabajador: trabajador)));
+                                },
+                                child: Text('siguiente'))
+                            : Text('')
+                      ],
+                    ),
                   ),
-                  ElevatedButton(
-                      onPressed: () {
-                        ref
-                            .read(eventsProvider.notifier)
-                            .inicializar(trabajador, DateTime.now());
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    ReservationPage(trabajador: trabajador)));
-                      },
-                      child: Text('siguiente'))
                 ]),
               ),
             ],
@@ -117,11 +132,13 @@ class CajaDeServicios extends StatefulWidget {
     required this.idServicio,
     required this.servicio,
     required this.ref,
+    required this.estadoInicial,
   }) : super(key: key);
 
   final String nombre;
   final String idServicio;
   final Service servicio;
+  final bool estadoInicial;
   final WidgetRef ref;
 
   @override
@@ -132,7 +149,7 @@ class _CajaDeServiciosState extends State<CajaDeServicios> {
   bool? isChecked;
   @override
   void initState() {
-    isChecked = false;
+    isChecked = widget.estadoInicial;
     super.initState();
   }
 

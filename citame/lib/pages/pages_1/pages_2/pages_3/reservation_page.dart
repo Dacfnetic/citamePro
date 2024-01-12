@@ -50,7 +50,7 @@ class ReservationPage extends ConsumerWidget {
                     isExpandable: true,
                     eventDoneColor: Colors.green,
                     selectedColor: Colors.pink,
-                    onDateSelected: (value) {
+                    onDateSelected: (value) async {
                       ref
                           .read(myBusinessStateProvider.notifier)
                           .setFecha(value);
@@ -59,6 +59,31 @@ class ReservationPage extends ConsumerWidget {
                           ref
                               .read(myBusinessStateProvider.notifier)
                               .getFecha());
+                      TimeOfDay inicio =
+                          await API.timePicker(context, 'Horario');
+                      ref
+                          .read(myBusinessStateProvider.notifier)
+                          .setHora(inicio);
+                      var duracion = 0.00;
+                      for (var servicio in serviciosSeleccionados2) {
+                        duracion = duracion + servicio.time;
+                      }
+                      final calculoDeHora =
+                          (inicio.hour + (inicio.minute / 60)) + duracion;
+                      final horaCalculada = calculoDeHora.truncate();
+
+                      final minutoCalculado =
+                          ((calculoDeHora - horaCalculada) * 60).round();
+                      TimeOfDay horaFinal = TimeOfDay(
+                          hour: horaCalculada, minute: minutoCalculado);
+                      log(horaFinal.toString());
+                      ref.read(eventsProvider.notifier).anadir(
+                          inicio,
+                          ref.read(myBusinessStateProvider.notifier).getFecha(),
+                          horaFinal);
+                      ref
+                          .read(myBusinessStateProvider.notifier)
+                          .setHoraFinal(horaFinal);
                     },
                     selectedTodayColor: Colors.red,
                     defaultDayColor: Colors.black,
@@ -70,7 +95,7 @@ class ReservationPage extends ConsumerWidget {
                     multiDayEndText: 'Fin',
                     isExpanded: false,
                     expandableDateFormat: 'EEEE, dd. MMMM yyyy',
-                    datePickerType: DatePickerType.date,
+                    //datePickerType: DatePickerType.date,
                     dayOfWeekStyle: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.w800,
@@ -81,76 +106,6 @@ class ReservationPage extends ConsumerWidget {
                   padding: const EdgeInsets.all(8),
                   child: Column(
                     children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Container(
-                              margin: EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(
-                                  width: 5,
-                                  color: Colors.grey.withOpacity(0.2),
-                                ),
-                              ),
-                              height: 125,
-                              child: Column(
-                                children: [
-                                  TextButton(
-                                      onPressed: () async {
-                                        TimeOfDay inicio = await API.timePicker(
-                                            context, 'Horario');
-                                        ref
-                                            .read(myBusinessStateProvider
-                                                .notifier)
-                                            .setHora(inicio);
-
-                                        var duracion = 0.00;
-                                        for (var servicio
-                                            in serviciosSeleccionados2) {
-                                          duracion = duracion + servicio.time;
-                                        }
-                                        final calculoDeHora = (inicio.hour +
-                                                (inicio.minute / 60)) +
-                                            duracion;
-                                        final horaCalculada =
-                                            calculoDeHora.truncate();
-
-                                        final minutoCalculado =
-                                            ((calculoDeHora - horaCalculada) *
-                                                    60)
-                                                .round();
-                                        TimeOfDay horaFinal = TimeOfDay(
-                                            hour: horaCalculada,
-                                            minute: minutoCalculado);
-                                        log(horaFinal.toString());
-                                        ref
-                                            .read(eventsProvider.notifier)
-                                            .anadir(
-                                                inicio,
-                                                ref
-                                                    .read(
-                                                        myBusinessStateProvider
-                                                            .notifier)
-                                                    .getFecha(),
-                                                horaFinal);
-                                        ref
-                                            .read(myBusinessStateProvider
-                                                .notifier)
-                                            .setHoraFinal(horaFinal);
-                                      },
-                                      child: Icon(
-                                        Icons.access_time,
-                                        size: 60,
-                                        color: Colors.blueGrey,
-                                      )),
-                                  Text('Hora'),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
                       ElevatedButton(
                           onPressed: () async {
                             SharedPreferences prefs =
