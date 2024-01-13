@@ -74,19 +74,22 @@ class DetailsWorker extends ConsumerWidget {
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            Container(
-                              decoration: BoxDecoration(),
-                              padding: EdgeInsets.only(
-                                  top: 5, bottom: 5, left: 10, right: 10),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Icon(Icons.chat_bubble_rounded,
-                                      color: Color(0xFF4B39EF), size: 30),
-                                  SizedBox(width: 5),
-                                  Text('Mensaje'),
-                                ],
+                            InkWell(
+                              onTap: () {
+                                API.llamar(trabajador.celular);
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(),
+                                padding: EdgeInsets.only(
+                                    top: 5, bottom: 5, left: 10, right: 10),
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.phone,
+                                        color: Color(0xFF4B39EF), size: 30),
+                                    SizedBox(width: 5),
+                                    Text('Llamar al prro'),
+                                  ],
+                                ),
                               ),
                             ),
                             SizedBox(

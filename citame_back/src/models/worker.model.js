@@ -10,6 +10,7 @@ const workerSchema = new Schema({
     email: {type: String, required: true},
     imgPath:[{type:Schema.Types.ObjectId,ref:'Imagen'}],
     salary :{type: Number},
+    celular :{type: Number},
     //horario: {type: String},
     status: {type: Boolean},
     puesto: {type:String},

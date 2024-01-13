@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:citame/agenda/neat_and_clean_calendar_event.dart';
 import 'package:citame/models/service_model.dart';
 import 'package:flutter/material.dart';
@@ -146,6 +148,29 @@ class EventsNotifier extends StateNotifier<List<NeatCleanCalendarEvent>> {
         }
       }
     }
+    state = aDevolver2;
+  }
+
+  void cargarCitasUsuario(citas, dia) {
+    //Tomar en cuenta solo los días posteriores o iguales al dia actual.
+    DateTime hoy = DateTime.now();
+
+    List<NeatCleanCalendarEvent> aDevolver2 = [];
+
+    for (var elemento in citas) {
+      var mC = elemento['citaHorario'];
+      NeatCleanCalendarEvent nuevo = NeatCleanCalendarEvent(
+        'Tu cita',
+        startTime: DateTime(mC['year'], mC['mes'], mC['dia'],
+            mC['hora_inicial'], mC['minuto_inicial']),
+        endTime: DateTime(mC['year'], mC['mes'], mC['dia'], mC['hora_final'],
+            mC['minuto_final']),
+        color: Colors.orange,
+        description: 'Tu cita',
+      );
+      aDevolver2.add(nuevo);
+    }
+
     state = aDevolver2;
   }
 

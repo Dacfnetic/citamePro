@@ -131,7 +131,7 @@ async function postCita(req,res){
 
                 
                 const trabajador = await workerModel.findById(req.body.idWorker);
-                
+                const user = await usuario.findById(decoded.idUser);
                 
 
 
@@ -144,6 +144,7 @@ async function postCita(req,res){
                 if(funciona){
                     dateCreated.save();
                     await workerModel.findByIdAndUpdate(req.body.idWorker,{$push: {citasHechas: dateCreated}});
+                    await usuario.findByIdAndUpdate(decoded.idUser,{$push: {citas: dateCreated}});
                     await workerModel.findByIdAndUpdate(req.body.idWorker,{$set: {horarioDisponible: agenda}});
 
                     return res.status(201).send('Todo ok');

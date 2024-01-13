@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:citame/pages/home_page.dart';
 import 'package:citame/pages/pages_1/business_search_page.dart';
 import 'package:citame/pages/pages_1/index_page.dart';
+import 'package:citame/pages/pages_1/pages_2/pages_3/pages_4/pages_5/user_agenda_page.dart';
 import 'package:citame/pages/pages_1/profile_page.dart';
 import 'package:citame/providers/business_provider.dart';
 import 'package:citame/providers/categories_provider.dart';
@@ -67,10 +68,11 @@ class BarraInferior extends ConsumerWidget {
             ref.read(categoriesProvider.notifier).inicializar();
             searchBarController.text = "";
             if (context.mounted) {
+              await userAPI.getUser(ref);
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => IndexPage(),
+                    builder: (context) => UserAgendaPage(),
                   ));
 
               await userAPI.getAllUsers();

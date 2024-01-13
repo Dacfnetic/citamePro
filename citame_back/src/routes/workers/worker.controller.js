@@ -33,7 +33,8 @@ async function postWorkers(req,res){
                             //horario: req.body.horario,
                             horarioDisponible: horasQueVaATrabajarElEsclavo,
                             status: req.body.status,
-                            puesto: req.body.puesto
+                            puesto: req.body.puesto,
+                            celular: req.body.celular,
 
                         });
                         await nuevo.save();
