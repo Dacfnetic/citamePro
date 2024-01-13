@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:citame/Widgets/bottom_bar.dart';
 import 'package:citame/Widgets/bottom_bar_business.dart';
 import 'package:citame/providers/event_provider.dart';
 import 'package:citame/providers/services_provider.dart';
@@ -8,7 +9,8 @@ import 'package:citame/agenda/flutter_neat_and_clean_calendar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class UserAgendaPage extends ConsumerWidget {
-  const UserAgendaPage({super.key});
+  UserAgendaPage({super.key});
+  final TextEditingController searchBarController = TextEditingController();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -41,7 +43,8 @@ class UserAgendaPage extends ConsumerWidget {
               color: Colors.black, fontWeight: FontWeight.w800, fontSize: 11),
         ),
       ),
-      bottomNavigationBar: BarraInferiorBusiness(),
+      bottomNavigationBar: BarraInferior(
+          searchBarController: searchBarController, tip: 1, padre: context),
     );
   }
 }
