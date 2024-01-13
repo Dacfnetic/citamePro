@@ -139,7 +139,7 @@ class BusinessCard extends ConsumerWidget {
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Expanded(
+                  /*Expanded(
                     child: Text(
                       '${distancia.toStringAsFixed(2)} miles away',
                       style: GoogleFonts.plusJakartaSans(
@@ -148,7 +148,7 @@ class BusinessCard extends ConsumerWidget {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                  ),
+                  ),*/
                   Expanded(
                     child: Text(
                       '${(distancia * 1.609).toStringAsFixed(2)} kilometers away',
@@ -169,7 +169,7 @@ class BusinessCard extends ConsumerWidget {
                   ),
                   Icon(
                     Icons.star_rounded,
-                    color: Color(0xFF606A85),
+                    color: Colors.amber,
                     size: 24,
                   ),
                 ],

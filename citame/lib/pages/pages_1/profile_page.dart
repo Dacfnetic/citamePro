@@ -86,7 +86,7 @@ class ProfilePage extends ConsumerWidget {
                 ),
               ),
               ProfileRow(
-                description: 'Favoritos',
+                description: 'Favoritos ',
                 icon: Icons.favorite,
                 page: Placeholder(),
                 method: 3,

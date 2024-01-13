@@ -34,7 +34,7 @@ class DetailsWorker extends ConsumerWidget {
                 child: Image.memory(
                   imagen,
                   width: double.infinity,
-                  height: 330,
+                  height: 350,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -83,7 +83,8 @@ class DetailsWorker extends ConsumerWidget {
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
                                   Icon(Icons.chat_bubble_rounded,
-                                      color: Color(0xFF4B39EF), size: 30),
+                                      color: Colors.black.withOpacity(0.8),
+                                      size: 30),
                                   SizedBox(width: 5),
                                   Text('Mensaje'),
                                 ],
@@ -114,7 +115,8 @@ class DetailsWorker extends ConsumerWidget {
                                 child: Row(
                                   children: [
                                     Icon(Icons.menu_book,
-                                        color: Color(0xFF4B39EF), size: 30),
+                                        color: Colors.black.withOpacity(0.8),
+                                        size: 30),
                                     SizedBox(width: 5),
                                     Text('Agendar Cita'),
                                   ],

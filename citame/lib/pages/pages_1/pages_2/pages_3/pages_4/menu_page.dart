@@ -72,44 +72,58 @@ class MenuPage extends ConsumerWidget {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
+        appBar: AppBar(
+          title: Text('configuracion',
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.normal,
+                  color: Colors.black)),
+        ),
         body: SafeArea(
           child: Column(children: [
             TabBar(
+                indicatorColor: Colors.black,
                 labelColor: Colors.black,
                 unselectedLabelColor: Colors.grey,
                 tabs: [
                   Tab(
-                    icon: Icon(Icons.menu_book, size: 30),
+                    icon: Icon(Icons.list, size: 30),
                   ),
                   Tab(
                     icon: Icon(
-                      Icons.menu,
+                      Icons.access_time,
                       size: 30,
                     ),
-                    child: Text('Jornada', style: TextStyle(fontSize: 14)),
                   ),
                   Tab(
                     icon: Icon(Icons.group, size: 30),
-                    child: Text('Trabajadores', style: TextStyle(fontSize: 14)),
                   )
                 ]),
             Expanded(
                 child: TabBarView(children: [
               Column(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(child: Text('Menu', style: API.estiloJ24negro)),
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.construction_sharp),
-                        color: Colors.black,
-                        style: ButtonStyle(
+                  Container(
+                    margin: EdgeInsets.only(top: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Menu',
+                          style: API.estiloJ24negro,
+                        ),
+                        IconButton(
+                          onPressed: () {},
+                          icon: Icon(Icons.monetization_on),
+                          color: Colors.amber,
+                          iconSize: 35,
+                          style: ButtonStyle(
                             backgroundColor:
-                                MaterialStatePropertyAll(Colors.black)),
-                      )
-                    ],
+                                MaterialStatePropertyAll(Colors.white),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                   Text(
                       'Crea tu menú para que los clientes puedan darte su dinero',
@@ -277,12 +291,23 @@ class MenuPage extends ConsumerWidget {
               ),
               ListView(
                 children: [
-                  Text('Jornada de atención', style: API.estiloJ24negro),
-                  Text(
-                    'Días de atención general del negocio, dentro de cada perfíl de trabajador puedes escoger que días trabaja.',
-                    style: API.estiloJ14gris,
+                  Container(
+                    margin: EdgeInsets.only(top: 10),
+                    child: Column(
+                      children: [
+                        Text('Jornada de atención', style: API.estiloJ24negro),
+                        Text(
+                          'Días de atención general del negocio, dentro de cada perfíl de trabajador puedes escoger que días trabaja.',
+                          style: API.estiloJ14gris,
+                        ),
+                      ],
+                    ),
                   ),
                   CheckboxListTile(
+                      activeColor: Colors.green,
+                      checkboxShape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                       value: ref
                           .watch(myBusinessStateProvider.notifier)
                           .obtenerDias()['lunes'],
@@ -363,10 +388,18 @@ class MenuPage extends ConsumerWidget {
               ),
               ListView(
                 children: [
-                  Text('Perfiles', style: API.estiloJ24negro),
-                  Text(
-                      'Crea los perfiles de tu personal para que tus clientes puedan conocerlos.',
-                      style: API.estiloJ14gris),
+                  Container(
+                    margin: EdgeInsets.only(top: 10),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Text('Perfiles', style: API.estiloJ24negro),
+                        Text(
+                            'Crea los perfiles de tu personal para que tus clientes puedan conocerlos.',
+                            style: API.estiloJ14gris),
+                      ],
+                    ),
+                  ),
                   workers.isNotEmpty
                       ? Expanded(
                           child: ListView(
