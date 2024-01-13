@@ -20,6 +20,7 @@ class Worker {
   final String idWorker;
   final String puesto;
   final Map horarioDisponible;
+  final int celular;
 
   Map toJson() => {
         'name': name,
@@ -30,7 +31,8 @@ class Worker {
         'status': status,
         'id': id,
         'idWorker': idWorker,
-        'puesto': puesto
+        'puesto': puesto,
+        'celular': celular,
       };
   Worker(
       {required this.name,
@@ -42,7 +44,8 @@ class Worker {
       required this.id,
       required this.idWorker,
       required this.puesto,
-      required this.horarioDisponible});
+      required this.horarioDisponible,
+      required this.celular});
 
   factory Worker.fromJson(Map<String, dynamic> json) {
     return Worker(
@@ -55,6 +58,7 @@ class Worker {
         id: json['id'],
         idWorker: json['_id'],
         puesto: json['puesto'],
-        horarioDisponible: json['horarioDisponible']);
+        horarioDisponible: json['horarioDisponible'],
+        celular: json['celular']);
   }
 }

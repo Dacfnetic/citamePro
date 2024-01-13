@@ -126,7 +126,8 @@ abstract class API {
       String email,
       BuildContext context,
       String puesto,
-      String horarioLibre) async {
+      String horarioLibre,
+      String celular) async {
     /* String imgConv = await API.convertTo64(imgPath);
     Uint8List casi = API.decode64(imgConv);
     List<int> imagen = casi.toList();*/
@@ -144,6 +145,7 @@ abstract class API {
           'horarioLibre': horarioLibre,
           'status': false,
           'puesto': puesto,
+          'celular': celular,
         })));
     if (response.statusCode == 201) {
       var workerData = jsonDecode(response.body);

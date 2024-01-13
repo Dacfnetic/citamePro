@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:citame/models/business_model.dart';
 import 'package:citame/models/user_model.dart';
+import 'package:citame/providers/event_provider.dart';
 import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
@@ -146,20 +147,20 @@ abstract class userAPI {
     throw Exception('Failed to get items');
   }
 
-  static Future<Usuario> getUser() async {
+  static Future<String> getUser(WidgetRef ref) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    print(auth);
-    final response = await http.get(Uri.parse('$serverUrl/api/user/get'),
-        headers: {'googleId': prefs.getString('googleId')!});
+    final response =
+        await http.get(Uri.parse('$serverUrl/api/user/get'), headers: {
+      'googleId': prefs.getString('googleId')!,
+      'x-access-token': prefs.getString('llaveDeUsuario')!
+    });
 
     if (response.statusCode == 200) {
-      final Usuario usuario = Usuario(
-          googleId: prefs.getString('googleId')!,
-          userName: prefs.getString('userName')!,
-          userEmail: prefs.getString('emailUser')!,
-          avatar: prefs.getString('avatar')!);
-      return usuario;
+      final List<dynamic> citas = jsonDecode(response.body);
+      ref
+          .read(eventsProvider.notifier)
+          .cargarCitasUsuario(citas, DateTime.now());
+      return 'Todo ok';
     }
     throw Exception('Failed to get items');
   }

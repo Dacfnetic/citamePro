@@ -1,25 +1,19 @@
 import 'dart:developer';
 
 import 'package:citame/Widgets/bottom_bar_business.dart';
+import 'package:citame/providers/event_provider.dart';
+import 'package:citame/providers/services_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:citame/agenda/flutter_neat_and_clean_calendar.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class WorkerDataVizPage extends StatelessWidget {
-  const WorkerDataVizPage({super.key});
+class UserAgendaPage extends ConsumerWidget {
+  const UserAgendaPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final List<NeatCleanCalendarEvent> eventList = [
-      NeatCleanCalendarEvent(
-        'Corte de pelo',
-        startTime: DateTime(DateTime.now().year, DateTime.now().month,
-            DateTime.now().day, 14, 30),
-        endTime: DateTime(DateTime.now().year, DateTime.now().month,
-            DateTime.now().day, 17, 0),
-        color: Colors.red,
-        description: 'Cortarle el pelo al prro',
-      ),
-    ];
+  Widget build(BuildContext context, WidgetRef ref) {
+    List<NeatCleanCalendarEvent> eventList = ref.watch(eventsProvider);
+
     return Scaffold(
       body: SafeArea(
         child: Calendar(
@@ -30,6 +24,7 @@ class WorkerDataVizPage extends StatelessWidget {
             log('Puego hacaer qu e pasen cosas');
           },
           isExpandable: true,
+          defaultDayColor: Colors.black,
           eventDoneColor: Colors.green,
           selectedColor: Colors.pink,
           selectedTodayColor: Colors.red,

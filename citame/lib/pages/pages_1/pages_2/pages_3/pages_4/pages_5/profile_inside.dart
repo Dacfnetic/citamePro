@@ -20,6 +20,7 @@ class ProfileInsidePage extends ConsumerWidget {
   final TextEditingController workerEmail = TextEditingController();
   final TextEditingController workerJob = TextEditingController();
   final TextEditingController workerSalary = TextEditingController();
+  final TextEditingController workerCel = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final GlobalKey<FormState> signUpKey =
       GlobalKey<FormState>(); //llave global del form para validaciones
@@ -172,6 +173,15 @@ class ProfileInsidePage extends ConsumerWidget {
                                                       padding:
                                                           const EdgeInsets.all(
                                                               8),
+                                                      child: Cuadro(
+                                                          control: workerCel,
+                                                          texto:
+                                                              'Celular del trabajador'),
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8),
                                                       child: ElevatedButton(
                                                         child: const Text(
                                                             'Submitß'),
@@ -207,6 +217,13 @@ class ProfileInsidePage extends ConsumerWidget {
                                 ? Text("Barbero")
                                 : Text(
                                     workerJob.text,
+                                    style: TextStyle(
+                                        fontSize: 12, color: Colors.grey),
+                                  ),
+                            workerCel.text == ''
+                                ? Text("0000-0000")
+                                : Text(
+                                    workerCel.text,
                                     style: TextStyle(
                                         fontSize: 12, color: Colors.grey),
                                   ),
@@ -265,7 +282,8 @@ class ProfileInsidePage extends ConsumerWidget {
                                     prefs.getString('emailUser')!,
                                     context,
                                     workerJob.text,
-                                    horarioLibre);
+                                    horarioLibre,
+                                    workerCel.text);
                               }
                             }
                           },
