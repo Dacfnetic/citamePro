@@ -34,7 +34,7 @@ class DetailsWorker extends ConsumerWidget {
                 child: Image.memory(
                   imagen,
                   width: double.infinity,
-                  height: 330,
+                  height: 350,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -74,6 +74,7 @@ class DetailsWorker extends ConsumerWidget {
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
+
                             InkWell(
                               onTap: () {
                                 API.llamar(trabajador.celular);
@@ -90,6 +91,7 @@ class DetailsWorker extends ConsumerWidget {
                                     Text('Llamar al prro'),
                                   ],
                                 ),
+
                               ),
                             ),
                             SizedBox(
@@ -117,7 +119,8 @@ class DetailsWorker extends ConsumerWidget {
                                 child: Row(
                                   children: [
                                     Icon(Icons.menu_book,
-                                        color: Color(0xFF4B39EF), size: 30),
+                                        color: Colors.black.withOpacity(0.8),
+                                        size: 30),
                                     SizedBox(width: 5),
                                     Text('Agendar Cita'),
                                   ],

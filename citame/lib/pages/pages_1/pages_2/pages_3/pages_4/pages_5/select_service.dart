@@ -15,8 +15,9 @@ class SelectService extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // Usuario user = ref.read(myBusinessStateProvider.notifier).getDatosUsuario();
     List<Service> serviciosSeleccionados2 = ref.watch(servicesProvider);
-    List<Text> serviciosSeleccionados =
-        serviciosSeleccionados2.map((e) => Text(e.nombreServicio)).toList();
+    List<ContenedorServicio> serviciosSeleccionados = serviciosSeleccionados2
+        .map((e) => ContenedorServicio(servicio: e))
+        .toList();
     List<Service> listaDeServicios =
         ref.watch(myBusinessStateProvider.notifier).getService();
     List<CajaDeServicios> servicios = listaDeServicios.map((servicio) {
@@ -60,21 +61,29 @@ class SelectService extends ConsumerWidget {
               TabBar(
                   indicatorSize: TabBarIndicatorSize.tab,
                   indicator: BoxDecoration(
+                      border: Border.all(color: Colors.grey.withOpacity(0.8)),
                       borderRadius: BorderRadius.circular(12),
-                      color: Colors.cyan),
+                      color: Colors.white),
                   labelColor: Colors.black,
                   unselectedLabelColor: Colors.grey,
                   tabs: [
                     Tab(
-                      icon: Icon(Icons.list_alt),
+                      icon: Icon(
+                        Icons.list_alt,
+                        size: 28,
+                      ),
                     ),
                     Tab(
-                      icon: Icon(Icons.check_box_rounded),
+                      icon: Icon(
+                        Icons.check_box_rounded,
+                        size: 28,
+                      ),
                     )
                   ]),
               Expanded(
                 child: TabBarView(children: [
                   Container(
+                    margin: EdgeInsets.only(top: 10),
                     child: ListView(
                       shrinkWrap: true,
                       children: [
@@ -88,6 +97,7 @@ class SelectService extends ConsumerWidget {
                     ),
                   ),
                   Container(
+                    margin: EdgeInsets.only(top: 10),
                     child: ListView(
                       shrinkWrap: true,
                       children: [
@@ -110,7 +120,11 @@ class SelectService extends ConsumerWidget {
                                           builder: (context) => ReservationPage(
                                               trabajador: trabajador)));
                                 },
-                                child: Text('siguiente'))
+                                child: Text(
+                                  'siguiente',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              )
                             : Text('')
                       ],
                     ),
@@ -122,6 +136,39 @@ class SelectService extends ConsumerWidget {
         ),
       ),
     );
+  }
+}
+
+class ContenedorServicio extends StatelessWidget {
+  const ContenedorServicio({super.key, required this.servicio});
+  final Service servicio;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        padding: EdgeInsets.all(5),
+        margin: EdgeInsets.only(top: 10, right: 5, left: 5),
+        decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey.withOpacity(0.8)),
+            borderRadius: BorderRadius.circular(10)),
+        child:
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Column(
+            children: [
+              Text(
+                servicio.nombreServicio,
+                style: API.estiloJ16negro,
+              ),
+              Text(
+                servicio.duracion,
+                style: TextStyle(color: Colors.grey.withOpacity(0.8)),
+              )
+            ],
+          ),
+          Text(
+            servicio.precio.toString(),
+            style: TextStyle(fontSize: 20),
+          ),
+        ]));
   }
 }
 
@@ -155,24 +202,36 @@ class _CajaDeServiciosState extends State<CajaDeServicios> {
 
   @override
   Widget build(BuildContext context) {
-    return CheckboxListTile(
-      //visualDensity: VisualDensity(horizontal: -4.0, vertical: -3.0),
-      activeColor: Colors.green,
-      checkboxShape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
+    return Container(
+      margin: EdgeInsets.only(top: 5, left: 5, right: 5, bottom: 2),
+      decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey.withOpacity(0.8))),
+      child: CheckboxListTile(
+        //visualDensity: VisualDensity(horizontal: -4.0, vertical: -3.0),
+        activeColor: Colors.green,
+        checkboxShape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        title: Text(
+          widget.nombre,
+          style: API.estiloJ16negro,
+        ),
+        value: isChecked,
+        onChanged: (bool? value) {
+          setState(() {
+            isChecked = value!;
+            if (isChecked!) {
+              widget.ref
+                  .read(servicesProvider.notifier)
+                  .anadir(widget.servicio);
+            } else {
+              widget.ref
+                  .read(servicesProvider.notifier)
+                  .remover(widget.servicio);
+            }
+          });
+        },
       ),
-      title: Text(widget.nombre),
-      value: isChecked,
-      onChanged: (bool? value) {
-        setState(() {
-          isChecked = value!;
-          if (isChecked!) {
-            widget.ref.read(servicesProvider.notifier).anadir(widget.servicio);
-          } else {
-            widget.ref.read(servicesProvider.notifier).remover(widget.servicio);
-          }
-        });
-      },
     );
   }
 }

@@ -56,11 +56,16 @@ class BusinessInsidePage extends ConsumerWidget {
           child: Column(
             children: [
               TabBar(
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  indicator: BoxDecoration(
+                      border: Border.all(color: Colors.grey.withOpacity(0.8)),
+                      borderRadius: BorderRadius.circular(12),
+                      color: Colors.white),
                   labelColor: Colors.black,
                   unselectedLabelColor: Colors.grey,
                   tabs: [
                     Tab(
-                      icon: Icon(Icons.store, size: 30),
+                      icon: Icon(Icons.business_center, size: 30),
                       child: Text(
                         'Informacion',
                         style: TextStyle(fontSize: 14),
@@ -86,13 +91,15 @@ class BusinessInsidePage extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       //mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(businessName, style: API.estiloJ24negro),
+                        Center(
+                            child:
+                                Text(businessName, style: API.estiloJ24negro)),
                         ClipRRect(
-                          borderRadius: BorderRadius.circular(16),
+                          borderRadius: BorderRadius.circular(12),
                           child: Image.memory(
                             imagen,
                             width: double.infinity,
-                            height: 230,
+                            height: 350,
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -107,7 +114,9 @@ class BusinessInsidePage extends ConsumerWidget {
                         Text('Descripción'),
                         Text(description, style: API.estiloJ14gris),
                         ElevatedButton(
+
                             onPressed: () {}, child: Text('Reservar cita'))
+
                       ],
                     ),
                   ),

@@ -102,12 +102,12 @@ class WorkerBox extends ConsumerWidget {
                       DetailsWorker(imagen: imagen, trabajador: worker)));
         },
         child: Container(
-          margin: EdgeInsets.fromLTRB(5, 4, 5, 4),
+          margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
 
           //height: 300,
           //padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.black),
+            border: Border.all(color: Colors.grey),
             borderRadius: BorderRadius.circular(12),
             color: Colors.white, // Color de fondo del Container
             boxShadow: [
@@ -124,10 +124,10 @@ class WorkerBox extends ConsumerWidget {
                 margin: EdgeInsets.all(10),
                 alignment: Alignment.centerLeft,
                 decoration: BoxDecoration(
-                  color: Color(0x4d39d2c0),
+                  color: Colors.white,
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: Color(0xff39d2c0),
+                    color: Colors.grey,
                     width: 2,
                   ),
                 ),
@@ -136,11 +136,11 @@ class WorkerBox extends ConsumerWidget {
                   width: 90,
                   child: TextButton(
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(13),
                       child: Image.memory(
                         imagen,
                         width: double.infinity,
-                        height: 230,
+                        height: 200,
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -155,6 +155,10 @@ class WorkerBox extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(worker.name, style: API.estiloJ24negro),
+                    Text(
+                      worker.puesto,
+                      style: TextStyle(color: Colors.grey.withOpacity(0.9)),
+                    )
                     //Text(horas, style: API.estiloJ14gris),
                   ],
                 ),
