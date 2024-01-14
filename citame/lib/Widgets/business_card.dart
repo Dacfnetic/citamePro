@@ -99,56 +99,58 @@ class BusinessCard extends ConsumerWidget {
             InkWell(
               onTap: () async {
                 SharedPreferences prefs = await SharedPreferences.getInstance();
-              prefs.setString('negocioActual', id);
-              if (!prefs.getStringList('negociosInaccesibles')!.contains(id)) {
-                Widget actual = ref.read(pageProvider);
-                ref.read(actualBusinessProvider.notifier).actualizar(id);
-                if (actual.runtimeType == MyBusinessesPage().runtimeType) {
-                  ref
-                      .read(myBusinessStateProvider.notifier)
-                      .establecerWorkers(id, ref);
-                  ref
-                      .read(myBusinessStateProvider.notifier)
-                      .setService(id, ref);
+                prefs.setString('negocioActual', id);
+                if (!prefs
+                    .getStringList('negociosInaccesibles')!
+                    .contains(id)) {
+                  Widget actual = ref.read(pageProvider);
+                  ref.read(actualBusinessProvider.notifier).actualizar(id);
+                  if (actual.runtimeType == MyBusinessesPage().runtimeType) {
+                    ref
+                        .read(myBusinessStateProvider.notifier)
+                        .establecerWorkers(id, ref);
+                    ref
+                        .read(myBusinessStateProvider.notifier)
+                        .setService(id, ref);
 
-                  ref
-                      .read(myBusinessStateProvider.notifier)
-                      .setActualBusiness(id);
-                  ref
-                      .read(myBusinessStateProvider.notifier)
-                      .setActualEmail(email);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => PreviewBusinessPage(),
-                    ),
-                  );
-                } else {
-                  ref
-                      .read(myBusinessStateProvider.notifier)
-                      .establecerWorkers(id, ref);
-                  ref
-                      .read(myBusinessStateProvider.notifier)
-                      .setService(id, ref);
-
-                  ref
-                      .read(myBusinessStateProvider.notifier)
-                      .setActualBusiness(id);
-                  ref
-                      .read(myBusinessStateProvider.notifier)
-                      .setActualEmail(email);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => BusinessInsidePage(
-                        businessName: nombre,
-                        imagen: imagen,
-                        description: description,
+                    ref
+                        .read(myBusinessStateProvider.notifier)
+                        .setActualBusiness(id);
+                    ref
+                        .read(myBusinessStateProvider.notifier)
+                        .setActualEmail(email);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PreviewBusinessPage(),
                       ),
-                    ),
-                  );
-                }
+                    );
+                  } else {
+                    ref
+                        .read(myBusinessStateProvider.notifier)
+                        .establecerWorkers(id, ref);
+                    ref
+                        .read(myBusinessStateProvider.notifier)
+                        .setService(id, ref);
 
+                    ref
+                        .read(myBusinessStateProvider.notifier)
+                        .setActualBusiness(id);
+                    ref
+                        .read(myBusinessStateProvider.notifier)
+                        .setActualEmail(email);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BusinessInsidePage(
+                          businessName: nombre,
+                          imagen: imagen,
+                          description: description,
+                        ),
+                      ),
+                    );
+                  }
+                }
               },
               child: Container(
                 padding: EdgeInsets.all(2),
@@ -163,7 +165,6 @@ class BusinessCard extends ConsumerWidget {
                         height: 230,
                         fit: BoxFit.cover,
                       ),
-
                     ),
                     Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
