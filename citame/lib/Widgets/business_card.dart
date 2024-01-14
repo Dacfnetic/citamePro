@@ -21,6 +21,7 @@ class BusinessCard extends ConsumerWidget {
   final double rating;
   final Uint8List imagen;
   final String email;
+  final bool isDueno;
   const BusinessCard({
     Key? key,
     required this.nombre,
@@ -32,6 +33,7 @@ class BusinessCard extends ConsumerWidget {
     required this.imagen,
     required this.description,
     required this.email,
+    required this.isDueno,
   }) : super(key: key);
 
   @override
@@ -42,13 +44,145 @@ class BusinessCard extends ConsumerWidget {
         longitudA: longitud,
         latitudB: coordenadas[0],
         longitudB: coordenadas[1]);
+    if (isDueno) {
+      return Expanded(
+        child: Container(
+          height: 330,
+          margin: EdgeInsets.all(5),
+          padding: EdgeInsets.all(2),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            //border: Border.all(color: Colors.black),
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.5), // Color de la sombra
+                spreadRadius: 2, // Extensión de la sombra
+                blurRadius: 2, // Desenfoque de la sombra
+                offset: Offset(0, 1), // Desplazamiento de la sombra
+              ),
+            ],
+            shape: BoxShape.rectangle,
+            //color: Colors.blue,
+          ),
+          child: TextButton(
+            style: ButtonStyle(
+                //backgroundColor: MaterialStatePropertyAll(Colors.red),
+                ),
+            onPressed: () {
+              Widget actual = ref.read(pageProvider);
+              ref.read(actualBusinessProvider.notifier).actualizar(id);
+              if (actual.runtimeType == MyBusinessesPage().runtimeType) {
+                ref
+                    .read(myBusinessStateProvider.notifier)
+                    .establecerWorkers(id, ref);
+                ref.read(myBusinessStateProvider.notifier).setService(id, ref);
 
-    return Animate(
-      effects: [
-        FadeEffect(delay: 500.ms, duration: 2000.ms),
-        SlideEffect(curve: Curves.easeInOut)
-      ],
-      child: Container(
+                ref
+                    .read(myBusinessStateProvider.notifier)
+                    .setActualBusiness(id);
+                ref
+                    .read(myBusinessStateProvider.notifier)
+                    .setActualEmail(email);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PreviewBusinessPage(),
+                  ),
+                );
+              } else {
+                ref
+                    .read(myBusinessStateProvider.notifier)
+                    .establecerWorkers(id, ref);
+                ref.read(myBusinessStateProvider.notifier).setService(id, ref);
+
+                ref
+                    .read(myBusinessStateProvider.notifier)
+                    .setActualBusiness(id);
+                ref
+                    .read(myBusinessStateProvider.notifier)
+                    .setActualEmail(email);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BusinessInsidePage(
+                      businessName: nombre,
+                      imagen: imagen,
+                      description: description,
+                    ),
+                  ),
+                );
+              }
+            },
+            child: Expanded(
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      IconButton(onPressed: () {}, icon: Icon(Icons.delete))
+                    ],
+                  ),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: Image.memory(
+                      imagen,
+                      width: double.infinity,
+                      height: 230,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Column(
+                          children: [
+                            Text(
+                              nombre,
+                              style: GoogleFonts.plusJakartaSans(
+                                color: Color(0xFF15161E),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            Text(
+                              '${(distancia * 1.609).toStringAsFixed(2)} kilometers away',
+                              style: GoogleFonts.plusJakartaSans(
+                                color: Color(0xFF606A85),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Text(
+                          rating.toStringAsFixed(2),
+                          style: GoogleFonts.plusJakartaSans(
+                            color: Color(0xFF606A85),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        Icon(
+                          Icons.star_rounded,
+                          color: Colors.amber,
+                          size: 24,
+                        ),
+                      ]),
+
+                  /*SizedBox(
+                  height: 24,
+                )*/
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    } else {
+      return Container(
         height: 333,
         margin: EdgeInsets.all(5),
         padding: EdgeInsets.all(2),
@@ -140,15 +274,15 @@ class BusinessCard extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   /*Expanded(
-                    child: Text(
-                      '${distancia.toStringAsFixed(2)} miles away',
-                      style: GoogleFonts.plusJakartaSans(
-                        color: Color(0xFF606A85),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
+                  child: Text(
+                    '${distancia.toStringAsFixed(2)} miles away',
+                    style: GoogleFonts.plusJakartaSans(
+                      color: Color(0xFF606A85),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
                     ),
-                  ),*/
+                  ),
+                ),*/
                   Expanded(
                     child: Text(
                       '${(distancia * 1.609).toStringAsFixed(2)} kilometers away',
@@ -175,12 +309,12 @@ class BusinessCard extends ConsumerWidget {
                 ],
               ),
               /*SizedBox(
-                height: 24,
-              )*/
+              height: 24,
+            )*/
             ],
           ),
         ),
-      ),
-    );
+      );
+    }
   }
 }
