@@ -195,6 +195,10 @@ class MyBusinessStateNotifier extends StateNotifier<List<Business>> {
     workerDaysAvailable[dia][index] = {'inicio': inicio, 'fin': fin};
   }
 
+  void setDiasWorker2(Map entrada) {
+    workerDaysAvailable = Map.from(generalSchedule);
+  }
+
   void setDiasWorker(dia, TimeOfDay inicio, TimeOfDay fin) {
     workerDaysAvailable[dia].add({'inicio': inicio, 'fin': fin});
   }
@@ -213,6 +217,26 @@ class MyBusinessStateNotifier extends StateNotifier<List<Business>> {
 
   void borrarDiaWorker(dia) {
     workerDaysAvailable[dia] = [];
+  }
+
+  void setDiasGeneral(dia, TimeOfDay inicio, TimeOfDay fin) {
+    generalSchedule[dia].add({'inicio': inicio, 'fin': fin});
+  }
+
+  Map obtenerDiasGeneral() {
+    return generalSchedule;
+  }
+
+  void copiarHorariosGeneral(dia) {
+    papelera = List.from(generalSchedule[dia]);
+  }
+
+  void pegarHorariosGeneral(dia) {
+    generalSchedule[dia] = List.from(papelera);
+  }
+
+  void borrarDiaGeneral(dia) {
+    generalSchedule[dia] = [];
   }
 
   void setCita({
@@ -295,6 +319,25 @@ Map diasLaboralesGenerales = {
 };
 
 Map workerDaysAvailable = {
+  'lunes': [
+    {
+      'inicio': TimeOfDay(hour: 7, minute: 0),
+      'fin': TimeOfDay(hour: 13, minute: 0)
+    },
+    {
+      'inicio': TimeOfDay(hour: 14, minute: 0),
+      'fin': TimeOfDay(hour: 17, minute: 0)
+    }
+  ],
+  'martes': [],
+  'miercoles': [],
+  'jueves': [],
+  'viernes': [],
+  'sabado': [],
+  'domingo': [],
+};
+
+Map generalSchedule = {
   'lunes': [
     {
       'inicio': TimeOfDay(hour: 7, minute: 0),

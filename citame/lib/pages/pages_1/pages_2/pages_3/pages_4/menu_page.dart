@@ -48,6 +48,9 @@ class MenuPage extends ConsumerWidget {
       API.reRender(ref);
     }
 
+    Map horario =
+        ref.watch(myBusinessStateProvider.notifier).obtenerDiasGeneral();
+
     List<Service> listaDeServicios =
         ref.watch(myBusinessStateProvider.notifier).getService();
     List<CajaDeServicios> servicios = listaDeServicios
@@ -294,102 +297,24 @@ class MenuPage extends ConsumerWidget {
                   ),
                 ],
               ),
-              ListView(
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(top: 10),
-                    child: Column(
-                      children: [
-                        Text('Jornada de atención', style: API.estiloJ24negro),
-                        Text(
-                          'Días de atención general del negocio, dentro de cada perfíl de trabajador puedes escoger que días trabaja.',
-                          style: API.estiloJ14gris,
-                        ),
-                      ],
-                    ),
-                  ),
-                  CheckboxListTile(
-                      activeColor: Colors.green,
-                      checkboxShape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      value: ref
-                          .watch(myBusinessStateProvider.notifier)
-                          .obtenerDias()['lunes'],
-                      onChanged: (value) {
-                        ref
-                            .read(myBusinessStateProvider.notifier)
-                            .setDias('lunes', value);
-                        reRender.reRender();
-                      },
-                      title: Text('Lunes')),
-                  CheckboxListTile(
-                      value: ref
-                          .watch(myBusinessStateProvider.notifier)
-                          .obtenerDias()['martes'],
-                      onChanged: (value) {
-                        ref
-                            .read(myBusinessStateProvider.notifier)
-                            .setDias('martes', value);
-                        reRender.reRender();
-                      },
-                      title: Text('Martes')),
-                  CheckboxListTile(
-                      value: ref
-                          .watch(myBusinessStateProvider.notifier)
-                          .obtenerDias()['miercoles'],
-                      onChanged: (value) {
-                        ref
-                            .read(myBusinessStateProvider.notifier)
-                            .setDias('miercoles', value);
-                        reRender.reRender();
-                      },
-                      title: Text('Miércoles')),
-                  CheckboxListTile(
-                      value: ref
-                          .watch(myBusinessStateProvider.notifier)
-                          .obtenerDias()['jueves'],
-                      onChanged: (value) {
-                        ref
-                            .read(myBusinessStateProvider.notifier)
-                            .setDias('jueves', value);
-                        reRender.reRender();
-                      },
-                      title: Text('Jueves')),
-                  CheckboxListTile(
-                      value: ref
-                          .watch(myBusinessStateProvider.notifier)
-                          .obtenerDias()['viernes'],
-                      onChanged: (value) {
-                        ref
-                            .read(myBusinessStateProvider.notifier)
-                            .setDias('viernes', value);
-                        reRender.reRender();
-                      },
-                      title: Text('Viernes')),
-                  CheckboxListTile(
-                      value: ref
-                          .watch(myBusinessStateProvider.notifier)
-                          .obtenerDias()['sabado'],
-                      onChanged: (value) {
-                        ref
-                            .read(myBusinessStateProvider.notifier)
-                            .setDias('sabado', value);
-                        reRender.reRender();
-                      },
-                      title: Text('Sábado')),
-                  CheckboxListTile(
-                      value: ref
-                          .watch(myBusinessStateProvider.notifier)
-                          .obtenerDias()['domingo'],
-                      onChanged: (value) {
-                        ref
-                            .read(myBusinessStateProvider.notifier)
-                            .setDias('domingo', value);
-                        reRender.reRender();
-                      },
-                      title: Text('Domingo')),
-                ],
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 16, 0, 0),
+                child: ListView(children: [
+                  ContenedorDeHorario2(
+                      horario: horario, day: 'lunes', ref: ref),
+                  ContenedorDeHorario2(
+                      horario: horario, day: 'martes', ref: ref),
+                  ContenedorDeHorario2(
+                      horario: horario, day: 'miercoles', ref: ref),
+                  ContenedorDeHorario2(
+                      horario: horario, day: 'jueves', ref: ref),
+                  ContenedorDeHorario2(
+                      horario: horario, day: 'viernes', ref: ref),
+                  ContenedorDeHorario2(
+                      horario: horario, day: 'sabado', ref: ref),
+                  ContenedorDeHorario2(
+                      horario: horario, day: 'domingo', ref: ref),
+                ]),
               ),
               ListView(
                 children: [
@@ -412,6 +337,10 @@ class MenuPage extends ConsumerWidget {
                       : Container(),
                   ElevatedButton.icon(
                     onPressed: () {
+                      ref.read(myBusinessStateProvider.notifier).setDiasWorker2(
+                          ref
+                              .read(myBusinessStateProvider.notifier)
+                              .obtenerDiasGeneral());
                       Navigator.push(
                           context,
                           MaterialPageRoute(
