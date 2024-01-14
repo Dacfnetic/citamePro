@@ -1,10 +1,12 @@
 import 'package:citame/pages/pages_1/pages_2/business_inside_page.dart';
 import 'package:citame/pages/pages_1/pages_2/my_businessess_page.dart';
+import 'package:citame/pages/pages_1/pages_2/pages_3/pages_4/menu_page.dart';
 import 'package:citame/pages/pages_1/pages_2/pages_3/preview_business_page.dart';
 import 'package:citame/providers/geolocator_provider.dart';
 import 'package:citame/providers/my_actual_business_provider.dart';
 import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:citame/providers/page_provider.dart';
+import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -46,32 +48,57 @@ class BusinessCard extends ConsumerWidget {
         latitudB: coordenadas[0],
         longitudB: coordenadas[1]);
     if (isDueno) {
-      return Expanded(
-        child: Container(
-          height: 330,
-          margin: EdgeInsets.all(5),
-          padding: EdgeInsets.all(2),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            //border: Border.all(color: Colors.black),
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.5), // Color de la sombra
-                spreadRadius: 2, // Extensión de la sombra
-                blurRadius: 2, // Desenfoque de la sombra
-                offset: Offset(0, 1), // Desplazamiento de la sombra
-              ),
-            ],
-            shape: BoxShape.rectangle,
-            //color: Colors.blue,
-          ),
-          child: TextButton(
-            style: ButtonStyle(
-                //backgroundColor: MaterialStatePropertyAll(Colors.red),
-                ),
-            onPressed: () async {
-              SharedPreferences prefs = await SharedPreferences.getInstance();
+      return Container(
+        height: 350,
+        padding: EdgeInsets.all(5),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          //border: Border.all(color: Colors.black),
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.5), // Color de la sombra
+              spreadRadius: 2, // Extensión de la sombra
+              blurRadius: 2, // Desenfoque de la sombra
+              offset: Offset(0, 1), // Desplazamiento de la sombra
+            ),
+          ],
+          shape: BoxShape.rectangle,
+          //color: Colors.blue,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                IconButton(
+                    onPressed: () async {
+                      if (context.mounted) {
+                        API.estasSeguro(
+                          context,
+                          ref
+                              .read(myBusinessStateProvider.notifier)
+                              .getActualBusiness(),
+                        );
+                      }
+                    },
+                    icon: Icon(Icons.delete)),
+                IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MenuPage(),
+                          ));
+                    },
+                    icon: Icon(Icons.settings))
+              ],
+            ),
+            InkWell(
+              onTap: () async {
+                SharedPreferences prefs = await SharedPreferences.getInstance();
               prefs.setString('negocioActual', id);
               if (!prefs.getStringList('negociosInaccesibles')!.contains(id)) {
                 Widget actual = ref.read(pageProvider);
@@ -121,73 +148,66 @@ class BusinessCard extends ConsumerWidget {
                     ),
                   );
                 }
-              }
-            },
-            child: Expanded(
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      IconButton(onPressed: () {}, icon: Icon(Icons.delete))
-                    ],
-                  ),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(16),
-                    child: Image.memory(
-                      imagen,
-                      width: double.infinity,
-                      height: 230,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Column(
-                          children: [
-                            Text(
-                              nombre,
-                              style: GoogleFonts.plusJakartaSans(
-                                color: Color(0xFF15161E),
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            Text(
-                              '${(distancia * 1.609).toStringAsFixed(2)} kilometers away',
-                              style: GoogleFonts.plusJakartaSans(
-                                color: Color(0xFF606A85),
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Text(
-                          rating.toStringAsFixed(2),
-                          style: GoogleFonts.plusJakartaSans(
-                            color: Color(0xFF606A85),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        Icon(
-                          Icons.star_rounded,
-                          color: Colors.amber,
-                          size: 24,
-                        ),
-                      ]),
 
-                  /*SizedBox(
-                  height: 24,
-                )*/
-                ],
+              },
+              child: Container(
+                padding: EdgeInsets.all(2),
+                margin: EdgeInsets.only(top: 0),
+                child: Column(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child: Image.memory(
+                        imagen,
+                        width: double.infinity,
+                        height: 230,
+                        fit: BoxFit.cover,
+                      ),
+
+                    ),
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Column(
+                            children: [
+                              Text(
+                                nombre,
+                                style: GoogleFonts.plusJakartaSans(
+                                  color: Color(0xFF15161E),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              Text(
+                                '${(distancia * 1.609).toStringAsFixed(2)} kilometers away',
+                                style: GoogleFonts.plusJakartaSans(
+                                  color: Color(0xFF606A85),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Text(
+                            rating.toStringAsFixed(2),
+                            style: GoogleFonts.plusJakartaSans(
+                              color: Color(0xFF606A85),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Icon(
+                            Icons.star_rounded,
+                            color: Colors.amber,
+                            size: 24,
+                          ),
+                        ]),
+                  ],
+                ),
               ),
             ),
-          ),
+          ],
         ),
       );
     } else {
