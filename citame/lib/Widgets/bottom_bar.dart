@@ -39,7 +39,6 @@ class BarraInferior extends ConsumerWidget {
           ref.read(navbarProvider.notifier).changeState(value);
           if (value == 2) {
             if (context.mounted) {
-              API.connect(context);
               controlador.setDatosUsuario();
               ref.read(pageProvider.notifier).actualizar(ProfilePage());
               //API.emitir();
@@ -48,7 +47,7 @@ class BarraInferior extends ConsumerWidget {
                   MaterialPageRoute(
                     builder: (context) => ProfilePage(),
                   )).then((_) {
-                API.desconnect();
+                //API.desconnect();
                 controlador.setPage(padre.widget.runtimeType);
                 log(controlador.getPage().toString());
                 if (padre.widget.runtimeType == BusinessSearchPage) {

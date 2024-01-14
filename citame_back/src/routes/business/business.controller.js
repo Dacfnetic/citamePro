@@ -168,7 +168,7 @@ async function deleteBusiness(req,res){
         
         //---Eliminar las citas y el modelo---
 
-        await citaModel.findById(req.body.idCita)
+        /*await citaModel.findById(req.body.idCita)
         .then((docs)=>{
             previousCita = docs.citas;
         });
@@ -202,7 +202,7 @@ async function deleteBusiness(req,res){
 
         }
     
-        await tr2.commitTransaction();
+        await tr2.commitTransaction();*/
 
         
         //Borrar el modelo entero de favouriteBusiness en el array del usuario

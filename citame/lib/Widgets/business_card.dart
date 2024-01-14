@@ -76,12 +76,7 @@ class BusinessCard extends ConsumerWidget {
                 IconButton(
                     onPressed: () async {
                       if (context.mounted) {
-                        API.estasSeguro(
-                          context,
-                          ref
-                              .read(myBusinessStateProvider.notifier)
-                              .getActualBusiness(),
-                        );
+                        API.estasSeguro(context, id);
                       }
                     },
                     icon: Icon(Icons.delete)),

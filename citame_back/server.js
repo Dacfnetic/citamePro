@@ -54,11 +54,11 @@ async function main(){
 
         //Refresh para el delete business.
         socket.on('deleteBusiness', (id) => {
-
+            console.log('NEGOCIOo');
             //Eliminar el negocio de la lista
-            arrayNegocios = arrayNegocios.filter( (n) => n.id !== id );
+            //arrayNegocios = arrayNegocios.filter( (n) => n.id !== id );
 
-            socket.broadcast('deleteBusiness',id);
+            //socket.broadcast('deleteBusiness',id);
             socket.emit('negocioEliminado',id);
 
         });

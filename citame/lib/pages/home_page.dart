@@ -24,6 +24,7 @@ class HomePage extends ConsumerWidget {
     controlador.setDatosUsuario();
     controlador.setPage(runtimeType);
     print(controlador.getPage());
+    API.connect(context);
 
     return Scaffold(
       body: SafeArea(
