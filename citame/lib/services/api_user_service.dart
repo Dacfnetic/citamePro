@@ -34,6 +34,12 @@ abstract class userAPI {
   static Future<void> postUser(String googleId, String? userName,
       String? emailUser, String? avatar) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getStringList('negociosInaccesibles') == null) {
+      prefs.setStringList('negociosInaccesibles', []);
+    }
+    if (prefs.getString('negocioActual') == null) {
+      prefs.setString('negocioActual', '');
+    }
     if (prefs.getString('googleId') == null ||
         prefs.getString('googleId') != googleId) {
       prefs.setString('googleId', googleId);

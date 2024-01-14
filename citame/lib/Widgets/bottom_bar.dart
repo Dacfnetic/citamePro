@@ -39,7 +39,7 @@ class BarraInferior extends ConsumerWidget {
           ref.read(navbarProvider.notifier).changeState(value);
           if (value == 2) {
             if (context.mounted) {
-              API.connect();
+              API.connect(context);
               controlador.setDatosUsuario();
               ref.read(pageProvider.notifier).actualizar(ProfilePage());
               //API.emitir();

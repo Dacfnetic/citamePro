@@ -82,7 +82,7 @@ class MyAppState extends State<MyApp> {
       BackgroundFetch.finish(taskId);
     });
     print('[BackgroundFetch] configure success: $status');
-    API.showNot();
+    API.showNot('Mil millonarios');
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling
     // setState to update our non-existent appearance.

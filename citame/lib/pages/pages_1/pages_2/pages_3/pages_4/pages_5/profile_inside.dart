@@ -427,21 +427,139 @@ class ContenedorDeHorario extends StatelessWidget {
               )
             ],
           )
+        ],
+      ),
+    );
+  }
+}
 
-          /*TextButton(
-            onPressed: () {},
-            child: Column(
+class ContenedorDeHorario2 extends StatelessWidget {
+  const ContenedorDeHorario2({
+    super.key,
+    required this.horario,
+    required this.day,
+    required this.ref,
+  });
+  final String day;
+  final Map horario;
+  final WidgetRef ref;
+
+  @override
+  Widget build(BuildContext context) {
+    List<Horario> obtenerHorario(String dia, Map horas) {
+      print(TimeOfDay.now().format(context));
+      List<dynamic> aProcesar = horas[dia];
+      int contador = -1;
+      List<Horario> retornar = aProcesar.map((turno) {
+        contador += 1;
+        return Horario(
+          ref: ref,
+          horario: turno,
+          turno: contador + 1,
+          dia: dia,
+        );
+      }).toList();
+      contador = -1;
+
+      return retornar;
+    }
+
+    void getSchedule(String dia) async {
+      TimeOfDay inicio = await API.timePicker(context, 'Horario de inicio');
+
+      TimeOfDay fin = await API.timePicker(context, 'Horario de fin');
+      ref
+          .read(myBusinessStateProvider.notifier)
+          .setDiasGeneral(dia, inicio, fin);
+      ref.read(reRenderProvider.notifier).reRender();
+    }
+
+    return Container(
+      decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.5), // Color de la sombra
+              spreadRadius: 2, // Extensión de la sombra
+              blurRadius: 2, // Desenfoque de la sombra
+              offset: Offset(0, 1), // Desplazamiento de la sombra
+            ),
+          ],
+          color: Color.fromARGB(255, 255, 255, 255),
+          borderRadius: BorderRadius.circular(12)),
+      width: double.infinity,
+      margin: EdgeInsets.fromLTRB(5, 10, 15, 5),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+                color: Colors.grey.withOpacity(0.7),
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(12),
+                    topRight: Radius.circular(12))),
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.lock_clock),
                 Text(
-                  'Hora',
-                  style: API.estiloJ14gris,
+                  day.toUpperCase(),
+                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
                 ),
               ],
             ),
           ),
-        */
+          Column(children: obtenerHorario(day, horario)),
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ElevatedButton(
+                onPressed: () async {
+                  getSchedule(day);
+                },
+                child: Icon(
+                  Icons.add,
+                  color: Colors.black,
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  ref
+                      .read(myBusinessStateProvider.notifier)
+                      .copiarHorariosGeneral(day);
+                  API.mensaje2(context, 'Horario copiado');
+                },
+                child: Icon(
+                  Icons.copy,
+                  color: Colors.black,
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  ref
+                      .read(myBusinessStateProvider.notifier)
+                      .pegarHorariosGeneral(day);
+                  ref.read(reRenderProvider.notifier).reRender();
+                },
+                child: Icon(
+                  Icons.paste,
+                  color: Colors.black,
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  ref
+                      .read(myBusinessStateProvider.notifier)
+                      .borrarDiaGeneral(day);
+                  ref.read(reRenderProvider.notifier).reRender();
+                },
+                child: Icon(
+                  Icons.delete,
+                  color: Colors.black,
+                ),
+              )
+            ],
+          )
         ],
       ),
     );

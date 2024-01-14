@@ -29,6 +29,7 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 String serverUrl = API.server;
 FirebaseAuth auth = FirebaseAuth.instance;
 String actualCat = '';
+
 String categoriaABuscar = '';
 IO.Socket socket = IO.io('http://win.citame.store/', <String, dynamic>{
   "transports": ["websocket"],
@@ -365,11 +366,19 @@ abstract class API {
     throw Exception('Failed to get items');
   }
 
-  static Future<void> connect() async {
+  static Future<void> connect(BuildContext context) async {
     socket.connect();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     socket.on('negocioEliminado', (id) {
+      prefs.getStringList('negociosInaccesibles')!.add(id);
+      if (prefs.getString('negocioActual') == id) {
+        Navigator.of(context).popUntil((route) => route.isFirst);
+        return;
+      }
       log('Se borró el negocio $id');
+    });
+    socket.on('notificacion', (notificacion) {
+      showNot(notificacion);
     });
     socket.emit("UsuarioRegistrado", prefs.getString('emailUser'));
   }
@@ -719,7 +728,7 @@ abstract class API {
     await flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
-  static Future<void> showNot() async {
+  static Future<void> showNot(String not) async {
     const AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails('channelId', 'channelName',
             importance: Importance.max, priority: Priority.high);
@@ -728,8 +737,8 @@ abstract class API {
     const NotificationDetails notificationDetails =
         NotificationDetails(android: androidNotificationDetails);
 
-    await flutterLocalNotificationsPlugin.show(1, 'Prro te aviso que...',
-        'Alguien te agregó a un negocio como trabajador', notificationDetails);
+    await flutterLocalNotificationsPlugin.show(
+        1, 'Prro te aviso que...', not, notificationDetails);
   }
 
   static var estiloJ24negro = GoogleFonts.plusJakartaSans(
