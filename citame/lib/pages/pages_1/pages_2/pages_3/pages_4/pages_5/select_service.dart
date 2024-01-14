@@ -84,51 +84,78 @@ class SelectService extends ConsumerWidget {
                 child: TabBarView(children: [
                   Container(
                     margin: EdgeInsets.only(top: 10),
-                    child: ListView(
-                      shrinkWrap: true,
+                    child: Column(
                       children: [
-                        servicios.isNotEmpty
-                            ? SizedBox(
-                                height: 300,
-                                child: ListView(
-                                    shrinkWrap: true, children: servicios))
-                            : Text(''),
+                        Text(
+                          'Selecciona los servicios que deseas agregar a tu cita',
+                          style: API.estiloJ16negro,
+                        ),
+                        Divider(
+                          thickness: 1,
+                          color: Colors.grey.withOpacity(0.8),
+                        ),
+                        SizedBox(height: 20),
+                        ListView(
+                          shrinkWrap: true,
+                          children: [
+                            servicios.isNotEmpty
+                                ? SizedBox(
+                                    height: 300,
+                                    child: ListView(
+                                        shrinkWrap: true, children: servicios))
+                                : Text(''),
+                          ],
+                        ),
                       ],
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(top: 10),
-                    child: ListView(
-                      shrinkWrap: true,
-                      children: [
-                        servicios.isNotEmpty
-                            ? SizedBox(
-                                height: 300,
-                                child: ListView(
-                                    shrinkWrap: true,
-                                    children: serviciosSeleccionados))
-                            : Text(''),
-                        serviciosSeleccionados.isNotEmpty
-                            ? ElevatedButton(
-                                onPressed: () {
-                                  ref
-                                      .read(eventsProvider.notifier)
-                                      .inicializar(trabajador, DateTime.now());
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => ReservationPage(
-                                              trabajador: trabajador)));
-                                },
-                                child: Text(
-                                  'siguiente',
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                              )
-                            : Text('')
-                      ],
-                    ),
-                  ),
+                      margin: EdgeInsets.only(top: 10),
+                      child: Column(
+                        children: [
+                          Text(
+                            'Lista de serivicios seleccionados para tu cita',
+                            style: API.estiloJ16negro,
+                          ),
+                          Divider(
+                            thickness: 1,
+                            color: Colors.grey.withOpacity(0.8),
+                          ),
+                          ListView(
+                            shrinkWrap: true,
+                            children: [
+                              servicios.isNotEmpty
+                                  ? SizedBox(
+                                      height: 300,
+                                      child: ListView(
+                                          shrinkWrap: true,
+                                          children: serviciosSeleccionados))
+                                  : Text(''),
+                              serviciosSeleccionados.isNotEmpty
+                                  ? ElevatedButton(
+                                      onPressed: () {
+                                        ref
+                                            .read(eventsProvider.notifier)
+                                            .inicializar(
+                                                trabajador, DateTime.now());
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ReservationPage(
+                                                        trabajador:
+                                                            trabajador)));
+                                      },
+                                      child: Text(
+                                        'siguiente',
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                    )
+                                  : Text('')
+                            ],
+                          ),
+                        ],
+                      )),
                 ]),
               ),
             ],

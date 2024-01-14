@@ -70,6 +70,7 @@ class BusinessListNotifier extends StateNotifier<List<BusinessCard>> {
           imagen: element.imgPath[0],
           description: element.description,
           email: element.email,
+          isDueno: false,
         ));
       }
       state = negocios;

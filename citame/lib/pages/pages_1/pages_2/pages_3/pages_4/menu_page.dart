@@ -82,6 +82,11 @@ class MenuPage extends ConsumerWidget {
         body: SafeArea(
           child: Column(children: [
             TabBar(
+                indicatorSize: TabBarIndicatorSize.tab,
+                indicator: BoxDecoration(
+                    border: Border.all(color: Colors.grey.withOpacity(0.8)),
+                    borderRadius: BorderRadius.circular(12),
+                    color: Colors.white),
                 indicatorColor: Colors.black,
                 labelColor: Colors.black,
                 unselectedLabelColor: Colors.grey,

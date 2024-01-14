@@ -58,10 +58,10 @@ class ProfileInsidePage extends ConsumerWidget {
                         margin: EdgeInsets.all(16),
                         alignment: Alignment.centerLeft,
                         decoration: BoxDecoration(
-                          color: Color(0x4d39d2c0),
+                          color: Colors.white,
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: Color(0xff39d2c0),
+                            color: Colors.grey,
                             width: 2,
                           ),
                         ),
@@ -354,12 +354,14 @@ class ContenedorDeHorario extends StatelessWidget {
           color: Color.fromARGB(255, 255, 255, 255),
           borderRadius: BorderRadius.circular(12)),
       width: double.infinity,
-      margin: EdgeInsets.fromLTRB(0, 10, 15, 10),
+      margin: EdgeInsets.fromLTRB(5, 10, 15, 5),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
         children: [
           Container(
             decoration: BoxDecoration(
-                color: Colors.cyan,
+                color: Colors.grey.withOpacity(0.7),
                 borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(12),
                     topRight: Radius.circular(12))),
@@ -384,7 +386,7 @@ class ContenedorDeHorario extends StatelessWidget {
                 },
                 child: Icon(
                   Icons.add,
-                  color: Colors.cyan,
+                  color: Colors.black,
                 ),
               ),
               ElevatedButton(
@@ -396,7 +398,7 @@ class ContenedorDeHorario extends StatelessWidget {
                 },
                 child: Icon(
                   Icons.copy,
-                  color: Colors.cyan,
+                  color: Colors.black,
                 ),
               ),
               ElevatedButton(
@@ -408,7 +410,7 @@ class ContenedorDeHorario extends StatelessWidget {
                 },
                 child: Icon(
                   Icons.paste,
-                  color: Colors.cyan,
+                  color: Colors.black,
                 ),
               ),
               ElevatedButton(
@@ -420,7 +422,7 @@ class ContenedorDeHorario extends StatelessWidget {
                 },
                 child: Icon(
                   Icons.delete,
-                  color: Colors.cyan,
+                  color: Colors.black,
                 ),
               )
             ],
