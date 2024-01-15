@@ -53,15 +53,20 @@ async function main(){
         });
 
         //Refresh para el delete business.
+        
         socket.on('deleteBusiness', (id) => {
+            console.log(usuariosConectados);
+            console.log(socket.client.sockets);
             console.log('NEGOCIOo');
             //Eliminar el negocio de la lista
             //arrayNegocios = arrayNegocios.filter( (n) => n.id !== id );
 
-            //socket.broadcast('deleteBusiness',id);
-            socket.emit('negocioEliminado',id);
+            //socket.broadcast.emit('negocioEliminado',id);
+            io.emit('negocioEliminado',id);
 
         });
+
+     
 
         
      
@@ -73,6 +78,7 @@ async function main(){
             io.emit('Usuarios Actualizados',Array.from(usuariosConectados));
         })
     });
+   
 
     
     //Express app

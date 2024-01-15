@@ -370,7 +370,9 @@ abstract class API {
     socket.connect();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     socket.on('negocioEliminado', (id) {
-      prefs.getStringList('negociosInaccesibles')!.add(id);
+      List<String> lista = prefs.getStringList('negociosInaccesibles')!;
+      lista.add(id);
+      prefs.setStringList('negociosInaccesibles', lista);
       if (prefs.getString('negocioActual') == id) {
         Navigator.of(context).popUntil((route) => route.isFirst);
         return;
