@@ -11,6 +11,7 @@ class HomePage extends ConsumerWidget {
   HomePage({
     super.key,
   });
+
   final TextEditingController searchBarController = TextEditingController();
 
   @override

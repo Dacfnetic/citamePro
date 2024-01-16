@@ -27,8 +27,18 @@ class HomeRow extends ConsumerWidget {
       margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Color(0xFFF1F4F8),
-        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey.withOpacity(0.7)),
+        color: Colors.white, // Color de fondo del contenedor
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5), // Color de la sombra
+            spreadRadius: 5,
+            blurRadius: 7,
+            offset: Offset(0, 3), // Desplazamiento de la sombra
+          ),
+        ],
+        borderRadius:
+            BorderRadius.circular(10.0), // Opcional: para esquinas redondeadas
       ),
       child: TextButton(
         onPressed: () /*async*/ {
@@ -78,8 +88,8 @@ class HomeRow extends ConsumerWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: SizedBox(
-                  width: 70,
-                  height: 70,
+                  width: 50,
+                  height: 50,
                   child: Image(
                     image: AssetImage(imagen),
 
@@ -96,6 +106,7 @@ class HomeRow extends ConsumerWidget {
                   style: API.estiloJ16negro,
                 ),
               ),
+              //Icon(Icons.arrow_circle_right)
             ],
           ),
         ),

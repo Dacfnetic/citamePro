@@ -39,8 +39,8 @@ class BusinessSearchPage extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(ref.read(geoProvider)[0].toString()),
-                Text(ref.read(geoProvider)[1].toString()),
+                /* Text(ref.read(geoProvider)[0].toString()),
+                Text(ref.read(geoProvider)[1].toString()),*/
                 Container(
                   width: double.infinity,
                   height: 60,
@@ -99,7 +99,8 @@ class BusinessSearchPage extends ConsumerWidget {
                 Text(categoria, style: API.estiloJ24negro),
                 SizedBox(height: 12),
                 Expanded(
-                  child: ListView(
+                  child: GridView.count(
+                      crossAxisCount: 2,
                       children: (negocios.isEmpty)
                           ? [Center(child: CircularProgressIndicator())]
                           : negocios),
