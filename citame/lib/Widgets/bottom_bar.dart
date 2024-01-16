@@ -67,14 +67,12 @@ class BarraInferior extends ConsumerWidget {
             ref.read(categoriesProvider.notifier).inicializar();
             searchBarController.text = "";
             if (context.mounted) {
-              await userAPI.getUser(ref);
               Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => UserAgendaPage(),
                   ));
-
-              await userAPI.getAllUsers();
+              await userAPI.getUser(ref);
             }
           }
         },

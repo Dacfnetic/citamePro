@@ -99,12 +99,10 @@ class BusinessSearchPage extends ConsumerWidget {
                 Text(categoria, style: API.estiloJ24negro),
                 SizedBox(height: 12),
                 Expanded(
-                  child: GridView.count(
-                      crossAxisCount: 2,
-                      children: (negocios.isEmpty)
-                          ? [Center(child: CircularProgressIndicator())]
-                          : negocios),
-                ),
+                  child: (negocios.isEmpty)
+                      ? Center(child: CircularProgressIndicator())
+                      : GridView.count(crossAxisCount: 2, children: negocios),
+                )
               ],
             ),
           ),
