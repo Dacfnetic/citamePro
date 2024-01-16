@@ -208,7 +208,7 @@ class BusinessCard extends ConsumerWidget {
       );
     } else {
       return Container(
-        height: 333,
+        height: 80,
         margin: EdgeInsets.all(5),
         padding: EdgeInsets.all(2),
         decoration: BoxDecoration(
@@ -288,7 +288,7 @@ class BusinessCard extends ConsumerWidget {
                 child: Image.memory(
                   imagen,
                   width: double.infinity,
-                  height: 230,
+                  height: 100,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -300,7 +300,7 @@ class BusinessCard extends ConsumerWidget {
                     nombre,
                     style: GoogleFonts.plusJakartaSans(
                       color: Color(0xFF15161E),
-                      fontSize: 16,
+                      fontSize: 12,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -310,22 +310,12 @@ class BusinessCard extends ConsumerWidget {
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  /*Expanded(
-                  child: Text(
-                    '${distancia.toStringAsFixed(2)} miles away',
-                    style: GoogleFonts.plusJakartaSans(
-                      color: Color(0xFF606A85),
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),*/
                   Expanded(
                     child: Text(
-                      '${(distancia * 1.609).toStringAsFixed(2)} kilometers away',
+                      '${(distancia * 1.609).toStringAsFixed(2)} kms',
                       style: GoogleFonts.plusJakartaSans(
                         color: Color(0xFF606A85),
-                        fontSize: 14,
+                        fontSize: 10,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -334,14 +324,14 @@ class BusinessCard extends ConsumerWidget {
                     rating.toStringAsFixed(2),
                     style: GoogleFonts.plusJakartaSans(
                       color: Color(0xFF606A85),
-                      fontSize: 14,
+                      fontSize: 10,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                   Icon(
                     Icons.star_rounded,
                     color: Colors.amber,
-                    size: 24,
+                    size: 10,
                   ),
                 ],
               ),
