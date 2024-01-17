@@ -38,6 +38,7 @@ async function main(){
             contador++;
             console.log(contador);       
             if(usuariosConectados.has(emailUser)){
+                listaDeSocketConCorreo[emailUser] = socket.id;
                 socket.emit('Usuario encontrado');
                 console.log(usuariosConectados);
             }else{

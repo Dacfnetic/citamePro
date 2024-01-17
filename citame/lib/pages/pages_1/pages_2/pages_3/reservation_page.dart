@@ -131,7 +131,7 @@ class ReservationPage extends ConsumerWidget {
                                       .getCita(),
                                   prefs.getString('llaveDeUsuario')!,
                                   trabajador.idWorker,
-                                  trabajador.id);
+                                  trabajador.email);
                             }
 
                             // API.mensaje(context, 'Aviso',
