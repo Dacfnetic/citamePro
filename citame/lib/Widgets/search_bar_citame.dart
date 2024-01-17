@@ -1,19 +1,18 @@
 import 'package:citame/providers/business_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class SearchBarCitame extends StatelessWidget {
+class SearchBarCitame extends ConsumerWidget {
   const SearchBarCitame({
     super.key,
-    required this.businessFunctions,
     required this.searchBarController,
   });
 
-  final BusinessListNotifier businessFunctions;
   final TextEditingController searchBarController;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       width: double.infinity,
       height: 60,
@@ -46,9 +45,8 @@ class SearchBarCitame extends StatelessWidget {
                 padding: EdgeInsetsDirectional.fromSTEB(4, 0, 0, 0),
                 child: SizedBox(
                   child: TextField(
-                    onChanged: (value) => {
-                      businessFunctions.filtrar(value),
-                    },
+                    onChanged: (value) =>
+                        {ref.read(businessProvider.notifier).filtrar(value)},
                     controller: searchBarController,
                     decoration: InputDecoration(
                       labelStyle: GoogleFonts.plusJakartaSans(

@@ -25,9 +25,9 @@ class BusinessListNotifier extends StateNotifier<List<BusinessCard>> {
 
   void filtrar(value) {
     if (value == "") {
-      state = negocios;
+      state = noBorrar;
     } else {
-      List<BusinessCard> negociosFiltrados = negocios
+      List<BusinessCard> negociosFiltrados = noBorrar
           .where((item) => item.nombre
               .toLowerCase()
               .contains(value.toString().toLowerCase()))
@@ -49,6 +49,7 @@ class BusinessListNotifier extends StateNotifier<List<BusinessCard>> {
   }
 
   void limpiar() {
+    noBorrar = [];
     state = [];
   }
 
@@ -73,6 +74,7 @@ class BusinessListNotifier extends StateNotifier<List<BusinessCard>> {
           isDueno: false,
         ));
       }
+      noBorrar = List.from(negocios);
       state = negocios;
     }
   }
@@ -85,3 +87,5 @@ class BusinessListNotifier extends StateNotifier<List<BusinessCard>> {
 LatLng businessPosition = LatLng(0, 0);
 
 List<BusinessCard> negocios = [];
+
+List<BusinessCard> noBorrar = [];

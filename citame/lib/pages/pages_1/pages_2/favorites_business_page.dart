@@ -27,9 +27,7 @@ class MyFavoritesPage extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SearchBarCitame(
-                    businessFunctions: ref.read(businessProvider.notifier),
-                    searchBarController: searchBarController),
+                SearchBarCitame(searchBarController: searchBarController),
                 SizedBox(height: 12),
                 Expanded(
                   child: ListView(
