@@ -49,6 +49,7 @@ class BusinessCard extends ConsumerWidget {
         longitudB: coordenadas[1]);
     if (isDueno) {
       return Container(
+        margin: EdgeInsets.all(5),
         height: 350,
         padding: EdgeInsets.all(5),
         decoration: BoxDecoration(
@@ -74,12 +75,14 @@ class BusinessCard extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 IconButton(
-                    onPressed: () async {
-                      if (context.mounted) {
-                        API.estasSeguro(context, id);
-                      }
-                    },
-                    icon: Icon(Icons.delete)),
+                  onPressed: () async {
+                    if (context.mounted) {
+                      API.estasSeguro(context, id);
+                    }
+                  },
+                  icon: Icon(Icons.delete),
+                  color: Colors.red,
+                ),
                 IconButton(
                     onPressed: () {
                       Navigator.push(
