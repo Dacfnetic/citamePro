@@ -28,7 +28,7 @@ class WorkerBox extends ConsumerWidget {
         margin: EdgeInsets.all(5),
         padding: EdgeInsets.all(4),
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey, width: 3),
+          border: Border.all(color: Colors.grey),
           borderRadius: BorderRadius.circular(8),
           color: Colors.white,
         ), // Color de fondo del Container
@@ -39,10 +39,10 @@ class WorkerBox extends ConsumerWidget {
               margin: EdgeInsets.all(10),
               alignment: Alignment.centerLeft,
               decoration: BoxDecoration(
-                color: Color(0x4d39d2c0),
+                color: Colors.white,
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: Color(0xff39d2c0),
+                  color: Colors.transparent,
                   width: 2,
                 ),
               ),
@@ -69,8 +69,9 @@ class WorkerBox extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(worker.name, style: API.estiloJ16negro),
-                  Text(worker.puesto),
+                  Text(worker.name, style: API.estiloJ24negro),
+                  Text(worker.puesto,
+                      style: TextStyle(color: Colors.grey.withOpacity(0.9))),
                   //Text(horas, style: API.estiloJ14gris),
                 ],
               ),
@@ -78,17 +79,21 @@ class WorkerBox extends ConsumerWidget {
             SizedBox(
               width: 15,
             ),
-            ElevatedButton(
-                onPressed: () {
-                  API.deleteWorkerInBusiness(
-                    ref
-                        .read(myBusinessStateProvider.notifier)
-                        .getActualBusiness(),
-                    worker.id,
-                    worker.idWorker,
-                  );
-                },
-                child: Text('Borrar')),
+            IconButton(
+              onPressed: () {
+                API.deleteWorkerInBusiness(
+                  ref
+                      .read(myBusinessStateProvider.notifier)
+                      .getActualBusiness(),
+                  worker.id,
+                  worker.idWorker,
+                );
+              },
+              icon: Icon(
+                Icons.delete,
+                color: Colors.red,
+              ),
+            )
           ],
         ),
       );
@@ -127,7 +132,7 @@ class WorkerBox extends ConsumerWidget {
                   color: Colors.white,
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: Colors.grey,
+                    color: Colors.transparent,
                     width: 2,
                   ),
                 ),

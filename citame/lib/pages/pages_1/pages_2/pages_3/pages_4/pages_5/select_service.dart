@@ -232,13 +232,23 @@ class _CajaDeServiciosState extends State<CajaDeServicios> {
     return Container(
       margin: EdgeInsets.only(top: 5, left: 5, right: 5, bottom: 2),
       decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 2,
+              blurRadius: 5,
+              offset: Offset(0,
+                  3), // Cambia la posición de la sombra según tus necesidades
+            ),
+          ],
+          color: Colors.white,
           border: Border.all(color: Colors.grey.withOpacity(0.8))),
       child: CheckboxListTile(
+        side: BorderSide(color: Colors.transparent),
+        checkColor: Colors.black,
         //visualDensity: VisualDensity(horizontal: -4.0, vertical: -3.0),
-        activeColor: Colors.green,
-        checkboxShape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
+        activeColor: Colors.transparent,
+
         title: Text(
           widget.nombre,
           style: API.estiloJ16negro,

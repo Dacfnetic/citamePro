@@ -74,7 +74,6 @@ class DetailsWorker extends ConsumerWidget {
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-
                             InkWell(
                               onTap: () {
                                 API.llamar(trabajador.celular);
@@ -86,12 +85,11 @@ class DetailsWorker extends ConsumerWidget {
                                 child: Row(
                                   children: [
                                     Icon(Icons.phone,
-                                        color: Color(0xFF4B39EF), size: 30),
+                                        color: Colors.black, size: 30),
                                     SizedBox(width: 5),
-                                    Text('Llamar al prro'),
+                                    Text('Llamar'),
                                   ],
                                 ),
-
                               ),
                             ),
                             SizedBox(

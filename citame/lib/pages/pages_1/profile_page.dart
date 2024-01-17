@@ -1,6 +1,7 @@
 import 'package:citame/Widgets/profile_row.dart';
 import 'package:citame/models/user_model.dart';
 import 'package:citame/pages/pages_1/pages_2/business_registration_page.dart';
+import 'package:citame/pages/pages_1/pages_2/pages_3/pages_4/pages_5/carousel_page.dart';
 import 'package:citame/pages/signin_page.dart';
 import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:citame/services/api_service.dart';
@@ -46,7 +47,7 @@ class ProfilePage extends ConsumerWidget {
                         color: Color(0x4d39d2c0),
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: Colors.green,
+                          color: Colors.grey.withOpacity(0.5),
                           width: 2,
                         ),
                         image: DecorationImage(
@@ -166,7 +167,7 @@ class ProfilePage extends ConsumerWidget {
               ProfileRow(
                 description: 'Registrar mi negocio',
                 icon: Icons.store,
-                page: BusinessRegisterPage(),
+                page: CarouselPage(),
                 method: 2,
               ),
               ProfileRow(
