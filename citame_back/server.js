@@ -10,7 +10,7 @@ const { setTimeout } = require('timers');
 
 const server = http.createServer(app);
 const io = new Server(server);
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 4000 ;
 const usuariosConectados = new Set();
 const arrayNegocios = [];
             
@@ -26,7 +26,7 @@ async function main(){
     await connect();
     app.get('/', (req, res) => {
         res.send('Holis');
-      });
+      }); 
       //Usuarios conectados
       let contador = 0;
     io.on('connection', (socket) => {

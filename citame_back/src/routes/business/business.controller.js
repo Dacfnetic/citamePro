@@ -204,6 +204,17 @@ async function deleteBusiness(req,res){
     
         await tr2.commitTransaction();*/
 
+        //Borrar citas, el modelo entero y del array Citas
+
+        await business.findById(req.body.businessId)
+        .then((docs)=>{
+            previousCita = docs.citas;
+        });
+
+        arrayCitas = JSON.parse(JSON.stringify(previousCita));
+        const citasB = await citaModel.find({ _id: { $in: arrayCitas } });
+
+        await citaModel.deleteMany({_id: { $in: citasB.map( (citaD) => citaD._id )} })
         
         //Borrar el modelo entero de favouriteBusiness en el array del usuario
 
@@ -233,6 +244,8 @@ async function deleteBusiness(req,res){
         }
 
         await tr.commitTransaction();
+
+        
        
         
         await business.findByIdAndDelete(req.body.businessId)//Cambiar y recibir el ID

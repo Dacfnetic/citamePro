@@ -1,11 +1,12 @@
 const usuario = require('../../models/users.model')
 const citaModel = require('../../models/cita.model');
 const workerModel = require('../../models/worker.model');
-const business = require('../../models/business.model');
 const jwt = require('jsonwebtoken');
 
 const Agenda = require('../../models/agenda');
 const config = require('../../config/configjson.js');
+const { default: mongoose } = require('mongoose');
+const businessModel = require('../../models/business.model');
 
 //import { Agenda } from ('../../models/agenda');
 
@@ -160,8 +161,34 @@ async function postCita(req,res){
 
 async function deleteCita(req,res){
 
+    //Borrar la cita que esten dentro del business
     try{
-        await citaModel.findByIdAndDelete(req.body.idCita);
+
+        const idCita = req.body.idCita;
+        const tr1 = await mongoose.startSession();
+        tr1.startTransaction();
+
+        const citaNegocio = await businessModel.find({citas: {$in: idCita}});
+
+        for await (const cit of citaNegocio){
+
+            const citaBusiness = cit.citas;
+
+            item9 = JSON.parse(JSON.stringify(citaBusiness));
+
+            const index = item9.findIndex((citass) => citass == idCita);
+
+            if(index !== -1){
+                item9.splice(index,1);
+            }
+
+            cit.citas = item9;
+            await cit.save(tr1);
+        }
+        await tr1.commitTransaction();
+
+
+        await citaModel.findByIdAndDelete(idCita);
         return res.status(200).json({message: 'TodoOk'});
     
     }catch(e){
