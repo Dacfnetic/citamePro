@@ -130,7 +130,8 @@ class ReservationPage extends ConsumerWidget {
                                       .read(myBusinessStateProvider.notifier)
                                       .getCita(),
                                   prefs.getString('llaveDeUsuario')!,
-                                  trabajador.idWorker);
+                                  trabajador.idWorker,
+                                  trabajador.id);
                             }
 
                             // API.mensaje(context, 'Aviso',

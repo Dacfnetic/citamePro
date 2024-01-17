@@ -224,6 +224,7 @@ abstract class API {
     Map cita,
     String idUsuario,
     String idWorker,
+    String idUserWorker,
   ) async {
     final response = await http.post(Uri.parse('$serverUrl/api/cita/create'),
         headers: {
@@ -235,6 +236,7 @@ abstract class API {
           'idWorker': idWorker,
         })));
     if (response.statusCode == 201) {
+      emitirCita(idUserWorker);
       mensaje(context, 'Cita enviada',
           'Su cita fue enviada al trabajador, le enviaremos una notificación cuando este la acepte');
       return 'Todo ok';
@@ -395,6 +397,10 @@ abstract class API {
 
   static Future<void> emitir(String id) async {
     socket.emit("deleteBusiness", id);
+  }
+
+  static Future<void> emitirCita(String idUserWorker) async {
+    socket.emit("citaEmitida", idUserWorker);
   }
 
   static Future<List<Service>> getService(String idBusiness) async {

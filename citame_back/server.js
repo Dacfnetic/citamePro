@@ -12,6 +12,7 @@ const server = http.createServer(app);
 const io = new Server(server);
 const PORT = process.env.PORT || 4000;
 const usuariosConectados = new Set();
+const listaDeSocketConCorreo = {};
 const arrayNegocios = [];
             
 async function update(){
@@ -44,8 +45,9 @@ async function main(){
                 //Mandar los usuarios
                 io.emit('Usuarios Actualizados', Array.from(usuariosConectados));
 
-
+                listaDeSocketConCorreo[emailUser] = socket.id;
                 console.log(usuariosConectados);
+                console.log(listaDeSocketConCorreo);
             } 
 
             //update();
@@ -63,6 +65,14 @@ async function main(){
 
             //socket.broadcast.emit('negocioEliminado',id);
             io.emit('negocioEliminado',id);
+
+        });
+
+        socket.on('citaEmitida', (correoAEnviarNotificacion) => {
+          
+            io.to(listaDeSocketConCorreo[correoAEnviarNotificacion]).emit('solicitudEntrante','El usuario x quiere reserva una cita con vos'); 
+            //socket.broadcast.emit('negocioEliminado',id);
+           
 
         });
 
