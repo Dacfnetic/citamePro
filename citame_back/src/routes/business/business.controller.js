@@ -11,7 +11,7 @@ const config = require('../../config/configjson.js');
 const {deleteImagesOnArrayService,deleteImagesOnArrayWorkers,deleteImagen} = require('../../config/functions.js')
 const io = require('../../../server.js');
 
-async function getAllBusiness(req,res){
+async function getAllBusinessd(req,res){
     console.log('Intentando obtener negocios por categoria');
     try{
         usuario.findOne({emailUser: req.get('email')})
@@ -25,6 +25,32 @@ async function getAllBusiness(req,res){
         return res.status(404).json('Errosillo');
     }  
 }
+
+async function getAllBusiness(req,res){
+    const nombreNegocio = req.body.businessName;
+    const categoriaNegocio = req.body.category;
+    const skip = 0;
+    const limit = 20; //Modificable
+
+    const negocios = await business.find({
+
+
+        $or: [
+
+            {businessName: {$regex: nombreNegocio, $options: "i"}},
+            {category: {$regex: categoriaNegocio, $options: "i"}},
+
+        ],
+        
+    }).projection({ businessName: 1,category: 1,}).skip(skip).limit(limit);
+
+
+    res.status(200).json(negocios);
+
+
+}
+
+
 async function getOwnerBusiness(req,res){
     
     try{
@@ -402,7 +428,7 @@ module.exports = {
     updateWorkers,
     updateArrayServices,
     updateBusiness,
-    getFavBusiness
+    getFavBusiness,
 }
 
 

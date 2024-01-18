@@ -187,6 +187,33 @@ async function deleteCita(req,res){
         }
         await tr1.commitTransaction();
 
+        //Borrar las citas del worker
+
+        const tr2 = await mongoose.startSession();
+        tr2.startTransaction();
+
+        const citaWorker = await workerModel.find({citasHechas: {$in: idCita}});
+
+        for await (const citW of citaWorker){
+
+            const citaWorkers = citW.citasHechas;
+
+            item10 = JSON.parse(JSON.stringify(citaWorkers));
+
+            const index2 = item10.findIndex((citWor) => citWor == idCita);
+
+            if(index2 !== -1){
+                item10.splice(index2,1);
+            }
+
+            citW.citasHechas = item10;
+            await citW.save();
+
+        }
+
+        await tr2.commitTransaction();
+
+
 
         await citaModel.findByIdAndDelete(idCita);
         return res.status(200).json({message: 'TodoOk'});
