@@ -49,19 +49,6 @@ class HomeRow extends ConsumerWidget {
           ref
               .read(pageProvider.notifier)
               .actualizar(BusinessSearchPage(categoria: categoria));
-          /*/try {
-            allBusiness = await API.getAllBusiness();
-            negocios = allBusiness.map((e) {
-              return (BusinessCard(
-                nombre: e.businessName,
-                categoria: e.category,
-                latitud: double.parse(e.latitude),
-                longitud: double.parse(e.longitude),
-                rating: 5.0,
-                imagen: e.imgPath,
-              ));
-            }).toList();*/
-          //if (context.mounted) {
           ref.read(myBusinessStateProvider.notifier).setPage(BusinessSearchPage(
                 categoria: categoria,
               ).runtimeType);

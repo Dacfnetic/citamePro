@@ -12,6 +12,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MenuPage extends ConsumerWidget {
   MenuPage({
@@ -51,8 +52,11 @@ class MenuPage extends ConsumerWidget {
     Map horario =
         ref.watch(myBusinessStateProvider.notifier).obtenerDiasGeneral();
 
+    Schedule horas = Schedule(horario: horario);
+
     List<Service> listaDeServicios =
         ref.watch(myBusinessStateProvider.notifier).getService();
+
     List<CajaDeServicios> servicios = listaDeServicios
         .map((servicio) => CajaDeServicios(
             nombre: servicio.nombreServicio,
@@ -60,9 +64,12 @@ class MenuPage extends ConsumerWidget {
             duracion: servicio.duracion,
             esDueno: true))
         .toList();
+
     ReRenderNotifier reRender = ref.read(reRenderProvider.notifier);
+
     List<Worker> workers =
         ref.watch(myBusinessStateProvider.notifier).obtenerWorkers();
+
     List<WorkerBox> trabajadores = workers
         .map((e) => WorkerBox(
               worker: e,
@@ -314,6 +321,20 @@ class MenuPage extends ConsumerWidget {
                       horario: horario, day: 'sabado', ref: ref),
                   ContenedorDeHorario2(
                       horario: horario, day: 'domingo', ref: ref),
+                  ElevatedButton(
+                      onPressed: () async {
+                        SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+                        ref
+                            .read(myBusinessStateProvider.notifier)
+                            .setHorarioParaEnviar(horas.toJson());
+                        Map enviar = ref
+                            .read(myBusinessStateProvider.notifier)
+                            .getHorarioParaEnviar();
+                        API.updateBusinessSchedule(
+                            prefs.getString('negocioActual')!, enviar);
+                      },
+                      child: Text('Guardar horario'))
                 ]),
               ),
               ListView(

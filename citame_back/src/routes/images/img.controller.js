@@ -1,6 +1,7 @@
 const sharp = require('sharp');
 const fs = require('fs').promises;
 const fss = require('fs');
+const redis = require('redis');
 const Negocio = require('../../models/business.model');
 const Imagen = require('../../models/image.model');
 const Trabajador = require('../../models/worker.model');
@@ -19,8 +20,6 @@ function randomImageName(){
 
 
 }
-
-
 
 async function uploadImage(req,res){
 
@@ -85,6 +84,49 @@ async function downloadImage(req,res){
 
 
 }
+/*
+//////Descarga de imagenes con cache
+async function downloadImage(req,res){
+
+    try {
+        const client = redis.createClient()
+        const datos = req.get('datos');
+        const mapa = JSON.parse(datos);
+
+        for(let imagenActual of mapa){
+            const cacheKey = `imagen:${imagenActual}`;
+            const cacheData = await client.get(cacheKey);
+
+            if(cacheData){
+
+                res.status(200).send(cacheData)//La imagen esta en el cache, enviela
+    
+    
+            }else{
+    
+                const imagen = await Imagen.findById(idImagen);
+    
+                if(imagen){
+    
+                    const file = fss.readFileSync(imagen.imgRuta);
+                    await client.set(cacheKey, file);
+    
+                    res.status(200).send(file);
+    
+                }
+    
+    
+            }
+
+        }
+
+    } catch(e){
+        console.log(e);
+        return res.status(404).json('Errosillo');
+    }
+
+
+}*/
 
 async function deleteImage(req,res){
 

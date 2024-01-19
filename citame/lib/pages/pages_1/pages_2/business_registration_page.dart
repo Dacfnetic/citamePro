@@ -121,19 +121,21 @@ class BusinessRegisterPage extends ConsumerWidget {
                           await SharedPreferences.getInstance();
                       if (signUpKey.currentState!.validate()) {
                         //var resultado = '';
-                        await API.postBusiness(
-                          businessName.text,
-                          API.getCat(),
-                          prefs.getString('emailUser')!,
-                          //auth.currentUser!.uid,
-                          [],
-                          cel.text,
-                          physicalDirection.text,
-                          negocio.position.latitude.toString(),
-                          negocio.position.longitude.toString(),
-                          description.text,
-                          ref.read(imgProvider),
-                        );
+                        for (int i = 0; i < 1; i++) {
+                          await API.postBusiness(
+                            businessName.text + i.toString(),
+                            API.getCat(),
+                            prefs.getString('emailUser')!,
+                            //auth.currentUser!.uid,
+                            [],
+                            cel.text,
+                            physicalDirection.text,
+                            negocio.position.latitude.toString(),
+                            negocio.position.longitude.toString(),
+                            description.text,
+                            ref.read(imgProvider),
+                          );
+                        }
 
                         if (context.mounted) {
                           businessName.text = '';

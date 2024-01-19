@@ -71,12 +71,18 @@ class BusinessListNotifier extends StateNotifier<List<BusinessCard>> {
           imagen: element.imgPath[0],
           description: element.description,
           email: element.email,
+          horario: element.horario,
           isDueno: false,
         ));
+        cambiarAhoraALV(negocios);
       }
       noBorrar = List.from(negocios);
       state = negocios;
     }
+  }
+
+  void cambiarAhoraALV(entrada) {
+    state = List.from(entrada);
   }
 
   void noExiste(BuildContext context) {

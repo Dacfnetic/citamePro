@@ -22,22 +22,24 @@ class BusinessCard extends ConsumerWidget {
   final double latitud;
   final double longitud;
   final double rating;
+  final Map horario;
   final Uint8List imagen;
   final String email;
   final bool isDueno;
-  const BusinessCard({
-    Key? key,
-    required this.nombre,
-    required this.id,
-    required this.categoria,
-    required this.latitud,
-    required this.longitud,
-    required this.rating,
-    required this.imagen,
-    required this.description,
-    required this.email,
-    required this.isDueno,
-  }) : super(key: key);
+  const BusinessCard(
+      {Key? key,
+      required this.nombre,
+      required this.id,
+      required this.categoria,
+      required this.latitud,
+      required this.longitud,
+      required this.rating,
+      required this.imagen,
+      required this.description,
+      required this.email,
+      required this.isDueno,
+      required this.horario})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -85,6 +87,9 @@ class BusinessCard extends ConsumerWidget {
                 ),
                 IconButton(
                     onPressed: () {
+                      ref
+                          .watch(myBusinessStateProvider.notifier)
+                          .establecerDiasGeneral(horario);
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -144,6 +149,7 @@ class BusinessCard extends ConsumerWidget {
                           businessName: nombre,
                           imagen: imagen,
                           description: description,
+                          negocio: this,
                         ),
                       ),
                     );
@@ -273,10 +279,10 @@ class BusinessCard extends ConsumerWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) => BusinessInsidePage(
-                      businessName: nombre,
-                      imagen: imagen,
-                      description: description,
-                    ),
+                        businessName: nombre,
+                        imagen: imagen,
+                        description: description,
+                        negocio: this),
                   ),
                 );
               }

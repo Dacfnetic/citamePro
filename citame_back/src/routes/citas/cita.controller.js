@@ -145,6 +145,7 @@ async function postCita(req,res){
                 if(funciona){
                     dateCreated.save();
                     await workerModel.findByIdAndUpdate(req.body.idWorker,{$push: {citasHechas: dateCreated}});
+                    await businessModel.findByIdAndUpdate(req.body.idBusiness,{$push: {citas: dateCreated}});
                     await usuario.findByIdAndUpdate(decoded.idUser,{$push: {citas: dateCreated}});
                     await workerModel.findByIdAndUpdate(req.body.idWorker,{$set: {horarioDisponible: agenda}});
 
@@ -187,34 +188,34 @@ async function deleteCita(req,res){
         }
         await tr1.commitTransaction();
 
-        //Borrar las citas del worker
 
-        const tr2 = await mongoose.startSession();
-        tr2.startTransaction();
+        const tr3 = await mongoose.startSession();
+        tr3.startTransaction();
 
-        const citaWorker = await workerModel.find({citasHechas: {$in: idCita}});
+        const citaUser = await usuario.find({citas: {$in: idCita}});
 
-        for await (const citW of citaWorker){
+        for await (const citU of citaUser){
 
-            const citaWorkers = citW.citasHechas;
+            const citaUsuario = citU.citas;
 
-            item10 = JSON.parse(JSON.stringify(citaWorkers));
+            item11 = JSON.parse(JSON.stringify(citaUsuario));
 
-            const index2 = item10.findIndex((citWor) => citWor == idCita);
+            const index3 = item11.findIndex((citUs) => citUs == idCita);
 
-            if(index2 !== -1){
-                item10.splice(index2,1);
+            if(index3 !== -1){
+                item11.splice(index3,1);
+
             }
 
-            citW.citasHechas = item10;
-            await citW.save();
+            citU.citas = item11;
+
+            await citU.save();
 
         }
 
-        await tr2.commitTransaction();
+        await tr3.commitTransaction();
 
-
-
+        
         await citaModel.findByIdAndDelete(idCita);
         return res.status(200).json({message: 'TodoOk'});
     

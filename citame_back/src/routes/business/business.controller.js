@@ -11,7 +11,7 @@ const config = require('../../config/configjson.js');
 const {deleteImagesOnArrayService,deleteImagesOnArrayWorkers,deleteImagen} = require('../../config/functions.js')
 const io = require('../../../server.js');
 
-async function getAllBusinessd(req,res){
+async function getAllBusiness(req,res){
     console.log('Intentando obtener negocios por categoria');
     try{
         usuario.findOne({emailUser: req.get('email')})
@@ -26,11 +26,11 @@ async function getAllBusinessd(req,res){
     }  
 }
 
-async function getAllBusiness(req,res){
+async function getAllBusinessd(req,res){
     const nombreNegocio = req.body.businessName;
     const categoriaNegocio = req.body.category;
     const skip = 0;
-    const limit = 20; //Modificable
+    const limit = 2; //Modificable
 
     const negocios = await business.find({
 
@@ -44,9 +44,7 @@ async function getAllBusiness(req,res){
         
     }).projection({ businessName: 1,category: 1,}).skip(skip).limit(limit);
 
-
     res.status(200).json(negocios);
-
 
 }
 
@@ -87,7 +85,7 @@ async function verifyOwnerBusiness(req,res){
                         nombresRecibidos = req.body.businessName;
                         listaRecibidaOrdenada = nombresRecibidos.sort(function(a, b){return b - a});
                         if(JSON.stringify(listaRecibidaOrdenada)===JSON.stringify(listaDeNombresOrdenada)){
-                            return res.status(200).send('1');
+                            return res.status(201).send('1');
                         }
                     }
                     return res.status(201).send('0');
@@ -121,7 +119,7 @@ async function postBusiness(req,res){
                     latitude: req.body.latitude,
                     longitude: req.body.longitude,
                     description: req.body.description,
-                    horario: req.body.horario,
+                    horario: '{}',
                     servicios: req.body.servicios
                 });
                 await nuevo.save();
@@ -241,6 +239,35 @@ async function deleteBusiness(req,res){
         const citasB = await citaModel.find({ _id: { $in: arrayCitas } });
 
         await citaModel.deleteMany({_id: { $in: citasB.map( (citaD) => citaD._id )} })
+
+        
+        const tr3 = await mongoose.startSession();
+        tr3.startTransaction();
+
+        const citaUser = await usuario.find({citas: {$in: idCita}});
+
+        for await (const citU of citaUser){
+
+            const citaUsuario = citU.citas;
+
+            item11 = JSON.parse(JSON.stringify(citaUsuario));
+
+            const index3 = item11.findIndex((citUs) => citUs == idCita);
+
+            if(index3 !== -1){
+                item11.splice(index3,1);
+
+            }
+
+            citU.citas = item11;
+
+            await citU.save();
+
+        }
+
+        await tr3.commitTransaction();
+
+
         
         //Borrar el modelo entero de favouriteBusiness en el array del usuario
 
@@ -272,6 +299,14 @@ async function deleteBusiness(req,res){
         await tr.commitTransaction();
 
         
+       //Borrar las citas del array del usuario
+
+       const businessF = await business.findById(req.body.businessId);
+       const user = await usuario.findOne({_id: req.body.idUser});
+       const Citas = businessF.citas;//Obtengo las citas de ese negocio
+
+       Citas.pull(Citas.filter((cita)=> cita._id === Citas._id));
+       await user.updateOne({_id: user._id}, {citas: Citas});
        
         
         await business.findByIdAndDelete(req.body.businessId)//Cambiar y recibir el ID
@@ -416,6 +451,13 @@ async function updateImage(req,res){
 
 }
 
+async function updateBusinessSchedule(req,res){
+    console.log('Actualizando horario del negocio');
+    const modificaciones = {horario: JSON.stringify(req.body.horario)};
+    //console.log('Si prro');
+    let resultado = await business.findByIdAndUpdate(req.body.idBusiness,{$set:modificaciones});
+    return res.status(200).send('Todo ok');
+}
 
 //Exportar funciones
 module.exports = {
@@ -429,6 +471,7 @@ module.exports = {
     updateArrayServices,
     updateBusiness,
     getFavBusiness,
+    updateBusinessSchedule,
 }
 
 

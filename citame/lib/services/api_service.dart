@@ -31,7 +31,7 @@ FirebaseAuth auth = FirebaseAuth.instance;
 String actualCat = '';
 
 String categoriaABuscar = '';
-IO.Socket socket = IO.io('http://valledolores.citame.store/', <String, dynamic>{
+IO.Socket socket = IO.io('http://win.citame.store/', <String, dynamic>{
   "transports": ["websocket"],
   "autoConnect": false,
 });
@@ -39,7 +39,7 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
 abstract class API {
-  static String server = 'https://valledolores.citame.store/';
+  static String server = 'https://win.citame.store';
 
   static Future<String> deleteBusiness(String businessId) async {
     final response =
@@ -96,6 +96,20 @@ abstract class API {
         body: utf8.encode(jsonEncode({
           'workerId': workerId,
           'businessId': businessId,
+        })));
+
+    if (response.statusCode == 200) return 'Todo ok';
+    throw Exception('Failed to add item');
+  }
+
+  static Future<String> updateBusinessSchedule(
+      String businessId, Map horario) async {
+    final response = await http.put(
+        Uri.parse('$serverUrl/api/business/updateBusinessSchedule'),
+        headers: {'Content-Type': 'application/json'},
+        body: utf8.encode(jsonEncode({
+          'horario': horario,
+          'idBusiness': businessId,
         })));
 
     if (response.statusCode == 200) return 'Todo ok';
@@ -224,6 +238,7 @@ abstract class API {
     Map cita,
     String idUsuario,
     String idWorker,
+    String idBusiness,
     String workerEmail,
   ) async {
     final response = await http.post(Uri.parse('$serverUrl/api/cita/create'),
@@ -234,6 +249,7 @@ abstract class API {
         body: utf8.encode(jsonEncode({
           'cita': cita,
           'idWorker': idWorker,
+          'idBusiness': idBusiness,
         })));
     if (response.statusCode == 201) {
       emitirCita(workerEmail);
@@ -278,10 +294,6 @@ abstract class API {
         .get(Uri.parse('$serverUrl/api/imagen/download'), headers: {'id': id});
     if (response.statusCode == 200) {
       var imagen = response.bodyBytes;
-      /*print(imagen.runtimeType);
-      var imagen1 = json.decode(imagen);
-      var imagen2 = imagen1['data'].cast<int>();
-      Uint8List imagen3 = Uint8List.fromList(imagen2);*/
 
       return imagen;
     }

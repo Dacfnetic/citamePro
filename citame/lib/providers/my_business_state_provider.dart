@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:citame/models/business_model.dart';
 import 'package:citame/models/service_model.dart';
 import 'package:citame/models/user_model.dart';
@@ -257,6 +259,79 @@ class MyBusinessStateNotifier extends StateNotifier<List<Business>> {
 
   Map getCita() {
     return citaActual;
+  }
+
+  void establecerDiasGeneral(entrada) {
+    generalSchedule['lunes'] = [];
+    for (var periodo in entrada['lunes']) {
+      Map anadir = {
+        'inicio': TimeOfDay(
+            hour: periodo['hora_inicial'], minute: periodo['minuto_inicial']),
+        'fin': TimeOfDay(
+            hour: periodo['hora_final'], minute: periodo['minuto_final'])
+      };
+      generalSchedule['lunes'].add(anadir);
+    }
+    generalSchedule['martes'] = [];
+    for (var periodo in entrada['martes']) {
+      Map anadir = {
+        'inicio': TimeOfDay(
+            hour: periodo['hora_inicial'], minute: periodo['minuto_inicial']),
+        'fin': TimeOfDay(
+            hour: periodo['hora_final'], minute: periodo['minuto_final'])
+      };
+      generalSchedule['martes'].add(anadir);
+    }
+    generalSchedule['miercoles'] = [];
+    for (var periodo in entrada['miercoles']) {
+      Map anadir = {
+        'inicio': TimeOfDay(
+            hour: periodo['hora_inicial'], minute: periodo['minuto_inicial']),
+        'fin': TimeOfDay(
+            hour: periodo['hora_final'], minute: periodo['minuto_final'])
+      };
+      generalSchedule['miercoles'].add(anadir);
+    }
+    generalSchedule['jueves'] = [];
+    for (var periodo in entrada['jueves']) {
+      Map anadir = {
+        'inicio': TimeOfDay(
+            hour: periodo['hora_inicial'], minute: periodo['minuto_inicial']),
+        'fin': TimeOfDay(
+            hour: periodo['hora_final'], minute: periodo['minuto_final'])
+      };
+      generalSchedule['jueves'].add(anadir);
+    }
+    generalSchedule['viernes'] = [];
+    for (var periodo in entrada['viernes']) {
+      Map anadir = {
+        'inicio': TimeOfDay(
+            hour: periodo['hora_inicial'], minute: periodo['minuto_inicial']),
+        'fin': TimeOfDay(
+            hour: periodo['hora_final'], minute: periodo['minuto_final'])
+      };
+      generalSchedule['viernes'].add(anadir);
+    }
+    generalSchedule['sabado'] = [];
+    for (var periodo in entrada['sabado']) {
+      Map anadir = {
+        'inicio': TimeOfDay(
+            hour: periodo['hora_inicial'], minute: periodo['minuto_inicial']),
+        'fin': TimeOfDay(
+            hour: periodo['hora_final'], minute: periodo['minuto_final'])
+      };
+      generalSchedule['sabado'].add(anadir);
+    }
+    generalSchedule['domingo'] = [];
+    for (var periodo in entrada['domingo']) {
+      Map anadir = {
+        'inicio': TimeOfDay(
+            hour: periodo['hora_inicial'], minute: periodo['minuto_inicial']),
+        'fin': TimeOfDay(
+            hour: periodo['hora_final'], minute: periodo['minuto_final'])
+      };
+      generalSchedule['domingo'].add(anadir);
+    }
   }
 
   void setFecha(DateTime fechaEscogida) {

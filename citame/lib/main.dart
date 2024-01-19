@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:citame/pages/home_page.dart';
 import 'package:citame/pages/signin_page.dart';
 import 'package:citame/services/api_service.dart';
@@ -18,7 +20,7 @@ void backgroundFetchHeadlessTask(HeadlessTask task) async {
   if (isTimeout) {
     // This task has exceeded its allowed running-time.
     // You must stop what you're doing and immediately .finish(taskId)
-    print("[BackgroundFetch] Headless task timed-out: $taskId");
+    log("[BackgroundFetch] Headless task timed-out: $taskId");
     BackgroundFetch.finish(taskId);
     return;
   }
@@ -35,11 +37,10 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
+  BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
   runApp(ProviderScope(
     child: MyApp(),
   ));
-  BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
 }
 
 class MyApp extends StatefulWidget {

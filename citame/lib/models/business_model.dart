@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:citame/utils/json.dart';
+
 class Business {
   final String businessName;
   final String idMongo;
@@ -11,6 +15,7 @@ class Business {
   final String longitude;
   final String description;
   final List imgPath;
+  final Map horario;
   Map toJson() => {
         'businessName': businessName,
         'idMongo': idMongo,
@@ -23,6 +28,7 @@ class Business {
         'longitude': longitude,
         'description': description,
         'imgPath': imgPath,
+        'horario': horario,
       };
   Business({
     required this.businessName,
@@ -37,6 +43,7 @@ class Business {
     required this.longitude,
     required this.description,
     required this.imgPath,
+    required this.horario,
   });
 
   factory Business.fromJson(Map<String, dynamic> json) {
@@ -53,6 +60,7 @@ class Business {
       longitude: json['longitude'],
       description: json['description'],
       imgPath: json['imgPath'],
+      horario: jsonDecode(json['horario']),
     );
   }
   factory Business.fromJson2(Map<String, dynamic> json) {
@@ -69,6 +77,7 @@ class Business {
       longitude: json['longitude'],
       description: json['description'],
       imgPath: json['imgPath'],
+      horario: jsonDecode(json['horario']),
     );
   }
 }

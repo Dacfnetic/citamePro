@@ -1,4 +1,6 @@
+import 'package:citame/Widgets/business_card.dart';
 import 'package:citame/Widgets/worker.dart';
+import 'package:citame/models/business_model.dart';
 import 'package:citame/models/service_model.dart';
 import 'package:citame/models/worker_moder.dart';
 import 'package:citame/pages/pages_1/pages_2/pages_3/pages_4/menu_page.dart';
@@ -16,10 +18,12 @@ class BusinessInsidePage extends ConsumerWidget {
     required this.businessName,
     required this.imagen,
     required this.description,
+    required this.negocio,
   }) : super(key: key);
   final String businessName;
   final Uint8List imagen;
   final String description;
+  final BusinessCard negocio;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     List<Service> listaDeServicios =
@@ -110,13 +114,11 @@ class BusinessInsidePage extends ConsumerWidget {
                                   .getActualBusiness());
                             },
                             child: Icon(Icons.favorite)),
-                        Text('Horario'),
+                        Expanded(child: Text(negocio.horario.toString())),
                         Text('Descripción'),
                         Text(description, style: API.estiloJ14gris),
                         ElevatedButton(
-
                             onPressed: () {}, child: Text('Reservar cita'))
-
                       ],
                     ),
                   ),
