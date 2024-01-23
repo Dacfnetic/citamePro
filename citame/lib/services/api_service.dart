@@ -31,15 +31,18 @@ FirebaseAuth auth = FirebaseAuth.instance;
 String actualCat = '';
 
 String categoriaABuscar = '';
-IO.Socket socket = IO.io('http://win.citame.store/', <String, dynamic>{
-  "transports": ["websocket"],
-  "autoConnect": false,
-});
+IO.Socket socket = IO.io(
+    'http://ec2-3-129-71-239.us-east-2.compute.amazonaws.com:4000',
+    <String, dynamic>{
+      "transports": ["websocket"],
+      "autoConnect": false,
+    });
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
 abstract class API {
-  static String server = 'https://win.citame.store';
+  static String server =
+      'http://ec2-3-129-71-239.us-east-2.compute.amazonaws.com:4000';
 
   static Future<String> deleteBusiness(String businessId) async {
     final response =
