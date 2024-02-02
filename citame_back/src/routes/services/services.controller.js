@@ -5,27 +5,27 @@ const services = require('../../models/services.model.js')
 
 async function getServices(req, res) {
   try {
-    let item = []
+    let item2 = []
     let servicioSend = []
     let contador = 0
     await business
       .findById(req.get('idBusiness'))
       .then(async (docs) => {
         const servicios = docs.servicios
-        item = JSON.parse(JSON.stringify(servicios))
-        if (item.length == 0) {
+        item2 = JSON.parse(JSON.stringify(servicios))
+        if (item2.length == 0) {
           return res.status(201).send('No hay servicios')
         }
       })
       .catch((e) => console.log(e))
 
-    item.forEach(async (element) => {
+    item2.forEach(async (element) => {
       const servicio = await services.findById(element)
 
       servicioSend.push(servicio)
       contador++
 
-      if (contador == item.length) {
+      if (contador == item2.length) {
         return res.status(200).json(servicioSend)
       }
     })
@@ -36,10 +36,14 @@ async function getServices(req, res) {
 
 async function postServices(req, res) {
   try {
+    let previousService = ''
+
     business.findById(req.body.idBusiness).then(async (docs) => {
+
+      
       if (docs != null) {
         console.log('Creando Servicio')
-
+        previousService = docs.servicios;
         const servicioNew = new services({
           nombreServicio: req.body.nombreServicio,
           businessCreatedBy: docs._id,
@@ -49,10 +53,46 @@ async function postServices(req, res) {
           duracion: req.body.duracion,
           time: req.body.time,
         })
-
+       
         await servicioNew.save()
 
-        return res.status(201).send(servicioNew)
+        //update del array del business
+
+        let item = [];
+        item = JSON.parse(JSON.stringify(previousService))
+        item.push(req.body.idService)
+
+        const modificaciones = { servicios: item }
+
+        await business.findByIdAndUpdate(req.body.idBusiness, { $set: modificaciones });
+        
+
+        //Get del service
+
+        let item2 = []
+        let servicioSend = []
+        let contador = 0
+        await business.findById(req.body.idBusiness)
+          .then(async (docs) => {
+            const servicios = docs.servicios
+            item2 = JSON.parse(JSON.stringify(servicios))
+            if (item2.length == 0) {//Pendiente de borrar por si acaso 
+              return res.status(201).send('No hay servicios')
+            }
+          })
+        .catch((e) => console.log(e))
+        
+        item2.forEach(async (element) => {
+          const servicio = await services.findById(element)
+    
+          servicioSend.push(servicio)
+          contador++
+    
+          if (contador == item2.length) {
+            return res.status(200).json(servicioSend)
+          }
+        })
+        
       }
       return res.status(202).send({ sms: 'El Servicio ya existe' }) //Cambiar porque est[a raro]
     })
