@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:citame/models/business_model.dart';
@@ -147,11 +148,18 @@ class MyBusinessStateNotifier extends StateNotifier<List<Business>> {
 
   void setService(id, ref) async {
     services = await API.getService(id);
-/*
-    for (var element in workers) {
-      element.imgPath[0] = await API.downloadImage(element.imgPath[0]);
-    }*/
     API.reRender(ref);
+  }
+
+  void setService2(response) async {
+    final List<dynamic> serviceList = jsonDecode(response.body);
+    //final List<dynamic> workerList = json.decode(workerList1);
+    final List<Service> servicios = serviceList.map((servicio) {
+      Service servicioActual = Service.fromJson(servicio);
+      return servicioActual;
+    }).toList();
+
+    services = servicios;
   }
 
   List<Service> getService() {

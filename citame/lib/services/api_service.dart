@@ -229,15 +229,10 @@ abstract class API {
               'descripcion': descripcion,
               'time': time
             })));
-    if (response.statusCode == 201) {
-      var serviceData = jsonDecode(response.body);
+    if (response.statusCode == 200) {
       //await API.postImagen(imgPath, serviceData['_id'], 'worker');
-
-      await API.updateServiceInBusiness(idBusiness, serviceData['_id']);
-
-      await API.mensaje(context, 'Aviso', 'El servicio fue creado');
-      ref.read(myBusinessStateProvider.notifier).setService(idBusiness, ref);
-      Navigator.pop(context);
+      //await API.mensaje(context, 'Aviso', 'El servicio fue creado');
+      ref.read(myBusinessStateProvider.notifier).setService2(response);
 
       return 'Todo ok';
     }

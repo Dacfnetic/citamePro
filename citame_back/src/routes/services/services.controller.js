@@ -59,8 +59,8 @@ async function postServices(req, res) {
         //update del array del business
 
         let item = [];
-        item = JSON.parse(JSON.stringify(previousService))
-        item.push(req.body.idService)
+        item = JSON.parse(JSON.stringify(previousService));
+        item.push(servicioNew);
 
         const modificaciones = { servicios: item }
 
@@ -82,7 +82,7 @@ async function postServices(req, res) {
           })
         .catch((e) => console.log(e))
         
-        item2.forEach(async (element) => {
+        await item2.forEach(async (element) => {
           const servicio = await services.findById(element)
     
           servicioSend.push(servicio)
@@ -94,7 +94,8 @@ async function postServices(req, res) {
         })
         
       }
-      return res.status(202).send({ sms: 'El Servicio ya existe' }) //Cambiar porque est[a raro]
+      //Verificar si el servicio ya existe
+      //return res.status(202).send({ sms: 'El Servicio ya existe' }) //Cambiar porque est[a raro]
     })
   } catch (e) {
     return res.status(404).json('Errosillo')

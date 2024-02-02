@@ -27,10 +27,12 @@ class ServicesNotifier extends StateNotifier<List<Service>> {
     state = [];
   }
 
+  void actualizar(servicios) {
+    state = servicios;
+  }
+
   /*void eliminar(entrada) {
     var index = state.where((element) => element.data)
     state = state.removeAt(index);
   }*/
 }
-
-List<double> servicios = [];

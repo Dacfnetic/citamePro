@@ -6,6 +6,7 @@ import 'package:citame/pages/pages_1/pages_2/pages_3/pages_4/pages_5/profile_ins
 import 'package:citame/providers/duracion_provider.dart';
 import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:citame/providers/re_render_provider.dart';
+import 'package:citame/providers/services_provider.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
@@ -54,8 +55,7 @@ class MenuPage extends ConsumerWidget {
 
     Schedule horas = Schedule(horario: horario);
 
-    List<Service> listaDeServicios =
-        ref.watch(myBusinessStateProvider.notifier).getService();
+    List<Service> listaDeServicios = ref.watch(servicesProvider);
 
     List<CajaDeServicios> servicios = listaDeServicios
         .map((servicio) => CajaDeServicios(
@@ -65,7 +65,7 @@ class MenuPage extends ConsumerWidget {
             esDueno: true))
         .toList();
 
-    ReRenderNotifier reRender = ref.read(reRenderProvider.notifier);
+    ReRenderNotifier reRender = ref.watch(reRenderProvider.notifier);
 
     List<Worker> workers =
         ref.watch(myBusinessStateProvider.notifier).obtenerWorkers();
@@ -284,9 +284,16 @@ class MenuPage extends ConsumerWidget {
                                                 '',
                                                 time);
                                             if (context.mounted) {
-                                              API.reRender(ref);
                                               Navigator.pop(context);
                                             }
+                                            ref
+                                                .read(servicesProvider.notifier)
+                                                .actualizar(ref
+                                                    .read(
+                                                        myBusinessStateProvider
+                                                            .notifier)
+                                                    .getService());
+                                            API.reRender(ref);
                                           }
                                         },
                                       ),
