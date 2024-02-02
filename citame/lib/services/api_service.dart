@@ -31,18 +31,15 @@ FirebaseAuth auth = FirebaseAuth.instance;
 String actualCat = '';
 
 String categoriaABuscar = '';
-IO.Socket socket = IO.io(
-    'http://ec2-3-129-71-239.us-east-2.compute.amazonaws.com:4000',
-    <String, dynamic>{
-      "transports": ["websocket"],
-      "autoConnect": false,
-    });
+IO.Socket socket = IO.io('http://win.citame.store/', <String, dynamic>{
+  "transports": ["websocket"],
+  "autoConnect": false,
+});
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
 abstract class API {
-  static String server =
-      'http://ec2-3-129-71-239.us-east-2.compute.amazonaws.com:4000';
+  static String server = 'https://win.citame.store';
 
   static Future<String> deleteBusiness(String businessId) async {
     final response =
@@ -54,6 +51,25 @@ abstract class API {
 
     if (response.statusCode == 200) {
       emitir(businessId);
+      return 'borrado';
+    }
+
+    throw Exception('Failed to add item');
+  }
+
+  static Future<String> pruebaLambda(String businessId) async {
+    final response = await http.post(
+        Uri.parse(
+            'https://laceiiqrie.execute-api.us-east-1.amazonaws.com/desplegada/prueba'),
+        headers: {'Content-Type': 'application/json'},
+        body: utf8.encode(jsonEncode({
+          'businessId': 'hola',
+        })));
+
+    if (response.statusCode == 200) {
+      //emitir(businessId);
+      log(response.body);
+
       return 'borrado';
     }
 

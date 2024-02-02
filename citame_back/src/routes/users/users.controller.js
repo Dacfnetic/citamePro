@@ -57,6 +57,7 @@ async function postUser(req, res) {
           avatar: req.body.avatar,
         })
 
+
         usuarioSave.save()
 
         const token = jwt.sign({ idUser: usuarioSave._id }, config.jwtSecret, {
@@ -83,12 +84,14 @@ async function postUser(req, res) {
   }
 }
 
+
 async function updateUser(req, res) {
   let emailUsuario = req.body.emailUser
 
   const usuarioUpdate = {
     userName: req.body.userName,
   }
+
 
   await usuario.findOneAndUpdate(emailUsuario, { $set: usuarioUpdate }, (err, userUpdated) => {
     if (err) {
@@ -141,6 +144,7 @@ async function FavoriteBusiness(req, res) {
   }
 
   const mod = { favoriteBusiness: item }
+
 
   await usuario.findByIdAndUpdate(decoded.idUser, { $set: mod })
 

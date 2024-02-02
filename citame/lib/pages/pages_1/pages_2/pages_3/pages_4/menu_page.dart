@@ -269,7 +269,7 @@ class MenuPage extends ConsumerWidget {
                                                   '${horario.inMinutes} minutos';
                                             }
                                             final time = horario.inMinutes / 60;
-                                            print(horario);
+
                                             await API.postService(
                                                 context,
                                                 ref

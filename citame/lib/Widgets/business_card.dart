@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:citame/pages/pages_1/pages_2/business_inside_page.dart';
 import 'package:citame/pages/pages_1/pages_2/my_businessess_page.dart';
 import 'package:citame/pages/pages_1/pages_2/pages_3/pages_4/menu_page.dart';
@@ -43,6 +45,31 @@ class BusinessCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    void _settingAccess() async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('negocioActual', id);
+      //Este if comprueba si el negocio no está en la lista negra de negocios no accesibles
+      if (!prefs.getStringList('negociosInaccesibles')!.contains(id)) {
+        //Pide al back los trabajadores del negocio
+        ref.read(myBusinessStateProvider.notifier).establecerWorkers(id, ref);
+        //Pide al back los servicios del negocio
+        ref.read(myBusinessStateProvider.notifier).setService(id, ref);
+        //Almacena el id del negocio actual
+        ref.read(myBusinessStateProvider.notifier).setActualBusiness(id);
+        //Convierte los datos crudos del horario y los formatea para que se miren bien en el front
+        ref
+            .watch(myBusinessStateProvider.notifier)
+            .establecerDiasGeneral(horario);
+        //Envia a la página del usuario
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MenuPage(),
+          ),
+        );
+      }
+    }
+
     List<double> coordenadas = ref.watch(geoProvider);
     double distancia = ref.read(geoProvider.notifier).distanciaEnMillas(
         latitudA: latitud,
@@ -86,130 +113,63 @@ class BusinessCard extends ConsumerWidget {
                   color: Colors.red,
                 ),
                 IconButton(
-                    onPressed: () {
-                      ref
-                          .watch(myBusinessStateProvider.notifier)
-                          .establecerDiasGeneral(horario);
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MenuPage(),
-                          ));
-                    },
+                    onPressed: () => _settingAccess(),
                     icon: Icon(Icons.settings))
               ],
             ),
-            InkWell(
-              onTap: () async {
-                SharedPreferences prefs = await SharedPreferences.getInstance();
-                prefs.setString('negocioActual', id);
-                if (!prefs
-                    .getStringList('negociosInaccesibles')!
-                    .contains(id)) {
-                  Widget actual = ref.read(pageProvider);
-                  ref.read(actualBusinessProvider.notifier).actualizar(id);
-                  if (actual.runtimeType == MyBusinessesPage().runtimeType) {
-                    ref
-                        .read(myBusinessStateProvider.notifier)
-                        .establecerWorkers(id, ref);
-                    ref
-                        .read(myBusinessStateProvider.notifier)
-                        .setService(id, ref);
-
-                    ref
-                        .read(myBusinessStateProvider.notifier)
-                        .setActualBusiness(id);
-                    ref
-                        .read(myBusinessStateProvider.notifier)
-                        .setActualEmail(email);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PreviewBusinessPage(),
-                      ),
-                    );
-                  } else {
-                    ref
-                        .read(myBusinessStateProvider.notifier)
-                        .establecerWorkers(id, ref);
-                    ref
-                        .read(myBusinessStateProvider.notifier)
-                        .setService(id, ref);
-
-                    ref
-                        .read(myBusinessStateProvider.notifier)
-                        .setActualBusiness(id);
-                    ref
-                        .read(myBusinessStateProvider.notifier)
-                        .setActualEmail(email);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => BusinessInsidePage(
-                          businessName: nombre,
-                          imagen: imagen,
-                          description: description,
-                          negocio: this,
-                        ),
-                      ),
-                    );
-                  }
-                }
-              },
-              child: Container(
-                padding: EdgeInsets.all(2),
-                margin: EdgeInsets.only(top: 0),
-                child: Column(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(16),
-                      child: Image.memory(
-                        imagen,
-                        width: double.infinity,
-                        height: 230,
-                        fit: BoxFit.cover,
-                      ),
+            Container(
+              padding: EdgeInsets.all(2),
+              margin: EdgeInsets.only(top: 0),
+              child: Column(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: Image.memory(
+                      imagen,
+                      width: double.infinity,
+                      height: 230,
+                      fit: BoxFit.cover,
                     ),
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Column(
-                            children: [
-                              Text(
-                                nombre,
-                                style: GoogleFonts.plusJakartaSans(
-                                  color: Color(0xFF15161E),
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                  ),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Column(
+                          children: [
+                            Text(
+                              nombre,
+                              style: GoogleFonts.plusJakartaSans(
+                                color: Color(0xFF15161E),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
                               ),
-                              Text(
-                                '${(distancia * 1.609).toStringAsFixed(2)} kilometers away',
-                                style: GoogleFonts.plusJakartaSans(
-                                  color: Color(0xFF606A85),
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Text(
-                            rating.toStringAsFixed(2),
-                            style: GoogleFonts.plusJakartaSans(
-                              color: Color(0xFF606A85),
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
                             ),
+                            Text(
+                              '${(distancia * 1.609).toStringAsFixed(2)} kilometers away',
+                              style: GoogleFonts.plusJakartaSans(
+                                color: Color(0xFF606A85),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Text(
+                          rating.toStringAsFixed(2),
+                          style: GoogleFonts.plusJakartaSans(
+                            color: Color(0xFF606A85),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
                           ),
-                          Icon(
-                            Icons.star_rounded,
-                            color: Colors.amber,
-                            size: 24,
-                          ),
-                        ]),
-                  ],
-                ),
+                        ),
+                        Icon(
+                          Icons.star_rounded,
+                          color: Colors.amber,
+                          size: 24,
+                        ),
+                      ]),
+                ],
               ),
             ),
           ],
