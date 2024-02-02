@@ -93,12 +93,6 @@ class ProfilePage extends ConsumerWidget {
                 method: 3,
               ),
               ProfileRow(
-                description: 'Información personal',
-                icon: Icons.person,
-                page: Placeholder(),
-                method: 2,
-              ),
-              ProfileRow(
                 description: 'Ver mis negocios',
                 icon: Icons.store,
                 page: Placeholder(),
@@ -122,12 +116,6 @@ class ProfilePage extends ConsumerWidget {
                 page: Placeholder(),
                 method: 2,
               ),
-              ProfileRow(
-                description: 'Donaciones',
-                icon: Icons.handshake,
-                page: Placeholder(),
-                method: 2,
-              ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 16, 0, 0),
                 child: Text(
@@ -141,10 +129,10 @@ class ProfilePage extends ConsumerWidget {
                 ),
               ),
               ProfileRow(
-                description: 'Invitar amigos',
+                description: 'Código de referencia',
                 icon: Icons.card_giftcard,
                 page: Placeholder(),
-                method: 2,
+                method: 8,
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 16, 0, 0),
@@ -157,12 +145,6 @@ class ProfilePage extends ConsumerWidget {
                     fontWeight: FontWeight.normal,
                   ),
                 ),
-              ),
-              ProfileRow(
-                description: 'Notificaciones',
-                icon: Icons.notifications,
-                page: Placeholder(),
-                method: 2,
               ),
               ProfileRow(
                 description: 'Registrar mi negocio',

@@ -88,7 +88,6 @@ async function postUser(req,res){
     }  
 }
 
-
 async function updateUser(req,res){
 
     let emailUsuario = req.body.emailUser
@@ -105,7 +104,6 @@ async function updateUser(req,res){
     })
 
 }
-
 
 async function FavoriteBusiness(req,res){
 
@@ -167,8 +165,6 @@ async function FavoriteBusiness(req,res){
 }
 
 async function deleteFavBusiness(req,res){
-
-    
 
 }
 

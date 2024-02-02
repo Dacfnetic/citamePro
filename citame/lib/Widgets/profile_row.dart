@@ -2,11 +2,13 @@ import 'dart:io';
 
 import 'package:citame/pages/pages_1/pages_2/favorites_business_page.dart';
 import 'package:citame/pages/pages_1/pages_2/my_businessess_page.dart';
+import 'package:citame/pages/paypal_payment.dart';
 import 'package:citame/providers/img_provider.dart';
 import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:citame/providers/my_favorites_provider.dart';
 import 'package:citame/providers/own_business_provider.dart';
 import 'package:citame/providers/page_provider.dart';
+import 'package:citame/services/api_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -93,11 +95,15 @@ class ProfileRow extends ConsumerWidget {
                 ));
             ref.read(myFavoritesProvider.notifier).cargar(context, ref);
           }
-
-          //}
-          //} catch (e) {
-          //  print(e.toString());
-          //}
+        }
+        if (method == 8) {
+          if (context.mounted) {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PaymentPage(),
+                ));
+          }
         }
       },
       child: Container(

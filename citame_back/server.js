@@ -76,11 +76,7 @@ async function main(){
            
 
         });
-
-     
-
-        
-     
+  
         //Desconexion de usuarios
         socket.on('disconnect',()=>{
             console.log('usuario desconectado');
