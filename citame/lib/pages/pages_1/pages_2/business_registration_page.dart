@@ -3,8 +3,11 @@ import 'dart:io';
 import 'package:citame/Widgets/cuadro.dart';
 import 'package:citame/Widgets/photo_container.dart';
 import 'package:citame/pages/pages_1/pages_2/map_page.dart';
+import 'package:citame/pages/pages_1/pages_2/pages_3/pages_4/menu_page.dart';
 import 'package:citame/providers/img_provider.dart';
 import 'package:citame/providers/marker_provider.dart';
+import 'package:citame/providers/my_actual_business_provider.dart';
+import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -120,30 +123,30 @@ class BusinessRegisterPage extends ConsumerWidget {
                       SharedPreferences prefs =
                           await SharedPreferences.getInstance();
                       if (signUpKey.currentState!.validate()) {
-                        //var resultado = '';
-                        for (int i = 0; i < 1; i++) {
-                          await API.postBusiness(
-                            businessName.text + i.toString(),
-                            API.getCat(),
-                            prefs.getString('emailUser')!,
-                            //auth.currentUser!.uid,
-                            [],
-                            cel.text,
-                            physicalDirection.text,
-                            negocio.position.latitude.toString(),
-                            negocio.position.longitude.toString(),
-                            description.text,
-                            ref.read(imgProvider),
-                          );
-                        }
-
+                        var idNegocio = '';
+                        idNegocio = await API.postBusiness(
+                          businessName.text,
+                          API.getCat(),
+                          prefs.getString('emailUser')!,
+                          //auth.currentUser!.uid,
+                          [],
+                          cel.text,
+                          physicalDirection.text,
+                          negocio.position.latitude.toString(),
+                          negocio.position.longitude.toString(),
+                          description.text,
+                          ref.read(imgProvider),
+                        );
                         if (context.mounted) {
-                          businessName.text = '';
-                          cel.text = '';
-                          physicalDirection.text = '';
-                          description.text = '';
-                          ref.read(imgProvider.notifier).changeState(File(''));
+                          ref
+                              .read(myBusinessStateProvider.notifier)
+                              .setActualBusiness(idNegocio);
                           Navigator.pop(context);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MenuPage(),
+                              ));
                         }
                       }
                     } catch (e) {

@@ -1,7 +1,7 @@
 import 'package:citame/Widgets/profile_row.dart';
 import 'package:citame/models/user_model.dart';
 import 'package:citame/pages/pages_1/pages_2/business_registration_page.dart';
-import 'package:citame/pages/pages_1/pages_2/pages_3/pages_4/pages_5/carousel_page.dart';
+import 'package:citame/pages/pages_1/carousel_page.dart';
 import 'package:citame/pages/signin_page.dart';
 import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:citame/services/api_service.dart';

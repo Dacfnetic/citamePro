@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:citame/Widgets/business_card.dart';
 import 'package:citame/Widgets/worker.dart';
 import 'package:citame/models/business_model.dart';
@@ -48,6 +50,7 @@ class BusinessInsidePage extends ConsumerWidget {
               worker: e,
               ref: ref,
               imagen: Uint8List.fromList(e.imgPath[0]),
+              imagenParaDueno: File(""),
               isDueno: false,
             ))
         .toList();

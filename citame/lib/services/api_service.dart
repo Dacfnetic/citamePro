@@ -41,6 +41,89 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 abstract class API {
   static String server = 'https://win.citame.store';
 
+  static Future<String> guardarConfiguracionGeneral(
+    BuildContext context,
+    String businessId,
+    Map horario,
+    List<Service> servicios,
+    List<Worker> trabajadores,
+  ) async {
+    var request = http.MultipartRequest(
+        'POST', Uri.parse('$serverUrl/api/business/saveChangesFromBusiness'));
+
+    request.fields['businessId'] = businessId;
+    request.fields['requestedServices'] = servicios.toString();
+    request.fields['horario'] = horario.toString();
+    request.fields['requestedWorkers'] = trabajadores.toString();
+    var response = await request.send();
+
+    if (response.statusCode == 201) {
+      if (context.mounted) {
+        API.mensaje(context, 'Aviso', 'La solicitud fue enviada al trabajador');
+        return 'Todo ok';
+      }
+    }
+
+    throw Exception('Failed to add item');
+  }
+
+  static Future<String> postWorker(
+      String name,
+      String workerEmail,
+      File imgPath,
+      double salary,
+      Map horario,
+      String businessName,
+      String businessId,
+      String email,
+      BuildContext context,
+      String puesto,
+      String horarioLibre,
+      String celular,
+      String destiny) async {
+    var request = http.MultipartRequest(
+        'POST', Uri.parse('$serverUrl/api/workers/create'));
+    request.files
+        .add(await http.MultipartFile.fromPath('imagen', imgPath.path));
+    request.fields['destiny'] = destiny;
+    request.fields['name'] = name;
+    request.fields['email'] = workerEmail;
+    request.fields['businessName'] = businessName;
+    request.fields['id'] = businessId;
+    request.fields['businessEmail'] = email;
+    request.fields['salary'] = salary.toString();
+    request.fields['horario'] = horario.toString();
+    request.fields['horarioLibre'] = horarioLibre;
+    request.fields['status'] = false.toString();
+    request.fields['puesto'] = puesto;
+    request.fields['celular'] = celular;
+
+    var response = await request.send();
+
+    if (response.statusCode == 201) {
+      if (context.mounted) {
+        API.mensaje(context, 'Aviso', 'La solicitud fue enviada al trabajador');
+        return 'Todo ok';
+      }
+    }
+    if (response.statusCode == 202) {
+      if (context.mounted) {
+        API.mensaje(
+            context, 'Aviso', 'El correo no está registrado en la aplicación');
+        return 'Todo ok';
+      }
+    }
+    if (response.statusCode == 203) {
+      if (context.mounted) {
+        API.mensaje(
+            context, 'Aviso', 'El correo ya está asignado a este negocio');
+        return 'Todo ok';
+      }
+    }
+
+    throw Exception('Failed to add item');
+  }
+
   static Future<String> deleteBusiness(String businessId) async {
     final response =
         await http.delete(Uri.parse('$serverUrl/api/business/delete'),
@@ -149,7 +232,7 @@ abstract class API {
     throw Exception('Failed to add item');
   }
 
-  static Future<String> postWorker(
+  static Future<String> postImagen2(
       String name,
       String workerEmail,
       File imgPath,
@@ -206,6 +289,21 @@ abstract class API {
     }
 
     throw Exception('Failed to add item');
+  }
+
+  static Future<String> postImagen(
+      File imagen, String id, String destiny) async {
+    var request = http.MultipartRequest(
+        'POST', Uri.parse('$serverUrl/api/imagen/upload'));
+    request.files.add(await http.MultipartFile.fromPath('imagen', imagen.path));
+    request.fields['id'] = id;
+    request.fields['destiny'] = destiny;
+    var response = await request.send();
+
+    if (response.statusCode == 201) return 'Todo ok';
+    if (response.statusCode == 202) return 'Todo ok';
+
+    throw Exception('Failed to adddsds item');
   }
 
   static Future<String> postService(
@@ -455,21 +553,6 @@ abstract class API {
     ref.read(reRenderProvider.notifier).reRender();
   }
 
-  static Future<String> postImagen(
-      File imagen, String id, String destiny) async {
-    var request = http.MultipartRequest(
-        'POST', Uri.parse('$serverUrl/api/imagen/upload'));
-    request.files.add(await http.MultipartFile.fromPath('imagen', imagen.path));
-    request.fields['id'] = id;
-    request.fields['destiny'] = destiny;
-    var response = await request.send();
-
-    if (response.statusCode == 201) return 'Todo ok';
-    if (response.statusCode == 202) return 'Todo ok';
-
-    throw Exception('Failed to adddsds item');
-  }
-
   static Future<String> postBusiness(
     String businessName,
     String? category,
@@ -501,7 +584,7 @@ abstract class API {
     if (response.statusCode == 201) {
       var businessList = jsonDecode(response.body);
       await API.postImagen(imgPath, businessList['_id'], 'business');
-      return 'todo OK';
+      return businessList['_id'];
     }
     if (response.statusCode == 202) return "El negocio ya existe";
     throw Exception('Failed to add item');

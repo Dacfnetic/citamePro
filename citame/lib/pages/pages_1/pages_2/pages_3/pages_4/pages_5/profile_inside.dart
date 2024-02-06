@@ -6,6 +6,8 @@ import 'package:citame/providers/img_provider.dart';
 import 'package:citame/providers/my_actual_business_provider.dart';
 import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:citame/providers/re_render_provider.dart';
+import 'package:citame/providers/services_provider.dart';
+import 'package:citame/providers/workers_provider.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -269,7 +271,7 @@ class ProfileInsidePage extends ConsumerWidget {
                                 .getHorarioParaEnviar();
                             if (signUpKey.currentState!.validate()) {
                               if (context.mounted) {
-                                API.postWorker(
+                                /*API.postWorker(
                                     workerName.text,
                                     workerEmail.text,
                                     ref.read(imgProvider),
@@ -283,7 +285,23 @@ class ProfileInsidePage extends ConsumerWidget {
                                     context,
                                     workerJob.text,
                                     horarioLibre,
-                                    workerCel.text);
+                                    workerCel.text,
+                                    "worker");*/
+                                ref.read(workersProvider.notifier).anadir(
+                                    Worker(
+                                        name: workerName.text,
+                                        email: workerEmail.text,
+                                        imgPath: [ref.read(imgProvider)],
+                                        salary: double.parse(workerSalary.text),
+                                        horario: enviar.toString(),
+                                        status: false,
+                                        id: "",
+                                        idWorker: "",
+                                        puesto: workerJob.text,
+                                        horarioDisponible: {},
+                                        celular: int.parse(workerCel.text)));
+                                //Escribir lo que pasa despues del post
+                                Navigator.pop(context);
                               }
                             }
                           },

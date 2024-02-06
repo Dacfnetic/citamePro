@@ -1,14 +1,13 @@
-import 'package:citame/models/service_model.dart';
-import 'package:flutter/material.dart';
+import 'package:citame/models/worker_moder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final servicesProvider =
-    StateNotifierProvider<ServicesNotifier, List<Service>>((ref) {
-  return ServicesNotifier();
+final workersProvider =
+    StateNotifierProvider<WorkersNotifier, List<Worker>>((ref) {
+  return WorkersNotifier();
 });
 
-class ServicesNotifier extends StateNotifier<List<Service>> {
-  ServicesNotifier() : super([]);
+class WorkersNotifier extends StateNotifier<List<Worker>> {
+  WorkersNotifier() : super([]);
 
   void anadir(entrada) {
     state = [...state, entrada];
@@ -18,7 +17,7 @@ class ServicesNotifier extends StateNotifier<List<Service>> {
   }
 
   void remover(entrada) {
-    List<Service> nueva = state.where((element) => element != entrada).toList();
+    List<Worker> nueva = state.where((element) => element != entrada).toList();
     state = nueva;
   }
 
@@ -30,7 +29,7 @@ class ServicesNotifier extends StateNotifier<List<Service>> {
     state = servicios;
   }
 
-  List<Service> obtener() {
+  List<Worker> obtener() {
     return state;
   }
 

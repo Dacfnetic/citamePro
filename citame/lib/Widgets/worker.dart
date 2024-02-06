@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:citame/models/worker_moder.dart';
@@ -14,11 +15,13 @@ class WorkerBox extends ConsumerWidget {
     required this.ref,
     required this.imagen,
     required this.isDueno,
+    required this.imagenParaDueno,
   });
 
   final bool isDueno;
   final Worker worker;
   final Uint8List imagen;
+  final File imagenParaDueno;
   final WidgetRef ref;
 
   @override
@@ -52,8 +55,8 @@ class WorkerBox extends ConsumerWidget {
                 child: TextButton(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(16),
-                    child: Image.memory(
-                      imagen,
+                    child: Image.file(
+                      imagenParaDueno,
                       width: double.infinity,
                       height: 230,
                       fit: BoxFit.cover,

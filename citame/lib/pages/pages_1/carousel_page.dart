@@ -212,7 +212,7 @@ class _CarouselPageState extends State<CarouselPage> {
           } else {
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
-                builder: (context) => SubscriptionPage(),
+                builder: (context) => BusinessRegisterPage(),
               ),
             );
           }

@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:citame/Widgets/cuadro.dart';
 import 'package:citame/Widgets/worker.dart';
 import 'package:citame/models/service_model.dart';
@@ -7,6 +9,7 @@ import 'package:citame/providers/duracion_provider.dart';
 import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:citame/providers/re_render_provider.dart';
 import 'package:citame/providers/services_provider.dart';
+import 'package:citame/providers/workers_provider.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
@@ -57,6 +60,8 @@ class MenuPage extends ConsumerWidget {
 
     List<Service> listaDeServicios = ref.watch(servicesProvider);
 
+    List<Worker> workers = ref.watch(workersProvider);
+
     List<CajaDeServicios> servicios = listaDeServicios
         .map((servicio) => CajaDeServicios(
             nombre: servicio.nombreServicio,
@@ -67,14 +72,12 @@ class MenuPage extends ConsumerWidget {
 
     ReRenderNotifier reRender = ref.watch(reRenderProvider.notifier);
 
-    List<Worker> workers =
-        ref.watch(myBusinessStateProvider.notifier).obtenerWorkers();
-
     List<WorkerBox> trabajadores = workers
         .map((e) => WorkerBox(
               worker: e,
               ref: ref,
-              imagen: e.imgPath[0],
+              imagen: Uint8List(0),
+              imagenParaDueno: e.imgPath[0],
               isDueno: true,
             ))
         .toList();
@@ -270,7 +273,7 @@ class MenuPage extends ConsumerWidget {
                                             }
                                             final time = horario.inMinutes / 60;
 
-                                            await API.postService(
+                                            /*await API.postService(
                                                 context,
                                                 ref
                                                     .read(
@@ -282,18 +285,36 @@ class MenuPage extends ConsumerWidget {
                                                 double.parse(precio.text),
                                                 enviar,
                                                 '',
-                                                time);
+                                                time);*/
+                                            ref
+                                                .read(servicesProvider.notifier)
+                                                .anadir(Service(
+                                                  nombreServicio: servicio.text,
+                                                  imgPath: [],
+                                                  precio:
+                                                      double.parse(precio.text),
+                                                  descripcion: "descripcion",
+                                                  duracion: enviar,
+                                                  businessCreatedBy: ref
+                                                      .read(
+                                                          myBusinessStateProvider
+                                                              .notifier)
+                                                      .getActualBusiness(),
+                                                  id: "",
+                                                  time: time,
+                                                ));
+
                                             if (context.mounted) {
                                               Navigator.pop(context);
                                             }
-                                            ref
+                                            /* ref
                                                 .read(servicesProvider.notifier)
                                                 .actualizar(ref
                                                     .read(
                                                         myBusinessStateProvider
                                                             .notifier)
                                                     .getService());
-                                            API.reRender(ref);
+                                            API.reRender(ref);*/
                                           }
                                         },
                                       ),
@@ -328,7 +349,8 @@ class MenuPage extends ConsumerWidget {
                       horario: horario, day: 'sabado', ref: ref),
                   ContenedorDeHorario2(
                       horario: horario, day: 'domingo', ref: ref),
-                  ElevatedButton(
+                  //TO DO: Tengo que copiar lo de adentro el la función de guardar general.
+                  /*ElevatedButton(
                       onPressed: () async {
                         SharedPreferences prefs =
                             await SharedPreferences.getInstance();
@@ -341,7 +363,7 @@ class MenuPage extends ConsumerWidget {
                         API.updateBusinessSchedule(
                             prefs.getString('negocioActual')!, enviar);
                       },
-                      child: Text('Guardar horario'))
+                      child: Text('Guardar horario'))*/
                 ]),
               ),
               ListView(
@@ -386,6 +408,27 @@ class MenuPage extends ConsumerWidget {
             ]))
           ]),
         ),
+        floatingActionButton: FloatingActionButton(onPressed: () async {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString('negocioActual',
+              ref.read(myBusinessStateProvider.notifier).getActualBusiness());
+          String idNegocio = prefs.getString('negocioActual')!;
+          ref
+              .read(myBusinessStateProvider.notifier)
+              .setHorarioParaEnviar(horas.toJson());
+          Map horarioGeneral =
+              ref.read(myBusinessStateProvider.notifier).getHorarioParaEnviar();
+          //Llamar al método de guardar configuración general
+          if (context.mounted) {
+            await API.guardarConfiguracionGeneral(
+              context,
+              idNegocio,
+              horarioGeneral,
+              ref.read(servicesProvider),
+              ref.read(workersProvider),
+            );
+          }
+        }),
       ),
     );
   }
