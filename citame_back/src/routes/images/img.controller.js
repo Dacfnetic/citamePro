@@ -141,4 +141,5 @@ module.exports = {
   uploadImage,
   downloadImage,
   deleteImage,
+  randomImageName,
 }

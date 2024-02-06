@@ -5,7 +5,6 @@ const services = require('../../models/services.model.js')
 const workerModel = require('../../models/worker.model.js')
 const citaModel = require('../../models/cita.model.js')
 const jwt = require('jsonwebtoken')
-const Imagen = require('../../models/image.model.js')
 const mongoose = require('mongoose')
 const config = require('../../config/configjson.js')
 const {
@@ -13,7 +12,8 @@ const {
   deleteImagesOnArrayWorkers,
   deleteImagen,
 } = require('../../config/functions.js')
-const io = require('../../../server.js')
+const ImageService = require('../images/img.service.js')
+const Agenda = require('../../models/agenda.js')
 
 async function getAllBusiness(req, res) {
   console.log('Intentando obtener negocios por categoria')
@@ -427,6 +427,81 @@ async function updateBusinessSchedule(req, res) {
   return res.status(200).send('Todo ok')
 }
 
+async function saveChangesFromBusiness(req, res) {
+  //Update Services
+  const business = await business.findById(req.body.businessId)
+  let previousService = business.doc.servicios //Servicios existentes
+  let listaServices = []
+  listaServices = JSON.parse(JSON.stringify(previousService))
+  let requestedServices = JSON.parse(req.body.requestedServices)
+
+  const newServicesToInsert = requestedServices.map(
+    (service) =>
+      new services({
+        nombreServicio: service.nombreServicio,
+        businessCreatedBy: business.doc._id,
+        precio: service.precio,
+        imgPath: service.imgPath,
+        descripcion: service.descripcion,
+        duracion: service.duracion,
+        time: service.time,
+      }),
+  )
+  const newServices = await services.insertMany(newServicesToInsert)
+  listaServices.push(newServices.insertedIds)
+
+  //Update Workers
+  let previousWorker = business.doc.workers //Trabajadores existentes
+  let listaWorkers = []
+  listaWorkers = JSON.parse(JSON.stringify(previousWorker))
+  let nuevoWorker = []
+  let requestedWorkers = req.body.requestedWorkers
+
+  for (let worker of requestedWorkers) {
+    await usuario.findOne({ emailUser: worker.email }).then(async (docs) => {
+      if (docs != null) {
+        const horasQueVaATrabajarElEsclavo = new Agenda()
+        horasQueVaATrabajarElEsclavo.construirHorarioInicial(worker.horario)
+
+        const newWorker = new workerModel({
+          id: docs._id,
+          workwith: business.doc._id,
+          name: worker.name,
+          email: worker.email,
+          salary: worker.salary,
+          //horario: worker.horario,
+          horarioDisponible: horasQueVaATrabajarElEsclavo,
+          status: worker.status,
+          puesto: worker.puesto,
+          celular: worker.celular,
+        })
+        await newWorker.save()
+
+        await ImageService.uploadImage({
+          buffer: worker.imgPath[0],
+          id: newWorker._id,
+          destiny: 'worker',
+        })
+
+        nuevoWorker.push(newWorker._id)
+      }
+    })
+  }
+
+  listaWorkers.push(nuevoWorker)
+
+  //Update horario
+  let modificaciones = {
+    horario: JSON.parse(req.body.horario),
+    servicios: listaServices,
+    workers: listaWorkers,
+  }
+
+  //Actualizar negocio
+  await business.findByIdAndUpdate(req.body.idBusiness, { $set: modificaciones })
+  return res.status(200).send('Todo ok')
+}
+
 //Exportar funciones
 module.exports = {
   getAllBusiness,
@@ -440,4 +515,5 @@ module.exports = {
   updateBusiness,
   getFavBusiness,
   updateBusinessSchedule,
+  saveChangesFromBusiness,
 }
