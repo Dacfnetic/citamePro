@@ -12,9 +12,9 @@ const {
   updateBusiness,
   getFavBusiness,
   updateBusinessSchedule,
+  saveChangesFromBusiness,
 } = require('./business.controller.js')
 
-const { verifyBusinessToken } = require('../Auth/verifyToken.js')
 //Creación de enrutador
 const businessRouter = express.Router()
 //Asignación de direcciones
@@ -29,6 +29,7 @@ businessRouter.put('/api/business/serviceupdate', updateArrayServices)
 businessRouter.put('/api/business/updateBusiness', updateBusiness)
 businessRouter.put('/api/business/updateBusinessSchedule', updateBusinessSchedule)
 businessRouter.get('/api/business/FavBusiness', getFavBusiness)
+businessRouter.post('/api/business/saveChangesFromBusiness', saveChangesFromBusiness)
 
 //Exportar enrutador
 module.exports = businessRouter
