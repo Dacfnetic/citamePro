@@ -11,7 +11,7 @@ class Agenda {
   }
 
   construirHorarioInicial(horario) {
-    const horarioJson = horario
+    const horarioJson = horario;
 
     this.lun = horarioJson.lunes.map((h) => {
       const hinicial = h.hora_inicial + h.minuto_inicial / 60

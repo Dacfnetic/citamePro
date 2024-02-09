@@ -48,20 +48,43 @@ abstract class API {
     List<Service> servicios,
     List<Worker> trabajadores,
   ) async {
+    List paraEnviar = [];
+    for (var trabajador in trabajadores) {
+      Map agregarALaLista = trabajador.toJson();
+      agregarALaLista['horario'] = jsonEncode(trabajador.horario);
+      agregarALaLista['imgPath'] = trabajador.imgPath[0].path;
+      paraEnviar.add(jsonEncode(agregarALaLista));
+    }
+    String enviar = paraEnviar.toString();
+
+    List paraEnviar2 = [];
+    for (var serv in servicios) {
+      Map agregarALaLista = serv.toJson();
+      paraEnviar2.add(jsonEncode(agregarALaLista));
+    }
+    String enviar2 = paraEnviar2.toString();
+
     var request = http.MultipartRequest(
         'POST', Uri.parse('$serverUrl/api/business/saveChangesFromBusiness'));
 
-    request.fields['businessId'] = businessId;
-    request.fields['requestedServices'] = servicios.toString();
-    request.fields['horario'] = horario.toString();
-    request.fields['requestedWorkers'] = trabajadores.toString();
-    var response = await request.send();
+    for (var trabajador in trabajadores) {
+      request.files.add(await http.MultipartFile.fromPath(
+          'imagen', trabajador.imgPath[0].path));
+    }
 
-    if (response.statusCode == 201) {
-      if (context.mounted) {
-        API.mensaje(context, 'Aviso', 'La solicitud fue enviada al trabajador');
-        return 'Todo ok';
-      }
+    request.fields['businessId'] = businessId;
+    request.fields['requestedServices'] = enviar2;
+    request.fields['horario'] = horario.toString();
+    request.fields['requestedWorkers'] = enviar;
+
+    http.Response response =
+        await http.Response.fromStream(await request.send());
+
+    if (response.statusCode == 200) {
+      log("Result: ${response.statusCode}");
+      var contenido = jsonDecode(response.body);
+      log(contenido.toString());
+      return "todo ok";
     }
 
     throw Exception('Failed to add item');
@@ -83,8 +106,10 @@ abstract class API {
       String destiny) async {
     var request = http.MultipartRequest(
         'POST', Uri.parse('$serverUrl/api/workers/create'));
+
     request.files
         .add(await http.MultipartFile.fromPath('imagen', imgPath.path));
+
     request.fields['destiny'] = destiny;
     request.fields['name'] = name;
     request.fields['email'] = workerEmail;
@@ -264,6 +289,7 @@ abstract class API {
           'puesto': puesto,
           'celular': celular,
         })));
+
     if (response.statusCode == 201) {
       var workerData = jsonDecode(response.body);
       await API.postImagen(imgPath, workerData['_id'], 'worker');
@@ -295,9 +321,11 @@ abstract class API {
       File imagen, String id, String destiny) async {
     var request = http.MultipartRequest(
         'POST', Uri.parse('$serverUrl/api/imagen/upload'));
+
     request.files.add(await http.MultipartFile.fromPath('imagen', imagen.path));
     request.fields['id'] = id;
     request.fields['destiny'] = destiny;
+
     var response = await request.send();
 
     if (response.statusCode == 201) return 'Todo ok';

@@ -1,4 +1,5 @@
 const express = require('express')
+const uploadMiddleware = require('../middlewares/uploadMiddleware')
 //Importación de funciones
 const {
   getAllBusiness,
@@ -29,7 +30,7 @@ businessRouter.put('/api/business/serviceupdate', updateArrayServices)
 businessRouter.put('/api/business/updateBusiness', updateBusiness)
 businessRouter.put('/api/business/updateBusinessSchedule', updateBusinessSchedule)
 businessRouter.get('/api/business/FavBusiness', getFavBusiness)
-businessRouter.post('/api/business/saveChangesFromBusiness', saveChangesFromBusiness)
+businessRouter.post('/api/business/saveChangesFromBusiness', uploadMiddleware.fields([{ name: 'imagen', maxCount: 5}]), saveChangesFromBusiness)
 
 //Exportar enrutador
 module.exports = businessRouter

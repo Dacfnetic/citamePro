@@ -271,29 +271,30 @@ class ProfileInsidePage extends ConsumerWidget {
                                 .getHorarioParaEnviar();
                             if (signUpKey.currentState!.validate()) {
                               if (context.mounted) {
-                                /*API.postWorker(
-                                    workerName.text,
-                                    workerEmail.text,
-                                    ref.read(imgProvider),
-                                    double.parse(workerSalary.text),
-                                    enviar,
-                                    ref.read(actualBusinessProvider),
-                                    ref
-                                        .read(myBusinessStateProvider.notifier)
-                                        .getActualBusiness(),
-                                    prefs.getString('emailUser')!,
-                                    context,
-                                    workerJob.text,
-                                    horarioLibre,
-                                    workerCel.text,
-                                    "worker");*/
+                                /*API.postImagen2(
+                                  workerName.text,
+                                  workerEmail.text,
+                                  ref.read(imgProvider),
+                                  double.parse(workerSalary.text),
+                                  enviar,
+                                  ref.read(actualBusinessProvider),
+                                  ref
+                                      .read(myBusinessStateProvider.notifier)
+                                      .getActualBusiness(),
+                                  prefs.getString('emailUser')!,
+                                  context,
+                                  workerJob.text,
+                                  horarioLibre,
+                                  workerCel.text,
+                                );*/
                                 ref.read(workersProvider.notifier).anadir(
                                     Worker(
                                         name: workerName.text,
                                         email: workerEmail.text,
                                         imgPath: [ref.read(imgProvider)],
+                                        imagen1: ref.read(imgProvider).path,
                                         salary: double.parse(workerSalary.text),
-                                        horario: enviar.toString(),
+                                        horario: enviar,
                                         status: false,
                                         id: "",
                                         idWorker: "",

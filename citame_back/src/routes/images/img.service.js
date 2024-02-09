@@ -6,15 +6,16 @@ const Imagen = require('../../models/image.model')
 const Trabajador = require('../../models/worker.model')
 
 class ImageService {
+  
   async uploadImage(data) {
     try {
-      const bufferImg = await sharp(data.buffer).resize({ width: 300, height: 300 }).toBuffer()
+      const bufferImg = await sharp(data.buffer.buffer).resize({ width: 300, height: 300 }).toBuffer()
 
       const nameImg = randomImageName()
       const nameFile = `img_${nameImg}_${Date.now()}.png`
       const rutaAlmacenamiento = `src/img_CitaMe/${nameFile}`
 
-      await fs.writeFile(rutaAlmacenamiento, bufferImg)
+      await fs.writeFileSync(rutaAlmacenamiento, bufferImg)
 
       const imagen = new Imagen({ imgNombre: nameFile, imgRuta: rutaAlmacenamiento })
       await imagen.save()

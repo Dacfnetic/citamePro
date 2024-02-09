@@ -429,43 +429,49 @@ async function updateBusinessSchedule(req, res) {
 
 async function saveChangesFromBusiness(req, res) {
   //Update Services
-  const business = await business.findById(req.body.businessId)
-  let previousService = business.doc.servicios //Servicios existentes
+  const busi = await business.findById(req.body.businessId)
+  let previousService = busi._doc.servicios //Servicios existentes
   let listaServices = []
   listaServices = JSON.parse(JSON.stringify(previousService))
-  let requestedServices = JSON.parse(req.body.requestedServices)
+  let requestedServices = JSON.parse(req.body.requestedServices);
 
-  const newServicesToInsert = requestedServices.map(
-    (service) =>
-      new services({
-        nombreServicio: service.nombreServicio,
-        businessCreatedBy: business.doc._id,
-        precio: service.precio,
-        imgPath: service.imgPath,
-        descripcion: service.descripcion,
-        duracion: service.duracion,
-        time: service.time,
-      }),
-  )
-  const newServices = await services.insertMany(newServicesToInsert)
-  listaServices.push(newServices.insertedIds)
+  
+    const newServicesToInsert = requestedServices.map(
+      (service) =>
+        new services({
+          nombreServicio: service.nombreServicio,
+          businessCreatedBy: busi._doc._id,
+          precio: service.precio,
+          imgPath: service.imgPath,
+          descripcion: service.descripcion,
+          duracion: service.duracion,
+          time: service.time,
+        }),
+    )
+    for(var serv of newServicesToInsert){
+      listaServices.push(serv._id);
+    }
+    const newServices = await services.insertMany(newServicesToInsert)
+    
+  
 
   //Update Workers
-  let previousWorker = business.doc.workers //Trabajadores existentes
+  let previousWorker = busi._doc.workers //Trabajadores existentes
   let listaWorkers = []
   listaWorkers = JSON.parse(JSON.stringify(previousWorker))
   let nuevoWorker = []
-  let requestedWorkers = req.body.requestedWorkers
-
+  let requestedWorkers = JSON.parse(req.body.requestedWorkers);
+  let contador = 0;
   for (let worker of requestedWorkers) {
     await usuario.findOne({ emailUser: worker.email }).then(async (docs) => {
       if (docs != null) {
-        const horasQueVaATrabajarElEsclavo = new Agenda()
-        horasQueVaATrabajarElEsclavo.construirHorarioInicial(worker.horario)
+        let horasQueVaATrabajarElEsclavo = new Agenda()
+   
+        horasQueVaATrabajarElEsclavo.construirHorarioInicial(JSON.parse(worker.horario));
 
         const newWorker = new workerModel({
           id: docs._id,
-          workwith: business.doc._id,
+          workwith: busi._doc._id,
           name: worker.name,
           email: worker.email,
           salary: worker.salary,
@@ -476,30 +482,32 @@ async function saveChangesFromBusiness(req, res) {
           celular: worker.celular,
         })
         await newWorker.save()
-
-        await ImageService.uploadImage({
-          buffer: worker.imgPath[0],
+        let hola = new ImageService();
+        await hola.uploadImage({
+          buffer: req.files.imagen[contador],
           id: newWorker._id,
           destiny: 'worker',
         })
-
-        nuevoWorker.push(newWorker._id)
+        contador++;
+        //const idCool = newWorker._id.toString();
+        nuevoWorker.push(newWorker._id);
       }
     })
   }
+  let listaActualizadaDeWorkers = listaWorkers.concat(nuevoWorker);
 
-  listaWorkers.push(nuevoWorker)
 
   //Update horario
   let modificaciones = {
-    horario: JSON.parse(req.body.horario),
+    horario: JSON.stringify(req.body.horario),
     servicios: listaServices,
-    workers: listaWorkers,
+    workers: listaActualizadaDeWorkers,
   }
 
   //Actualizar negocio
-  await business.findByIdAndUpdate(req.body.idBusiness, { $set: modificaciones })
-  return res.status(200).send('Todo ok')
+  await business.findByIdAndUpdate(req.body.businessId, { $set: modificaciones });
+  let respuesta = await business.findByIdAndUpdate(req.body.businessId);
+  return res.status(200).send(respuesta);
 }
 
 //Exportar funciones

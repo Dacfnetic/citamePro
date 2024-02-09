@@ -13,8 +13,9 @@ class Worker {
   final String name;
   final String email;
   final List imgPath;
+  final String imagen1;
   final double salary;
-  final String horario;
+  final Map horario;
   final bool status;
   final String id;
   final String idWorker;
@@ -26,8 +27,9 @@ class Worker {
         'name': name,
         'email': email,
         'imgPath': imgPath,
+        'imagen1': imagen1,
         'salary': salary,
-        'horario': horario,
+        'horario': horario.toString(),
         'status': status,
         'id': id,
         'idWorker': idWorker,
@@ -38,6 +40,7 @@ class Worker {
       {required this.name,
       required this.email,
       required this.imgPath,
+      required this.imagen1,
       required this.salary,
       required this.horario,
       required this.status,
@@ -52,8 +55,9 @@ class Worker {
         name: json['name'],
         email: json['email'],
         imgPath: json['imgPath'],
+        imagen1: json['imgPath'][0].path,
         salary: json['salary'].toDouble(),
-        horario: '',
+        horario: {},
         status: json['status'],
         id: json['id'],
         idWorker: json['_id'],
