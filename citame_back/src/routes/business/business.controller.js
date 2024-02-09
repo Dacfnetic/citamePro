@@ -490,18 +490,17 @@ async function saveChangesFromBusiness(req, res) {
         })
         contador++;
         //const idCool = newWorker._id.toString();
-        nuevoWorker.push(newWorker._id);
+        listaWorkers.push(newWorker._id);
       }
     })
   }
-  let listaActualizadaDeWorkers = listaWorkers.concat(nuevoWorker);
 
 
   //Update horario
   let modificaciones = {
-    horario: JSON.stringify(req.body.horario),
+    horario: req.body.horario,
     servicios: listaServices,
-    workers: listaActualizadaDeWorkers,
+    workers: listaWorkers,
   }
 
   //Actualizar negocio
