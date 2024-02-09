@@ -13,7 +13,6 @@ class Worker {
   final String name;
   final String email;
   final List imgPath;
-  final String imagen1;
   final double salary;
   final Map horario;
   final bool status;
@@ -27,7 +26,6 @@ class Worker {
         'name': name,
         'email': email,
         'imgPath': imgPath,
-        'imagen1': imagen1,
         'salary': salary,
         'horario': horario.toString(),
         'status': status,
@@ -40,7 +38,6 @@ class Worker {
       {required this.name,
       required this.email,
       required this.imgPath,
-      required this.imagen1,
       required this.salary,
       required this.horario,
       required this.status,
@@ -55,7 +52,6 @@ class Worker {
         name: json['name'],
         email: json['email'],
         imgPath: json['imgPath'],
-        imagen1: json['imgPath'][0].path,
         salary: json['salary'].toDouble(),
         horario: {},
         status: json['status'],

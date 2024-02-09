@@ -49,6 +49,7 @@ abstract class API {
     List<Worker> trabajadores,
   ) async {
     List paraEnviar = [];
+    String horarioParaEnviar = jsonEncode(horario);
     for (var trabajador in trabajadores) {
       Map agregarALaLista = trabajador.toJson();
       agregarALaLista['horario'] = jsonEncode(trabajador.horario);
@@ -74,7 +75,7 @@ abstract class API {
 
     request.fields['businessId'] = businessId;
     request.fields['requestedServices'] = enviar2;
-    request.fields['horario'] = horario.toString();
+    request.fields['horario'] = horarioParaEnviar;
     request.fields['requestedWorkers'] = enviar;
 
     http.Response response =

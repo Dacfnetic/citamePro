@@ -292,7 +292,6 @@ class ProfileInsidePage extends ConsumerWidget {
                                         name: workerName.text,
                                         email: workerEmail.text,
                                         imgPath: [ref.read(imgProvider)],
-                                        imagen1: ref.read(imgProvider).path,
                                         salary: double.parse(workerSalary.text),
                                         horario: enviar,
                                         status: false,
