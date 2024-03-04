@@ -103,23 +103,7 @@ async function main() {
     var keyName = 'hello_world.txt'
 
     // Create a promise on S3 service object
-    var bucketPromise = new AWS.S3({
-      apiVersion: '2006-03-01',
-      region: 'us-east-2',
-      accessKeyId: 'AKIASSBRRBMJ3ABEIOUZ',
-      secretAccessKey: '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',
-    })
-      .createBucket({ Bucket: bucketName })
-      .promise()
-
-    var snsPromise = new AWS.SNS({
-      region: 'us-east-1',
-      accessKeyId: 'AKIASSBRRBMJ3ABEIOUZ',
-      secretAccessKey: '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',
-    }).createPlatformEndpoint({
-      Token: tokenName,
-      PlatformApplicationArn: 'arn:aws:sns:us-east-1:176197536531:app/GCM/citame',
-    }).promise()
+  
     /*
     // Handle promise fulfilled/rejected states
     bucketPromise
