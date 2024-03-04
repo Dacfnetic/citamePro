@@ -128,7 +128,7 @@ async function postCita(req, res) {
 
     let agenda = new Agenda()
     agenda.establecerHorarios(trabajador._doc.horarioDisponible)
-    const funciona = agenda.updateWorkerHorario(cita)
+    const funciona = agenda.updateWorkerHorario(cita, dateCreated._id)
 
     if (funciona) {
       dateCreated.save()

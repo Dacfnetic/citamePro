@@ -1,98 +1,147 @@
-const http = require('http');
+const http = require('http')
 const app = require('./src/app')
-const { Server } = require("socket.io");
-const user = require('./src/models/users.model');
-const {deleteBusiness} = require('./src/routes/business/business.controller');
+const { Server } = require('socket.io')
+const user = require('./src/models/users.model')
+const { deleteBusiness } = require('./src/routes/business/business.controller')
+var AWS = require('aws-sdk')
+var uuid = require('uuid')
 
-const { connect } = require('./src/config/database');
-const { setTimeout } = require('timers');
+const { connect } = require('./src/config/database')
+const { setTimeout } = require('timers')
 //const {setupWebSocket} = require('./src/routes/notification/notification.controller');
 
-const server = http.createServer(app);
-const io = new Server(server);
-const PORT = process.env.PORT || 4000 ;
-const usuariosConectados = new Set();
-const listaDeSocketConCorreo = {};
-const arrayNegocios = [];
-            
-async function update(){
-    await io.emit('CACA', 'CACA');
-    setTimeout(update,5000);
+const server = http.createServer(app)
+const io = new Server(server)
+const PORT = process.env.PORT || 4000
+const usuariosConectados = new Set()
+const listaDeSocketConCorreo = {}
+const arrayNegocios = []
+
+async function update() {
+  await io.emit('CACA', 'CACA')
+  setTimeout(update, 5000)
 }
 
+async function main() {
+  //Conexion a la BD
+  await connect()
+  app.get('/', (req, res) => {
+    res.send('Holis')
+  })
+  //Usuarios conectados
+  let contador = 0
+  io.on('connection', (socket) => {
+    //io.disconnectSockets(true);
+    console.log('a user connected' + socket.id)
 
-async function main(){
-    
-    //Conexion a la BD
-    await connect();
-    app.get('/', (req, res) => {
-        res.send('Holis');
-      }); 
-      //Usuarios conectados
-      let contador = 0;
-    io.on('connection', (socket) => {
-        //io.disconnectSockets(true);
-        console.log('a user connected' + socket.id);
-        
-        socket.on('UsuarioRegistrado',(emailUser) => {  
-            contador++;
-            console.log(contador);       
-            if(usuariosConectados.has(emailUser)){
-                listaDeSocketConCorreo[emailUser] = socket.id;
-                socket.emit('Usuario encontrado');
-                console.log(usuariosConectados);
-            }else{
-                usuariosConectados.add(emailUser);
-                //Mandar los usuarios
-                io.emit('Usuarios Actualizados', Array.from(usuariosConectados));
+    socket.on('UsuarioRegistrado', (emailUser) => {
+      contador++
+      console.log(contador)
+      if (usuariosConectados.has(emailUser)) {
+        listaDeSocketConCorreo[emailUser] = socket.id
+        socket.emit('Usuario encontrado')
+        console.log(usuariosConectados)
+      } else {
+        usuariosConectados.add(emailUser)
+        //Mandar los usuarios
+        io.emit('Usuarios Actualizados', Array.from(usuariosConectados))
 
-                listaDeSocketConCorreo[emailUser] = socket.id;
-                console.log(usuariosConectados);
-                console.log(listaDeSocketConCorreo);
-            } 
+        listaDeSocketConCorreo[emailUser] = socket.id
+        console.log(usuariosConectados)
+        console.log(listaDeSocketConCorreo)
+      }
 
-            //update();
+      //update();
+    })
 
-        });
+    //Refresh para el delete business.
 
-        //Refresh para el delete business.
-        
-        socket.on('deleteBusiness', (id) => {
-            console.log(usuariosConectados);
-            console.log(socket.client.sockets);
-            console.log('NEGOCIOo');
-            //Eliminar el negocio de la lista
-            //arrayNegocios = arrayNegocios.filter( (n) => n.id !== id );
+    socket.on('deleteBusiness', (id) => {
+      console.log(usuariosConectados)
+      console.log(socket.client.sockets)
+      console.log('NEGOCIOo')
+      //Eliminar el negocio de la lista
+      //arrayNegocios = arrayNegocios.filter( (n) => n.id !== id );
 
-            //socket.broadcast.emit('negocioEliminado',id);
-            io.emit('negocioEliminado',id);
+      //socket.broadcast.emit('negocioEliminado',id);
+      io.emit('negocioEliminado', id)
+    })
 
-        });
+    socket.on('citaEmitida', (correoAEnviarNotificacion) => {
+      io.to(listaDeSocketConCorreo[correoAEnviarNotificacion]).emit(
+        'solicitudEntrante',
+        'El usuario x quiere reserva una cita con vos',
+      )
+      //socket.broadcast.emit('negocioEliminado',id);
+    })
 
-        socket.on('citaEmitida', (correoAEnviarNotificacion) => {
-          
-            io.to(listaDeSocketConCorreo[correoAEnviarNotificacion]).emit('solicitudEntrante','El usuario x quiere reserva una cita con vos'); 
-            //socket.broadcast.emit('negocioEliminado',id);
-           
+    //Desconexion de usuarios
+    socket.on('disconnect', () => {
+      console.log('usuario desconectado')
+      usuariosConectados.delete(socket.emailUser)
+      console.log(usuariosConectados)
+      io.emit('Usuarios Actualizados', Array.from(usuariosConectados))
+    })
+  })
 
-        });
-  
-        //Desconexion de usuarios
-        socket.on('disconnect',()=>{
-            console.log('usuario desconectado');
-            usuariosConectados.delete(socket.emailUser);
-            console.log(usuariosConectados);
-            io.emit('Usuarios Actualizados',Array.from(usuariosConectados));
+  //Express app
+  await server.listen(PORT, () => {
+    console.log(`Server is running at port: ${PORT}`)
+
+    /*AWS.config.getCredentials(function(err) {
+        if (err) console.log(err.stack);
+        // credentials not loaded
+        else {
+            console.log("Access key:", AWS.config.credentials.accessKeyId);
+        }
+        });*/
+
+    // Create unique bucket name
+    var bucketName = 'node-sdk-sample-' + uuid.v4()
+    var tokenName = '1' + uuid.v4()
+    // Create name for uploaded object key
+    var keyName = 'hello_world.txt'
+
+    // Create a promise on S3 service object
+    var bucketPromise = new AWS.S3({
+      apiVersion: '2006-03-01',
+      region: 'us-east-2',
+      accessKeyId: 'AKIASSBRRBMJ3ABEIOUZ',
+      secretAccessKey: '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',
+    })
+      .createBucket({ Bucket: bucketName })
+      .promise()
+
+    var snsPromise = new AWS.SNS({
+      region: 'us-east-1',
+      accessKeyId: 'AKIASSBRRBMJ3ABEIOUZ',
+      secretAccessKey: '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',
+    }).createPlatformEndpoint({
+      Token: tokenName,
+      PlatformApplicationArn: 'arn:aws:sns:us-east-1:176197536531:app/GCM/citame',
+    }).promise()
+    /*
+    // Handle promise fulfilled/rejected states
+    bucketPromise
+      .then(function (data) {
+        // Create params for putObject call
+        var objectParams = {
+          Bucket: bucketName,
+          Key: keyName,
+          Body: 'Hello World!',
+        }
+        // Create object upload promise
+        var uploadPromise = new AWS.S3({ apiVersion: '2006-03-01' })
+          .putObject(objectParams)
+          .promise()
+        uploadPromise.then(function (data) {
+          console.log('Successfully uploaded data to ' + bucketName + '/' + keyName)
         })
-    });
-   
-
-    
-    //Express app
-    await server.listen(PORT ,() =>{
-        console.log(`Server is running at port: ${PORT}`);
-    });
-
+      })
+      .catch(function (err) {
+        console.error(err, err.stack)
+    })*/
+  })
 }
 
-main();
+main()
