@@ -34,34 +34,75 @@ async function main() {
     //io.disconnectSockets(true);
     console.log('a user connected' + socket.id)
 
-    socket.on('UsuarioRegistrado', (emailUser) => {
-      contador++
-      console.log(contador)
-      if (usuariosConectados.has(emailUser)) {
-        listaDeSocketConCorreo[emailUser] = socket.id
-        socket.emit('Usuario encontrado')
-        console.log(usuariosConectados)
-      } else {
-        usuariosConectados.add(emailUser)
-        //Mandar los usuarios
-        io.emit('Usuarios Actualizados', Array.from(usuariosConectados))
 
-        listaDeSocketConCorreo[emailUser] = socket.id
-        console.log(usuariosConectados)
-        console.log(listaDeSocketConCorreo)
-      }
+async function main(){
+    
+    //Conexion a la BD
+    await connect();
 
-      //update();
-    })
+    
+    app.get('/', (req, res) => {
+        res.send('Holis');
+      }); 
+      //Usuarios conectados
+      let contador = 0;
+    io.on('connection', (socket) => {
+        //io.disconnectSockets(true);
+        console.log('a user connected' + socket.id);
+        
+        socket.on('UsuarioRegistrado',(emailUser) => {  
+            contador++;
+            console.log(contador);       
+            if(usuariosConectados.has(emailUser)){
+                listaDeSocketConCorreo[emailUser] = socket.id;
+                socket.emit('Usuario encontrado');
+                console.log(usuariosConectados);
+            }else{
+                usuariosConectados.add(emailUser);
+                //Mandar los usuarios
+                io.emit('Usuarios Actualizados', Array.from(usuariosConectados));
 
-    //Refresh para el delete business.
+                listaDeSocketConCorreo[emailUser] = socket.id;
+                console.log(usuariosConectados);
+                console.log(listaDeSocketConCorreo);
+            } 
 
-    socket.on('deleteBusiness', (id) => {
-      console.log(usuariosConectados)
-      console.log(socket.client.sockets)
-      console.log('NEGOCIOo')
-      //Eliminar el negocio de la lista
-      //arrayNegocios = arrayNegocios.filter( (n) => n.id !== id );
+            //update();
+
+        });
+
+        //Refresh para el delete business.
+        
+        socket.on('deleteBusiness', (id) => {
+            console.log(usuariosConectados);
+            console.log(socket.client.sockets);
+            console.log('NEGOCIOo');
+            //Eliminar el negocio de la lista
+            //arrayNegocios = arrayNegocios.filter( (n) => n.id !== id );
+
+            //socket.broadcast.emit('negocioEliminado',id);
+            io.emit('negocioEliminado',id);
+
+        });
+
+        socket.on('citaEmitida', (correoAEnviarNotificacion) => {
+          
+            io.to(listaDeSocketConCorreo[correoAEnviarNotificacion]).emit('solicitudEntrante','El usuario x quiere reserva una cita con vos'); 
+            //socket.broadcast.emit('negocioEliminado',id);
+           
+
+        });
+  
+        //Desconexion de usuarios
+        socket.on('disconnect',()=>{
+            console.log('usuario desconectado');
+            usuariosConectados.delete(socket.emailUser);
+            console.log(usuariosConectados);
+            io.emit('Usuarios Actualizados',Array.from(usuariosConectados));
+        })
+    });
+   
+
 
       //socket.broadcast.emit('negocioEliminado',id);
       io.emit('negocioEliminado', id)

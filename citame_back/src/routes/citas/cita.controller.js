@@ -196,7 +196,10 @@ async function deleteCita(req, res) {
       await citU.save()
     }
 
-    await tr3.commitTransaction()
+    await tr3.commitTransaction();
+
+    //Tomar el horario y borrarlo de la agenda
+
 
     await citaModel.findByIdAndDelete(idCita)
     return res.status(200).json({ message: 'TodoOk' })
@@ -205,11 +208,100 @@ async function deleteCita(req, res) {
   }
 }
 
+
+async function verifyCita(req,res){
+
+  const idCita = req.body.idCita;
+  //const cita = req.body.cita;
+  const status = req.body.status;
+
+  if(status == 'Aprobada'){
+  const citaStatus = {
+    statusCita: 'Aprobada'
+  }
+
+  await citaModel.findByIdAndUpdate(idCita, {$set : citaStatus}, (err, citaStatus)=>{
+
+    if(err){
+      return res.status(404).json('Error')
+    }
+
+    return citaStatus;
+
+  })
+
+  }else if (status == 'NoAprobada') {
+
+    //Llamar el metodo de eliminar cita para borrarla si no es aceptada
+    try {
+      
+      const tr1 = await mongoose.startSession()
+      tr1.startTransaction()
+  
+      const citaNegocio = await businessModel.find({ citas: { $in: idCita } })
+  
+      for await (const cit of citaNegocio) {
+        const citaBusiness = cit.citas
+  
+        item9 = JSON.parse(JSON.stringify(citaBusiness))
+  
+        const index = item9.findIndex((citass) => citass == idCita)
+  
+        if (index !== -1) {
+          item9.splice(index, 1)
+        }
+  
+        cit.citas = item9
+        await cit.save(tr1)
+      }
+      await tr1.commitTransaction()
+  
+      const tr3 = await mongoose.startSession()
+      tr3.startTransaction()
+  
+      const citaUser = await usuario.find({ citas: { $in: idCita } })
+  
+      for await (const citU of citaUser) {
+        const citaUsuario = citU.citas
+  
+        item11 = JSON.parse(JSON.stringify(citaUsuario))
+  
+        const index3 = item11.findIndex((citUs) => citUs == idCita)
+  
+        if (index3 !== -1) {
+          item11.splice(index3, 1)
+        }
+  
+        citU.citas = item11
+  
+        await citU.save()
+      }
+  
+      await tr3.commitTransaction();
+  
+      //Tomar el horario y borrarlo de la agenda
+      
+  
+      await citaModel.findByIdAndDelete(idCita)
+      return res.status(200).json({ message: 'TodoOk' })
+    } catch (e) {
+      return res.status(404).json({ message: 'No se puede borrar la cita' })
+    }
+
+  }
+
+  
+
+}
+
+
+
 async function updateCita(req, res) {
   let citaId = req.body.idCita
 
   const citaUpdate = {
     //Comentar acerca de que pasaria si un usuario quiere escoger otro worker
+    //Re hacer el metodo con la agenda
     fecha: req.body.fecha,
     hora: req.body.hora,
     servicios: req.body.servicios,
@@ -223,6 +315,8 @@ async function updateCita(req, res) {
     return res.status(200).json({ citaModel: citaUpdate })
   })
 }
+
+
 
 module.exports = {
   deleteCita,

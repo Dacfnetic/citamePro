@@ -69,6 +69,10 @@ async function verifyDisponibilidad(worker, start, end) {
   }
 }
 
+async function deleteCita(){
+  
+}
+
 module.exports = {
   deleteImagesOnArrayWorkers,
   deleteImagesOnArrayService,
