@@ -25,6 +25,8 @@ async function main(){
     
     //Conexion a la BD
     await connect();
+
+    
     app.get('/', (req, res) => {
         res.send('Holis');
       }); 
