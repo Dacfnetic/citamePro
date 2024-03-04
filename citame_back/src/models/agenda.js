@@ -68,8 +68,9 @@ class Agenda {
 
   //Metodo restar cita para horario disponible
 
-  updateWorkerHorario(citaJson) {
-    const cita = citaJson
+  updateWorkerHorario(citaJson, idCita) {
+    const cita = citaJson;
+    const idCita = idCita;
     const fecha = `${cita.dia}/${cita.mes}/${cita.year}`
     let index = this.diasConCitas.findIndex((dia) => dia.fecha === fecha)
     let horarioD = []
@@ -134,12 +135,12 @@ class Agenda {
     const horario1A = this.diasConCitas[index].HorarioDisp[indexH].HoraInicial
     const horario2A = horaInicio
 
-    const horarioA = { HoraInicial: horario1A, HoraFinal: horario2A }
+    const horarioA = { HoraInicial: horario1A, HoraFinal: horario2A, idCita: idCita}
 
     const horario1B = horaFinal
     const horario2B = this.diasConCitas[index].HorarioDisp[indexH].HoraFinal
 
-    const horarioB = { HoraInicial: horario1B, HoraFinal: horario2B }
+    const horarioB = { HoraInicial: horario1B, HoraFinal: horario2B, idCita: idCita}
 
     // if (horarioinicial del indice del horario disponible es menor que el horario de inicio && el horario final del indice del horario disponible es mayor que el horario final){
 
@@ -147,6 +148,8 @@ class Agenda {
 
     return true
   }
+
+
 }
 
 module.exports = Agenda

@@ -1,9 +1,12 @@
+import 'dart:developer';
+
 import 'package:citame/Widgets/bottom_bar.dart';
 import 'package:citame/Widgets/home_row.dart';
 import 'package:citame/providers/categories_provider.dart';
 import 'package:citame/providers/geolocator_provider.dart';
 import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:citame/services/api_service.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -26,6 +29,37 @@ class HomePage extends ConsumerWidget {
     controlador.setPage(runtimeType);
     print(controlador.getPage());
     API.connect(context);
+
+    void requestPermission() async {
+      FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+      NotificationSettings settings = await messaging.requestPermission(
+        alert: true,
+        announcement: false,
+        badge: true,
+        carPlay: false,
+        criticalAlert: false,
+        provisional: false,
+        sound: true,
+      );
+      if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+        log("User granted permission");
+      } else if (settings.authorizationStatus ==
+          AuthorizationStatus.provisional) {
+        log("User granted provisional permission");
+      } else {
+        log("User declined or has not accepted permission");
+      }
+    }
+
+    void getToken() async {
+      await FirebaseMessaging.instance.getToken().then((token) {
+        log(token!);
+      });
+    }
+
+    requestPermission();
+    getToken();
 
     return Scaffold(
       body: SafeArea(

@@ -49,7 +49,7 @@ async function postUser(req, res) {
     usuario.findOne({ emailUser: req.body.emailUser }).then(async (docs) => {
       if (docs == null) {
         console.log('Creando usuario')
-
+        
         const usuarioSave = await usuario({
           googleId: req.body.googleId,
           userName: req.body.userName,
