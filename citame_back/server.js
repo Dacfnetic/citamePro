@@ -6,6 +6,7 @@ const { deleteBusiness } = require('./src/routes/business/business.controller')
 var AWS = require('aws-sdk')
 var uuid = require('uuid')
 
+
 const { connect } = require('./src/config/database')
 const { setTimeout } = require('timers')
 //const {setupWebSocket} = require('./src/routes/notification/notification.controller');
@@ -16,23 +17,11 @@ const PORT = process.env.PORT || 4000
 const usuariosConectados = new Set()
 const listaDeSocketConCorreo = {}
 const arrayNegocios = []
-
+let gets = 0;
 async function update() {
   await io.emit('CACA', 'CACA')
   setTimeout(update, 5000)
 }
-
-async function main() {
-  //Conexion a la BD
-  await connect()
-  app.get('/', (req, res) => {
-    res.send('Holis')
-  })
-  //Usuarios conectados
-  let contador = 0
-  io.on('connection', (socket) => {
-    //io.disconnectSockets(true);
-    console.log('a user connected' + socket.id)
 
 
 async function main(){
@@ -103,28 +92,6 @@ async function main(){
     });
    
 
-
-      //socket.broadcast.emit('negocioEliminado',id);
-      io.emit('negocioEliminado', id)
-    })
-
-    socket.on('citaEmitida', (correoAEnviarNotificacion) => {
-      io.to(listaDeSocketConCorreo[correoAEnviarNotificacion]).emit(
-        'solicitudEntrante',
-        'El usuario x quiere reserva una cita con vos',
-      )
-      //socket.broadcast.emit('negocioEliminado',id);
-    })
-
-    //Desconexion de usuarios
-    socket.on('disconnect', () => {
-      console.log('usuario desconectado')
-      usuariosConectados.delete(socket.emailUser)
-      console.log(usuariosConectados)
-      io.emit('Usuarios Actualizados', Array.from(usuariosConectados))
-    })
-  })
-
   //Express app
   await server.listen(PORT, () => {
     console.log(`Server is running at port: ${PORT}`)
@@ -167,6 +134,9 @@ async function main(){
         console.error(err, err.stack)
     })*/
   })
+  
 }
 
 main()
+
+

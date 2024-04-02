@@ -1,8 +1,10 @@
 //Importación de modelos de objetos
 const usuario = require('../../models/users.model.js')
+const tolkien = require('../../models/deviceToken.model.js')
 const business = require('../../models/business.model.js')
 const citame = require('../../models/cita.model.js')
 const jwt = require('jsonwebtoken')
+var AWS = require('aws-sdk')
 const config = require('../../config/configjson.js')
 //Función para obtener usuario
 async function getUser(req, res) {
@@ -49,14 +51,22 @@ async function postUser(req, res) {
     usuario.findOne({ emailUser: req.body.emailUser }).then(async (docs) => {
       if (docs == null) {
         console.log('Creando usuario')
-        
+
         const usuarioSave = await usuario({
           googleId: req.body.googleId,
           userName: req.body.userName,
           emailUser: req.body.emailUser,
           avatar: req.body.avatar,
+          deviceTokens: [req.body.deviceToken],
         })
 
+        await tolkien.findOne({ token: req.body.deviceToken }).then(async (docs) => {
+          if (docs == null) {
+          
+           
+            tokenSave.save()
+          }
+        })
 
         usuarioSave.save()
 
@@ -69,6 +79,21 @@ async function postUser(req, res) {
         return res.status(201).json({ auth: true, token })
       } else {
         const usuarioSave = await usuario.findOne({ emailUser: req.body.emailUser })
+
+        if (!usuarioSave.deviceTokens.includes(req.body.deviceToken)) {
+          usuarioSave.deviceTokens.push(req.body.deviceToken)
+          usuario.findByIdAndUpdate(usuarioSave._id, {
+            $set: { deviceTokens: usuarioSave.deviceTokens },
+          })
+        }
+
+        await tolkien.findOne({ token: req.body.deviceToken }).then(async (docs) => {
+          if (docs == null) {
+          
+            
+            tokenSave.save()
+          }
+        })
 
         const token = jwt.sign({ idUser: usuarioSave._id }, config.jwtSecret, {
           //Obtenemos y guardamos el id del usuario con su token
@@ -84,14 +109,12 @@ async function postUser(req, res) {
   }
 }
 
-
 async function updateUser(req, res) {
   let emailUsuario = req.body.emailUser
 
   const usuarioUpdate = {
     userName: req.body.userName,
   }
-
 
   await usuario.findOneAndUpdate(emailUsuario, { $set: usuarioUpdate }, (err, userUpdated) => {
     if (err) {
@@ -144,7 +167,6 @@ async function FavoriteBusiness(req, res) {
   }
 
   const mod = { favoriteBusiness: item }
-
 
   await usuario.findByIdAndUpdate(decoded.idUser, { $set: mod })
 

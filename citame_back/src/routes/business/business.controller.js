@@ -15,6 +15,8 @@ const {
 const ImageService = require('../images/img.service.js')
 const Agenda = require('../../models/agenda.js')
 
+var contadorDePostBusiness = 0;
+
 async function getAllBusiness(req, res) {
   console.log('Intentando obtener negocios por categoria')
   try {
@@ -37,7 +39,7 @@ async function getAllBusinessd(req, res) {
   const categoriaNegocio = req.body.category
   const skip = 0
   const limit = 2 //Modificable
-
+  gets = gets + 1;
   const negocios = await business
     .find({
       $or: [
@@ -107,7 +109,9 @@ async function verifyOwnerBusiness(req, res) {
   }
 }
 async function postBusiness(req, res) {
-  console.log('Intentando crear negocio')
+  console.log('Intentando crear negocio');
+  contadorDePostBusiness++;
+  console.log('postBusiness' + contadorDePostBusiness);
   try {
     let existe = true
     await business

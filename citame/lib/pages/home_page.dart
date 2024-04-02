@@ -30,37 +30,6 @@ class HomePage extends ConsumerWidget {
     print(controlador.getPage());
     API.connect(context);
 
-    void requestPermission() async {
-      FirebaseMessaging messaging = FirebaseMessaging.instance;
-
-      NotificationSettings settings = await messaging.requestPermission(
-        alert: true,
-        announcement: false,
-        badge: true,
-        carPlay: false,
-        criticalAlert: false,
-        provisional: false,
-        sound: true,
-      );
-      if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-        log("User granted permission");
-      } else if (settings.authorizationStatus ==
-          AuthorizationStatus.provisional) {
-        log("User granted provisional permission");
-      } else {
-        log("User declined or has not accepted permission");
-      }
-    }
-
-    void getToken() async {
-      await FirebaseMessaging.instance.getToken().then((token) {
-        log(token!);
-      });
-    }
-
-    requestPermission();
-    getToken();
-
     return Scaffold(
       body: SafeArea(
         child: Container(

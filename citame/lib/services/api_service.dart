@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:citame/providers/event_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:citame/Widgets/cuadro.dart';
 import 'package:citame/firebase_options.dart';
@@ -214,6 +215,25 @@ abstract class API {
             })));
 
     if (response.statusCode == 200) return 'Todo ok';
+    throw Exception('Failed to add item');
+  }
+
+  static Future<String> verifyCita(
+      String status, String idCita, WidgetRef ref) async {
+    final response = await http.put(Uri.parse('$serverUrl/api/cita/verifyCita'),
+        headers: {'Content-Type': 'application/json'},
+        body: utf8.encode(jsonEncode({
+          'idCita': idCita,
+          'status': status,
+        })));
+
+    if (response.statusCode == 200) {
+      final List<dynamic> citas = jsonDecode(response.body);
+      ref
+          .read(eventsProvider.notifier)
+          .cargarCitasUsuario(citas, DateTime.now());
+      return 'Todo ok';
+    }
     throw Exception('Failed to add item');
   }
 

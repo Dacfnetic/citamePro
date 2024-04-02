@@ -3,8 +3,12 @@ const usuario = require('../../models/users.model.js')
 const business = require('../../models/business.model.js')
 const workersModel = require('../../models/worker.model.js')
 const Agenda = require('../../models/agenda.js')
+var contadorDePostWorker = 0;
+var contadorDeGetWorker = 0;
 
 async function postWorkers(req, res) {
+  contadorDePostWorker++;
+  console.log('postWorker: ' + contadorDePostWorker);
   try {
     let existe = true
     let worker = []
@@ -81,6 +85,8 @@ async function postWorkers(req, res) {
 }
 
 async function getWorkers(req, res) {
+  contadorDeGetWorker++;
+  console.log('getWorkers: ' + contadorDeGetWorker);
   try {
     let worker = []
     await business.findById(req.get('businessId')).then((docs) => {

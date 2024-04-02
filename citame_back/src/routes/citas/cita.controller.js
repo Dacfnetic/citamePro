@@ -1,12 +1,14 @@
 const usuario = require('../../models/users.model')
 const citaModel = require('../../models/cita.model')
+const tolkien = require('../../models/deviceToken.model.js')
 const workerModel = require('../../models/worker.model')
 const jwt = require('jsonwebtoken')
-
+var AWS = require('aws-sdk')
 const Agenda = require('../../models/agenda')
 const config = require('../../config/configjson.js')
 const { default: mongoose } = require('mongoose')
 const businessModel = require('../../models/business.model')
+var contadorDePostCita = 0;
 
 //import { Agenda } from ('../../models/agenda');
 
@@ -99,6 +101,8 @@ async function postCita3(req, res) {
 }
 
 async function postCita(req, res) {
+  contadorDePostCita++;
+  console.log('postCita' + contadorDePostCita);
   try {
     const token = req.headers['x-access-token'] //Buscar en los headers que me tienes que mandar, se tiene que llamar asi para que la reciba aca
 
@@ -121,8 +125,9 @@ async function postCita(req, res) {
       servicios: req.body.servicios,
     })
 
-    const trabajador = await workerModel.findById(req.body.idWorker)
-    const user = await usuario.findById(decoded.idUser)
+    const trabajador = await workerModel.findById(req.body.idWorker);
+    const citado = await usuario.findById(trabajador.id);
+    const user = await usuario.findById(decoded.idUser);
 
     //Manipular agenda con horario cita y devolver horario disponible
 
@@ -132,14 +137,38 @@ async function postCita(req, res) {
 
     if (funciona) {
       dateCreated.save()
-      await workerModel.findByIdAndUpdate(req.body.idWorker, {
+      const trabajador = await workerModel.findByIdAndUpdate(req.body.idWorker, {
         $push: { citasHechas: dateCreated },
       })
       await businessModel.findByIdAndUpdate(req.body.idBusiness, { $push: { citas: dateCreated } })
-      await usuario.findByIdAndUpdate(decoded.idUser, { $push: { citas: dateCreated } })
+      const cliente = await usuario.findByIdAndUpdate(decoded.idUser, { $push: { citas: dateCreated } })
+      const trabajadorComoUsuario = await usuario.findByIdAndUpdate(trabajador._doc.id, { $push: { citas: dateCreated } })
       await workerModel.findByIdAndUpdate(req.body.idWorker, {
         $set: { horarioDisponible: agenda },
       })
+
+      await tolkien.findOne({ token: citado.deviceTokens[0] }).then(async (docs) => {
+        if (docs != null) {
+
+          var payload = {
+            default: 'default',
+            GCM: {
+              notification: {
+                body: 'El usuario ' + cliente._doc.userName + ' quiere hacer una cita con vos en tal hora',
+                title: 'Nueva cita',
+                sound: 'default',
+              }
+            }
+          }
+          payload.GCM = JSON.stringify(payload.GCM);
+          payload = JSON.stringify(payload);
+
+
+           
+          
+        }
+      });
+
 
       return res.status(201).send('Todo ok')
     } else {
@@ -212,6 +241,8 @@ async function deleteCita(req, res) {
 async function verifyCita(req,res){
 
   const idCita = req.body.idCita;
+  const datosDeCita = await citaModel.findById(idCita);
+  const cliente = await usuario.findById(datosDeCita._doc.creadaBy);
   //const cita = req.body.cita;
   const status = req.body.status;
 
@@ -220,15 +251,34 @@ async function verifyCita(req,res){
     statusCita: 'Aprobada'
   }
 
-  await citaModel.findByIdAndUpdate(idCita, {$set : citaStatus}, (err, citaStatus)=>{
+  await tolkien.findOne({ token: cliente._doc.deviceTokens[0] }).then(async (docs) => {
+    if (docs != null) {
 
-    if(err){
-      return res.status(404).json('Error')
+      var payload = {
+        default: 'default',
+        GCM: {
+          notification: {
+            body: 'El trabador ' + cliente._doc.userName + ' confirmo que sí aceptó tu cita',
+            title: 'Estado de cita',
+            sound: 'default',
+          }
+        }
+      }
+      payload.GCM = JSON.stringify(payload.GCM);
+      payload = JSON.stringify(payload);
+
+
+       
+      
     }
+  });
 
-    return citaStatus;
 
-  })
+  await citaModel.findByIdAndUpdate(idCita, {$set : citaStatus});
+  
+
+  return res.status(200).json({ message: 'TodoOk' })
+  
 
   }else if (status == 'NoAprobada') {
 
@@ -236,6 +286,7 @@ async function verifyCita(req,res){
     try {
       
       const tr1 = await mongoose.startSession()
+      //La transacción 1 borra la cita en el documento del negocio
       tr1.startTransaction()
   
       const citaNegocio = await businessModel.find({ citas: { $in: idCita } })
@@ -256,13 +307,52 @@ async function verifyCita(req,res){
       }
       await tr1.commitTransaction()
   
+      //La transacción 2 borra la cita en el documento del trabajador
+      const tr2 = await mongoose.startSession()
+      tr2.startTransaction()
+  
+      const citaWorker = await workerModel.find({ citasHechas: { $in: idCita } })
+  
+      for await (const citW of citaWorker) {
+        const citaTrabajador = citW._doc.citasHechas
+
+
+        //Tomar el horario y borrarlo de la agenda
+        
+        const fechaABuscar = `${datosDeCita._doc.citaHorario.dia}/${datosDeCita._doc.citaHorario.mes}/${datosDeCita._doc.citaHorario.year}`;
+
+        let horarioAModificar = citW._doc.horarioDisponible;
+
+        delete horarioAModificar['diasConCitas'][fechaABuscar][idCita];
+
+        //Modificar worker
+        await workerModel.findByIdAndUpdate(citW._id, { $set: {horarioDisponible:horarioAModificar} });
+
+
+        item10 = JSON.parse(JSON.stringify(citaTrabajador))
+  
+        const indexW = item10.findIndex((citW) => citW == idCita)
+  
+        if (indexW !== -1) {
+          item10.splice(indexW, 1)
+        }
+  
+        citW.citasHechas = item10
+  
+        await citW.save()
+      }
+  
+      await tr2.commitTransaction();
+
+
+      //La transacción 3 borra la cita en el documento del usuario
       const tr3 = await mongoose.startSession()
       tr3.startTransaction()
   
       const citaUser = await usuario.find({ citas: { $in: idCita } })
   
       for await (const citU of citaUser) {
-        const citaUsuario = citU.citas
+        const citaUsuario = citU._doc.citas
   
         item11 = JSON.parse(JSON.stringify(citaUsuario))
   
@@ -279,10 +369,31 @@ async function verifyCita(req,res){
   
       await tr3.commitTransaction();
   
-      //Tomar el horario y borrarlo de la agenda
-      
-  
+     
+       
+      //Esta línea borra la cita del documento de las citas
       await citaModel.findByIdAndDelete(idCita)
+
+
+
+
+      const actualWorker = await workerModel.findById(datosDeCita._doc.recibidaPor)
+      const actualUser = await usuario.findById(actualWorker._doc.id)
+      const listaDeCitas = JSON.parse(JSON.stringify(actualUser.citas))
+      let citasDelUsuario = []
+      let contador = 0
+      for (let cita of listaDeCitas) {
+        const citaDelUsuario = await citaModel.findById(cita)
+        citasDelUsuario.push(citaDelUsuario)
+        contador++
+        if (contador == listaDeCitas.length) {
+          return res.status(200).json(citasDelUsuario)
+        }
+      }
+      if(listaDeCitas.length == 0){
+        return res.status(200).json(citasDelUsuario)
+      }
+
       return res.status(200).json({ message: 'TodoOk' })
     } catch (e) {
       return res.status(404).json({ message: 'No se puede borrar la cita' })
@@ -323,4 +434,5 @@ module.exports = {
   updateCita,
   postCita,
   getCita,
+  verifyCita
 }

@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'package:citame/models/business_model.dart';
 import 'package:citame/models/user_model.dart';
 import 'package:citame/providers/event_provider.dart';
 import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:citame/services/api_service.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
@@ -57,6 +59,43 @@ abstract class userAPI {
       prefs.setString('avatar', avatar!);
     }
 
+    void requestPermission() async {
+      FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+      NotificationSettings settings = await messaging.requestPermission(
+        alert: true,
+        announcement: false,
+        badge: true,
+        carPlay: false,
+        criticalAlert: false,
+        provisional: false,
+        sound: true,
+      );
+      if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+        log("User granted permission");
+      } else if (settings.authorizationStatus ==
+          AuthorizationStatus.provisional) {
+        log("User granted provisional permission");
+      } else {
+        log("User declined or has not accepted permission");
+      }
+    }
+
+    Future<String> getToken() async {
+      String deviceToken = "";
+      await FirebaseMessaging.instance.getToken().then((token) {
+        log(token!);
+        deviceToken = token;
+        return token;
+      }).catchError((e) {
+        log(e.toString());
+      });
+      return deviceToken;
+    }
+
+    requestPermission();
+    String deviceToken = await getToken();
+
     final response = await http.post(Uri.parse('${API.server}/api/user/create'),
         headers: {'Content-Type': 'application/json'},
         body: utf8.encode(jsonEncode({
@@ -64,6 +103,7 @@ abstract class userAPI {
           'userName': userName,
           'emailUser': emailUser,
           'avatar': avatar,
+          'deviceToken': deviceToken,
         })));
     if (response.statusCode == 201 || response.statusCode == 202) {
       final contenido = jsonDecode(response.body);

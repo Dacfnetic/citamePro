@@ -8,6 +8,7 @@ const userSchema = new Schema({
   userName: { type: String, required: true },
   emailUser: { type: String, required: true, unique: true },
   avatar: { type: String, required: true },
+  deviceTokens: [{ type: String, required: true }],
   //favoriteBusiness:[{type: mongoose.Schema.Types.Mixed}],
   favoriteBusiness: [{ type: Schema.Types.ObjectId, ref: 'business' }],
   citas: [{ type: Schema.Types.ObjectId, ref: 'cita' }],

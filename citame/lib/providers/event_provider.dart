@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:ffi';
 
 import 'package:citame/agenda/neat_and_clean_calendar_event.dart';
@@ -58,12 +59,17 @@ class EventsNotifier extends StateNotifier<List<NeatCleanCalendarEvent>> {
       }
     }
     Map esclavo = trabajador.horarioDisponible;
-    List diasOcupado = esclavo['diasConCitas'];
+    List diasOcupado = [];
+    if (esclavo.containsKey('diasConCitas')) {
+      diasOcupado =
+          esclavo['diasConCitas'].entries.map((entry) => entry.key).toList();
+    }
+
     List diasConCita = [];
 
     if (diasOcupado.isNotEmpty) {
       for (var dia in diasOcupado) {
-        diasConCita.add(dia['fecha']);
+        diasConCita.add(dia);
       }
     }
     List<NeatCleanCalendarEvent> aDevolver2 = [];
@@ -99,9 +105,43 @@ class EventsNotifier extends StateNotifier<List<NeatCleanCalendarEvent>> {
       }
       final index = diasConCita.indexOf(day);
       if (index != -1) {
-        Map horarios = diasOcupado[index];
-        List periodosDisponibles = horarios['HorarioDisp'];
+        //Map horarios = diasOcupado[index];
+        List periodosDisponibles = esclavo[diaEnLetras];
         List<NeatCleanCalendarEvent> aDevolver = [];
+
+        List citas = [];
+        if (esclavo.containsKey('diasConCitas')) {
+          citas = esclavo['diasConCitas'][day]
+              .entries
+              .map((entry) => {
+                    'horaInicio': entry.value['horaInicio'],
+                    'horaFinal': entry.value['horaFinal']
+                  })
+              .toList();
+        }
+
+        for (var cita in citas) {
+          int index = 0;
+          for (var periodo in periodosDisponibles) {
+            if (periodo['HoraInicial'] <= cita['horaInicio'] &&
+                periodo['HoraFinal'] >= cita['horaFinal']) {
+              Map periodoA = {
+                'HoraInicial': periodo['HoraInicial'],
+                'HoraFinal': cita['horaInicio']
+              };
+              Map periodoB = {
+                'HoraInicial': cita['horaFinal'],
+                'HoraFinal': periodo['HoraFinal']
+              };
+              periodosDisponibles
+                  .replaceRange(index, index + 1, [periodoA, periodoB]);
+              break;
+            }
+            index = index + 1;
+          }
+          index = 0;
+        }
+
         aDevolver = periodosDisponibles.map((periodo) {
           final horaInicial = periodo['HoraInicial'].truncate();
           final minutoInicial =
@@ -135,6 +175,7 @@ class EventsNotifier extends StateNotifier<List<NeatCleanCalendarEvent>> {
           final minutoFinal =
               ((periodo['HoraFinal'] - periodo['HoraFinal'].truncate()) * 60)
                   .round();
+
           NeatCleanCalendarEvent nuevo = NeatCleanCalendarEvent(
             'Disponible',
             startTime:
@@ -144,6 +185,7 @@ class EventsNotifier extends StateNotifier<List<NeatCleanCalendarEvent>> {
             color: Colors.green,
             description: 'Disponible para cumplir sus deseos',
           );
+
           aDevolver2.add(nuevo);
         }
       }
@@ -166,7 +208,7 @@ class EventsNotifier extends StateNotifier<List<NeatCleanCalendarEvent>> {
         endTime: DateTime(mC['year'], mC['mes'], mC['dia'], mC['hora_final'],
             mC['minuto_final']),
         color: Colors.orange,
-        description: 'Tu cita',
+        description: elemento['_id'],
       );
       aDevolver2.add(nuevo);
     }
