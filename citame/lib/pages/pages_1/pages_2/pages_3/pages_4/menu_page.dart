@@ -86,7 +86,7 @@ class MenuPage extends ConsumerWidget {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('configuracion',
+          title: Text('Configuracion',
               style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.normal,
@@ -397,8 +397,8 @@ class MenuPage extends ConsumerWidget {
                             builder: (context) => ProfileInsidePage(),
                           ));
                     },
-                    icon: Icon(Icons.plus_one),
-                    label: Text('Agregar más'),
+                    icon: Icon(Icons.add),
+                    label: Text('Agregar trabajador'),
                   ),
                   SizedBox(
                     height: 24,
@@ -470,10 +470,16 @@ class CajaDeServicios extends StatelessWidget {
         ]),
         child: Container(
           padding: EdgeInsets.all(7),
+          
           decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey, width: 0.8),
+              border: Border.all(color: Colors.white, width: 0.8),
               //borderRadius: BorderRadius.circular(12),
-              color: Colors.white),
+              color: Colors.white,
+              
+            
+              
+              ),
+              
           //margin: EdgeInsets.only(top: 5, bottom: 5),
           child: Row(
             mainAxisSize: MainAxisSize.max,
