@@ -31,7 +31,7 @@ class WorkerBox extends ConsumerWidget {
         margin: EdgeInsets.all(5),
         padding: EdgeInsets.all(4),
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
+          //border: Border.all(color: Colors.grey),
           borderRadius: BorderRadius.circular(8),
           color: Colors.white,
         ), // Color de fondo del Container
