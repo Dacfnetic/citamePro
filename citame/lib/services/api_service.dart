@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:citame/providers/event_provider.dart';
+import 'package:citame/providers/own_business_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:citame/Widgets/cuadro.dart';
 import 'package:citame/firebase_options.dart';
@@ -42,13 +43,13 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 abstract class API {
   static String server = 'https://win.citame.store';
 
-  static Future<String> guardarConfiguracionGeneral(
-    BuildContext context,
-    String businessId,
-    Map horario,
-    List<Service> servicios,
-    List<Worker> trabajadores,
-  ) async {
+  static Future<Map> guardarConfiguracionGeneral(
+      BuildContext context,
+      String businessId,
+      Map horario,
+      List<Service> servicios,
+      List<Worker> trabajadores,
+      WidgetRef ref) async {
     List paraEnviar = [];
     String horarioParaEnviar = jsonEncode(horario);
     for (var trabajador in trabajadores) {
@@ -84,9 +85,12 @@ abstract class API {
 
     if (response.statusCode == 200) {
       log("Result: ${response.statusCode}");
-      var contenido = jsonDecode(response.body);
+      Map contenido = jsonDecode(response.body);
+      ref
+          .read(ownBusinessProvider.notifier)
+          .actualizarUnNegocio(contenido, context, ref);
       log(contenido.toString());
-      return "todo ok";
+      return contenido;
     }
 
     throw Exception('Failed to add item');
@@ -219,7 +223,8 @@ abstract class API {
   }
 
   static Future<String> verifyCita(
-      String status, String idCita, WidgetRef ref) async {
+      String statusActual, String status, String idCita, WidgetRef ref) async {
+    if (statusActual == "Aprobada") return "ok";
     final response = await http.put(Uri.parse('$serverUrl/api/cita/verifyCita'),
         headers: {'Content-Type': 'application/json'},
         body: utf8.encode(jsonEncode({
@@ -772,19 +777,23 @@ abstract class API {
                     child: Text('Nada')),
                 TextButton(
                     onPressed: () async {
-                      TimeOfDay inicio =
-                          await API.timePicker(context, 'Horario de inicio');
-                      if (context.mounted) {
-                        TimeOfDay fin =
-                            await API.timePicker(context, 'Horario de fin');
-
-                        ref
-                            .read(myBusinessStateProvider.notifier)
-                            .cambiarHorario(dia, turno, inicio, fin);
-                        ref.read(reRenderProvider.notifier).reRender();
+                      try {
+                        TimeOfDay inicio =
+                            await API.timePicker(context, 'Horario de inicio');
                         if (context.mounted) {
-                          Navigator.pop(context);
+                          TimeOfDay fin =
+                              await API.timePicker(context, 'Horario de fin');
+
+                          ref
+                              .read(myBusinessStateProvider.notifier)
+                              .cambiarHorario(dia, turno, inicio, fin);
+                          ref.read(reRenderProvider.notifier).reRender();
+                          if (context.mounted) {
+                            Navigator.pop(context);
+                          }
                         }
+                      } catch (e) {
+                        return;
                       }
                     },
                     child: Text('Cambiar')),
@@ -802,11 +811,14 @@ abstract class API {
   }
 
   static timePicker(BuildContext context, String titulo) {
-    Future<TimeOfDay?> selectedTime = showTimePicker(
+    final selectedTime = showTimePicker(
       initialTime: TimeOfDay.now(),
       context: context,
       helpText: titulo,
+      errorInvalidText: "Eso no es un tiempo válido",
+      cancelText: "Cancelame esta mierda",
     );
+    if (selectedTime == null) return null;
 
     return selectedTime;
   }

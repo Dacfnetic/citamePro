@@ -59,31 +59,37 @@ class ReservationPage extends ConsumerWidget {
                           ref
                               .read(myBusinessStateProvider.notifier)
                               .getFecha());
-                      TimeOfDay inicio =
-                          await API.timePicker(context, 'Horario');
-                      ref
-                          .read(myBusinessStateProvider.notifier)
-                          .setHora(inicio);
-                      var duracion = 0.00;
-                      for (var servicio in serviciosSeleccionados2) {
-                        duracion = duracion + servicio.time;
-                      }
-                      final calculoDeHora =
-                          (inicio.hour + (inicio.minute / 60)) + duracion;
-                      final horaCalculada = calculoDeHora.truncate();
+                      try {
+                        TimeOfDay inicio =
+                            await API.timePicker(context, 'Horario');
+                        ref
+                            .read(myBusinessStateProvider.notifier)
+                            .setHora(inicio);
+                        var duracion = 0.00;
+                        for (var servicio in serviciosSeleccionados2) {
+                          duracion = duracion + servicio.time;
+                        }
+                        final calculoDeHora =
+                            (inicio.hour + (inicio.minute / 60)) + duracion;
+                        final horaCalculada = calculoDeHora.truncate();
 
-                      final minutoCalculado =
-                          ((calculoDeHora - horaCalculada) * 60).round();
-                      TimeOfDay horaFinal = TimeOfDay(
-                          hour: horaCalculada, minute: minutoCalculado);
-                      log(horaFinal.toString());
-                      ref.read(eventsProvider.notifier).anadir(
-                          inicio,
-                          ref.read(myBusinessStateProvider.notifier).getFecha(),
-                          horaFinal);
-                      ref
-                          .read(myBusinessStateProvider.notifier)
-                          .setHoraFinal(horaFinal);
+                        final minutoCalculado =
+                            ((calculoDeHora - horaCalculada) * 60).round();
+                        TimeOfDay horaFinal = TimeOfDay(
+                            hour: horaCalculada, minute: minutoCalculado);
+                        log(horaFinal.toString());
+                        ref.read(eventsProvider.notifier).anadir(
+                            inicio,
+                            ref
+                                .read(myBusinessStateProvider.notifier)
+                                .getFecha(),
+                            horaFinal);
+                        ref
+                            .read(myBusinessStateProvider.notifier)
+                            .setHoraFinal(horaFinal);
+                      } catch (e) {
+                        return;
+                      }
                     },
                     selectedTodayColor: Colors.red,
                     defaultDayColor: Colors.black,
@@ -183,13 +189,17 @@ class ContenedorDeHorario extends StatelessWidget {
     }
 
     void getSchedule(String dia) async {
-      TimeOfDay inicio = await API.timePicker(context, 'Horario de inicio');
-      if (context.mounted) {
-        TimeOfDay fin = await API.timePicker(context, 'Horario de fin');
-        ref
-            .read(myBusinessStateProvider.notifier)
-            .setDiasWorker(dia, inicio, fin);
-        ref.read(reRenderProvider.notifier).reRender();
+      try {
+        TimeOfDay inicio = await API.timePicker(context, 'Horario de inicio');
+        if (context.mounted) {
+          TimeOfDay fin = await API.timePicker(context, 'Horario de fin');
+          ref
+              .read(myBusinessStateProvider.notifier)
+              .setDiasWorker(dia, inicio, fin);
+          ref.read(reRenderProvider.notifier).reRender();
+        }
+      } catch (e) {
+        return;
       }
     }
 

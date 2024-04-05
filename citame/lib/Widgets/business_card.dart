@@ -3,11 +3,14 @@
 import 'package:citame/pages/pages_1/pages_2/business_inside_page.dart';
 import 'package:citame/pages/pages_1/pages_2/my_businessess_page.dart';
 import 'package:citame/pages/pages_1/pages_2/pages_3/pages_4/menu_page.dart';
+import 'package:citame/pages/pages_1/pages_2/pages_3/pages_4/pages_5/profile_inside.dart';
 import 'package:citame/pages/pages_1/pages_2/pages_3/preview_business_page.dart';
 import 'package:citame/providers/geolocator_provider.dart';
 import 'package:citame/providers/my_actual_business_provider.dart';
 import 'package:citame/providers/my_business_state_provider.dart';
+import 'package:citame/providers/own_business_provider.dart';
 import 'package:citame/providers/page_provider.dart';
+import 'package:citame/providers/re_render_provider.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -48,6 +51,7 @@ class BusinessCard extends ConsumerWidget {
     void _settingAccess() async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString('negocioActual', id);
+      Map hora = ref.watch(ownBusinessProvider.notifier).obtenerHorario(id);
       //Este if comprueba si el negocio no está en la lista negra de negocios no accesibles
       if (!prefs.getStringList('negociosInaccesibles')!.contains(id)) {
         //Pide al back los trabajadores del negocio
@@ -57,9 +61,7 @@ class BusinessCard extends ConsumerWidget {
         //Almacena el id del negocio actual
         ref.read(myBusinessStateProvider.notifier).setActualBusiness(id);
         //Convierte los datos crudos del horario y los formatea para que se miren bien en el front
-        ref
-            .watch(myBusinessStateProvider.notifier)
-            .establecerDiasGeneral(horario);
+        ref.watch(myBusinessStateProvider.notifier).establecerDiasGeneral(hora);
         //Envia a la página del usuario
         Navigator.push(
           context,
@@ -77,104 +79,109 @@ class BusinessCard extends ConsumerWidget {
         latitudB: coordenadas[0],
         longitudB: coordenadas[1]);
     if (isDueno) {
-      return Container(
-        margin: EdgeInsets.all(5),
-        height: 350,
-        padding: EdgeInsets.all(5),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          //border: Border.all(color: Colors.black),
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.5), // Color de la sombra
-              spreadRadius: 2, // Extensión de la sombra
-              blurRadius: 2, // Desenfoque de la sombra
-              offset: Offset(0, 1), // Desplazamiento de la sombra
-            ),
-          ],
-          shape: BoxShape.rectangle,
-          //color: Colors.blue,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                IconButton(
-                  onPressed: () async {
-                    if (context.mounted) {
-                      API.estasSeguro(context, id);
-                    }
-                  },
-                  icon: Icon(Icons.delete),
-                  color: Colors.red,
+      return PopScope(
+          canPop: true,
+          onPopInvoked: (didPop) {
+            ref.read(reRenderProvider.notifier).reRender();
+          },
+          child: Container(
+            margin: EdgeInsets.all(5),
+            height: 350,
+            padding: EdgeInsets.all(5),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              //border: Border.all(color: Colors.black),
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.5), // Color de la sombra
+                  spreadRadius: 2, // Extensión de la sombra
+                  blurRadius: 2, // Desenfoque de la sombra
+                  offset: Offset(0, 1), // Desplazamiento de la sombra
                 ),
-                IconButton(
-                    onPressed: () => _settingAccess(),
-                    icon: Icon(Icons.settings))
               ],
+              shape: BoxShape.rectangle,
+              //color: Colors.blue,
             ),
-            Container(
-              padding: EdgeInsets.all(2),
-              margin: EdgeInsets.only(top: 0),
-              child: Column(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(16),
-                    child: Image.memory(
-                      imagen,
-                      width: double.infinity,
-                      height: 230,
-                      fit: BoxFit.cover,
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                      onPressed: () async {
+                        if (context.mounted) {
+                          API.estasSeguro(context, id);
+                        }
+                      },
+                      icon: Icon(Icons.delete),
+                      color: Colors.red,
                     ),
-                  ),
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Column(
+                    IconButton(
+                        onPressed: () => _settingAccess(),
+                        icon: Icon(Icons.settings))
+                  ],
+                ),
+                Container(
+                  padding: EdgeInsets.all(2),
+                  margin: EdgeInsets.only(top: 0),
+                  child: Column(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: Image.memory(
+                          imagen,
+                          width: double.infinity,
+                          height: 230,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisSize: MainAxisSize.max,
                           children: [
-                            Text(
-                              nombre,
-                              style: GoogleFonts.plusJakartaSans(
-                                color: Color(0xFF15161E),
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                              ),
+                            Column(
+                              children: [
+                                Text(
+                                  nombre,
+                                  style: GoogleFonts.plusJakartaSans(
+                                    color: Color(0xFF15161E),
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                Text(
+                                  '${(distancia * 1.609).toStringAsFixed(2)} kilometers away',
+                                  style: GoogleFonts.plusJakartaSans(
+                                    color: Color(0xFF606A85),
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
                             ),
                             Text(
-                              '${(distancia * 1.609).toStringAsFixed(2)} kilometers away',
+                              rating.toStringAsFixed(2),
                               style: GoogleFonts.plusJakartaSans(
                                 color: Color(0xFF606A85),
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
-                          ],
-                        ),
-                        Text(
-                          rating.toStringAsFixed(2),
-                          style: GoogleFonts.plusJakartaSans(
-                            color: Color(0xFF606A85),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        Icon(
-                          Icons.star_rounded,
-                          color: Colors.amber,
-                          size: 24,
-                        ),
-                      ]),
-                ],
-              ),
+                            Icon(
+                              Icons.star_rounded,
+                              color: Colors.amber,
+                              size: 24,
+                            ),
+                          ]),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      );
+          ));
     } else {
       return Container(
         height: 80,

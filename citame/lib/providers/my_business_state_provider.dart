@@ -391,6 +391,18 @@ class MyBusinessStateNotifier extends StateNotifier<List<Business>> {
   Type getPage() {
     return pagina;
   }
+
+  void sePuedenGuardarCambiosGeneralesCambio() {
+    sePuedenGuardarCambiosGenerales = true;
+  }
+
+  void noSePuedenGuardarCambiosGeneralesCambio() {
+    sePuedenGuardarCambiosGenerales = false;
+  }
+
+  bool getSePuedenGuardarCambiosGeneralesCambio() {
+    return sePuedenGuardarCambiosGenerales;
+  }
 }
 
 Map diasLaboralesGenerales = {
@@ -492,3 +504,5 @@ bool socketConectado = false;
 Usuario? user;
 
 Type pagina = HomePage().runtimeType;
+
+bool sePuedenGuardarCambiosGenerales = false;

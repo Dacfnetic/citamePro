@@ -1,7 +1,11 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:citame/Widgets/business_card.dart';
 import 'package:citame/models/business_model.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:citame/services/api_user_service.dart';
+import 'package:citame/utils/json.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -67,6 +71,42 @@ class BusinessListNotifier extends StateNotifier<List<BusinessCard>> {
       }
     }
     state = negocios;
+  }
+
+  void actualizarUnNegocio(
+      Map negocio, BuildContext context, WidgetRef ref) async {
+    negocios = state;
+    final index =
+        negocios.indexWhere((element) => element.id == negocio['_id']);
+    Map hora = jsonDecode(negocio['horario']);
+
+    //Añadir carta cambiada
+
+    negocios.insert(
+        index,
+        BusinessCard(
+          nombre: negocios[index].nombre,
+          id: negocios[index].id,
+          categoria: negocios[index].categoria,
+          latitud: negocios[index].latitud,
+          longitud: negocios[index].longitud,
+          rating: 5.0,
+          imagen: negocios[index].imagen,
+          description: negocios[index].description,
+          email: negocios[index].email,
+          horario: hora,
+          isDueno: true,
+        ));
+    negocios.removeAt(index + 1);
+
+    state = negocios;
+  }
+
+  Map obtenerHorario(String idNegocio) {
+    negocios = state;
+    final index = negocios.indexWhere((element) => element.id == idNegocio);
+    Map hora = negocios[index].horario;
+    return hora;
   }
 }
 

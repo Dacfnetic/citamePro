@@ -5,6 +5,8 @@ const workersModel = require('../../models/worker.model.js')
 const Agenda = require('../../models/agenda.js')
 var contadorDePostWorker = 0;
 var contadorDeGetWorker = 0;
+var contadorDeDeleteWorker = 0;
+var contadorDeUpdateHorarioWorker = 0;
 
 async function postWorkers(req, res) {
   contadorDePostWorker++;
@@ -119,6 +121,8 @@ async function getWorkers(req, res) {
 }
 
 async function deleteWorkers(req, res) {
+  contadorDeDeleteWorker++;
+  console.log('DeleteWorker: ' + contadorDeDeleteWorker);
   try {
     //Borrar modelo
     await workersModel.findByIdAndDelete(req.body.idWorker)
@@ -128,9 +132,9 @@ async function deleteWorkers(req, res) {
   }
 }
 
-async function updateHorarioWorker(req, res) {}
-
 async function updateStatusCita(req, res) {
+  contadorDeUpdateHorarioWorker++;
+  console.log('UpdateHorarioWorker: ' + contadorDeUpdateHorarioWorker);
   let citaId = req.body.idCita
 
   const citaUpdate = {

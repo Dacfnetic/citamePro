@@ -201,15 +201,14 @@ class EventsNotifier extends StateNotifier<List<NeatCleanCalendarEvent>> {
 
     for (var elemento in citas) {
       var mC = elemento['citaHorario'];
-      NeatCleanCalendarEvent nuevo = NeatCleanCalendarEvent(
-        'Tu cita',
-        startTime: DateTime(mC['year'], mC['mes'], mC['dia'],
-            mC['hora_inicial'], mC['minuto_inicial']),
-        endTime: DateTime(mC['year'], mC['mes'], mC['dia'], mC['hora_final'],
-            mC['minuto_final']),
-        color: Colors.orange,
-        description: elemento['_id'],
-      );
+      NeatCleanCalendarEvent nuevo = NeatCleanCalendarEvent('Tu cita',
+          startTime: DateTime(mC['year'], mC['mes'], mC['dia'],
+              mC['hora_inicial'], mC['minuto_inicial']),
+          endTime: DateTime(mC['year'], mC['mes'], mC['dia'], mC['hora_final'],
+              mC['minuto_final']),
+          color: Colors.orange,
+          description: elemento['_id'],
+          metadata: {"estado": elemento['statusCita']});
       aDevolver2.add(nuevo);
     }
 

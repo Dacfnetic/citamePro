@@ -1,6 +1,8 @@
 import 'dart:developer';
+
 import 'package:citame/pages/home_page.dart';
 import 'package:citame/pages/pages_1/business_search_page.dart';
+import 'package:citame/pages/pages_1/index_page.dart';
 import 'package:citame/pages/pages_1/pages_2/pages_3/pages_4/pages_5/user_agenda_page.dart';
 import 'package:citame/pages/pages_1/profile_page.dart';
 import 'package:citame/providers/business_provider.dart';
@@ -8,6 +10,7 @@ import 'package:citame/providers/categories_provider.dart';
 import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:citame/providers/navbar_provider.dart';
 import 'package:citame/providers/page_provider.dart';
+import 'package:citame/services/api_service.dart';
 import 'package:citame/services/api_user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

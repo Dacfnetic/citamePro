@@ -9,10 +9,16 @@ const config = require('../../config/configjson.js')
 const { default: mongoose } = require('mongoose')
 const businessModel = require('../../models/business.model')
 var contadorDePostCita = 0;
+var contadorDeGetCita = 0;
+var contadorDeDeleteCita = 0;
+var contadorDeVerifyCita = 0;
+var contadorDeUpdateCita = 0;
 
 //import { Agenda } from ('../../models/agenda');
 
 async function getCita(req, res) {
+  contadorDeGetCita++;
+  console.log('GetCita' + contadorDeGetCita);
   try {
     citaModel
       .findById({ idCita: req.get('_id') })
@@ -26,78 +32,6 @@ async function getCita(req, res) {
   } catch (e) {
     return res.status(404).json('Errosillo')
   }
-}
-
-async function postCita3(req, res) {
-  const token = req.headers['x-access-token'] //Buscar en los headers que me tienes que mandar, se tiene que llamar asi para que la reciba aca
-
-  if (!token) {
-    return res.status(401).json({
-      auth: false,
-      message: 'No token',
-    })
-  }
-  //Una vez exista el JWT lo decodifica
-  const decoded = jwt.verify(token, config.jwtSecret) //Verifico en base al token
-
-  const user = decoded.idUser
-  const worker = req.body.workerId
-  const fecha = req.body.fecha
-  const horaInicio = req.body.horaInicio
-  const duracion = req.body.duracion
-  const servicio = req.body.servicioId
-
-  const fechaY = fecha.split('T')[0]
-
-  const workerFind = await workerModel.findOne({ _id: worker })
-
-  //Si el worker no existe
-  if (!workerFind) {
-    res.status(404).json({
-      success: false,
-      message: 'El worker no existe',
-    })
-    return
-  }
-
-  const horario = workerFind.horario[fechaY]
-
-  //Si el horario no esta disponible
-  if (!horario) {
-    res.status(404).json({
-      success: false,
-      message: 'El worker no está disponible en esa fecha',
-    })
-    return
-  }
-
-  //Buscar el intervalo disponible
-  const intervalo = horario.find(
-    (intervalo) => intervalo.horaInicio <= horaInicio && horaInicio < intervalo.horaFin,
-  )
-
-  if (intervalo) {
-    const cita = new Cita({
-      user,
-      worker,
-      fecha,
-      horaInicio,
-      servicio,
-      duracion,
-    })
-
-    await cita.save()
-
-    res.status(400).json({
-      success: true,
-      message: 'Cita creada',
-    })
-  }
-
-  res.status(400).json({
-    success: false,
-    message: 'El intervalo de hora no esta disponible',
-  })
 }
 
 async function postCita(req, res) {
@@ -164,8 +98,6 @@ async function postCita(req, res) {
           payload = JSON.stringify(payload);
 
 
-           
-          
         }
       });
 
@@ -181,6 +113,8 @@ async function postCita(req, res) {
 
 async function deleteCita(req, res) {
   //Borrar la cita que esten dentro del business
+  contadorDeDeleteCita++;
+  console.log('DeleteCita' + contadorDeDeleteCita);
   try {
     const idCita = req.body.idCita
     const tr1 = await mongoose.startSession()
@@ -237,12 +171,13 @@ async function deleteCita(req, res) {
   }
 }
 
-
 async function verifyCita(req,res){
-
+  contadorDeVerifyCita++;
+  console.log('verifyCita' + contadorDeVerifyCita);
   const idCita = req.body.idCita;
   const datosDeCita = await citaModel.findById(idCita);
   const cliente = await usuario.findById(datosDeCita._doc.creadaBy);
+  const worker = await workerModel.findById(datosDeCita._doc.recibidaPor);
   //const cita = req.body.cita;
   const status = req.body.status;
 
@@ -258,7 +193,7 @@ async function verifyCita(req,res){
         default: 'default',
         GCM: {
           notification: {
-            body: 'El trabador ' + cliente._doc.userName + ' confirmo que sí aceptó tu cita',
+            body: 'El trabador ' + worker._doc.name + ' confirmo que sí aceptó tu cita',
             title: 'Estado de cita',
             sound: 'default',
           }
@@ -268,8 +203,6 @@ async function verifyCita(req,res){
       payload = JSON.stringify(payload);
 
 
-       
-      
     }
   });
 
@@ -277,7 +210,22 @@ async function verifyCita(req,res){
   await citaModel.findByIdAndUpdate(idCita, {$set : citaStatus});
   
 
-  return res.status(200).json({ message: 'TodoOk' })
+  const actualWorker = await workerModel.findById(datosDeCita._doc.recibidaPor)
+  const actualUser = await usuario.findById(actualWorker._doc.id)
+  const listaDeCitas = JSON.parse(JSON.stringify(actualUser.citas))
+  let citasDelUsuario = []
+  let contador = 0
+  for (let cita of listaDeCitas) {
+    const citaDelUsuario = await citaModel.findById(cita)
+    citasDelUsuario.push(citaDelUsuario)
+    contador++
+    if (contador == listaDeCitas.length) {
+      return res.status(200).json(citasDelUsuario)
+    }
+  }
+  if(listaDeCitas.length == 0){
+    return res.status(200).json(citasDelUsuario)
+  }
   
 
   }else if (status == 'NoAprobada') {
@@ -405,11 +353,10 @@ async function verifyCita(req,res){
 
 }
 
-
-
 async function updateCita(req, res) {
   let citaId = req.body.idCita
-
+  contadorDeUpdateCita++;
+  console.log('updateCita' + contadorDeUpdateCita);
   const citaUpdate = {
     //Comentar acerca de que pasaria si un usuario quiere escoger otro worker
     //Re hacer el metodo con la agenda

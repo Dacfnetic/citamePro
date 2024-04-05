@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:citame/Widgets/bottom_bar.dart';
 import 'package:citame/Widgets/bottom_bar_business.dart';
-import 'package:citame/pages/pages_1/pages_2/pages_3/pages_4/pages_5/details_date.dart';
 import 'package:citame/providers/event_provider.dart';
 import 'package:citame/providers/services_provider.dart';
 import 'package:citame/services/api_service.dart';
@@ -22,14 +21,11 @@ class UserAgendaPage extends ConsumerWidget {
       body: SafeArea(
         child: Calendar(
           startOnMonday: true,
-          weekDays: ['Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa', 'Do'],
+          weekDays: ['Lu', 'Ma', 'Mi', 'JU', 'Vi', 'Sa', 'Do'],
           eventsList: eventList,
           onEventSelected: (value) {
-            /*Navigator.push(
-            context,
-            MaterialPageRoute(
-            builder: (context) => DetailsDate()));*/
-            API.verifyCita('Aprobada', value.description, ref);
+            API.verifyCita(
+                value.metadata!['estado'], 'Aprobada', value.description, ref);
             log('Puedo hacer que pasen cosas');
           },
           isExpandable: true,

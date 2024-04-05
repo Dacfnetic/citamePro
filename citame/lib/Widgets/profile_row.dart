@@ -67,11 +67,6 @@ class ProfileRow extends ConsumerWidget {
                 ));
             ref.read(ownBusinessProvider.notifier).cargar(context, ref);
           }
-
-          //}
-          //} catch (e) {
-          //  print(e.toString());
-          //}
         }
         if (method == 2) {
           if (context.mounted) {

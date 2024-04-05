@@ -15,10 +15,23 @@ const {
 const ImageService = require('../images/img.service.js')
 const Agenda = require('../../models/agenda.js')
 
+var contadorDeGetAllBusiness = 0;
+var contadorDeGetOwnerBusiness = 0;
+var contadorDeVerifyOwnerBusiness = 0;
 var contadorDePostBusiness = 0;
+var contadorDeDeleteBusiness = 0;
+var contadorDeUpdateWorkersInBusinessbyCreateWorker = 0;
+var contadorDeUpdateWorkers = 0;
+var contadorDeUpdateArrayServices = 0;
+var contadorDeUpdateBusiness = 0;
+var contadorDeGetFavBusiness = 0;
+var contadorDeUpdateBusinessSchedule = 0;
+var contadorDeSaveChangesFromBusiness = 0;
 
 async function getAllBusiness(req, res) {
   console.log('Intentando obtener negocios por categoria')
+  contadorDeGetAllBusiness++;
+  console.log('getAllBusiness: ' + contadorDeGetAllBusiness);
   try {
     usuario
       .findOne({ emailUser: req.get('email') })
@@ -33,28 +46,9 @@ async function getAllBusiness(req, res) {
     return res.status(404).json('Errosillo')
   }
 }
-
-async function getAllBusinessd(req, res) {
-  const nombreNegocio = req.body.businessName
-  const categoriaNegocio = req.body.category
-  const skip = 0
-  const limit = 2 //Modificable
-  gets = gets + 1;
-  const negocios = await business
-    .find({
-      $or: [
-        { businessName: { $regex: nombreNegocio, $options: 'i' } },
-        { category: { $regex: categoriaNegocio, $options: 'i' } },
-      ],
-    })
-    .projection({ businessName: 1, category: 1 })
-    .skip(skip)
-    .limit(limit)
-
-  res.status(200).json(negocios)
-}
-
 async function getOwnerBusiness(req, res) {
+  contadorDeGetOwnerBusiness++;
+  console.log('getOwnerBusiness: ' + contadorDeGetOwnerBusiness);
   try {
     console.log('Intentando obtener negocios del usuario')
     usuario
@@ -81,6 +75,8 @@ async function getOwnerBusiness(req, res) {
 }
 async function verifyOwnerBusiness(req, res) {
   console.log('Verificando si los negocios del usuario han cambiado')
+  contadorDeVerifyOwnerBusiness++;
+  console.log('verifyOwnerBusiness: ' + contadorDeVerifyOwnerBusiness);
   try {
     usuario
       .findOne({ emailUser: req.body.email })
@@ -111,7 +107,7 @@ async function verifyOwnerBusiness(req, res) {
 async function postBusiness(req, res) {
   console.log('Intentando crear negocio');
   contadorDePostBusiness++;
-  console.log('postBusiness' + contadorDePostBusiness);
+  console.log('postBusiness: ' + contadorDePostBusiness);
   try {
     let existe = true
     await business
@@ -151,6 +147,8 @@ async function postBusiness(req, res) {
 }
 async function deleteBusiness(req, res) {
   console.log('Intentando borrar negocio')
+  contadorDeDeleteBusiness++;
+  console.log('DeleteBusiness: ' + contadorDeDeleteBusiness);
   try {
     let existe = true
 
@@ -318,6 +316,8 @@ async function deleteBusiness(req, res) {
 }
 async function updateWorkersInBusinessbyCreateWorker(req, res) {
   console.log('Actualizando fotos del usuario')
+  contadorDeUpdateWorkersInBusinessbyCreateWorker++;
+  console.log('updateWorkersInBusinessbyCreateWorker: ' + contadorDeUpdateWorkersInBusinessbyCreateWorker);
   try {
     let previousWorkers = ''
 
@@ -333,9 +333,10 @@ async function updateWorkersInBusinessbyCreateWorker(req, res) {
     res.status(500).json({ error: error.message })
   }
 }
-
 async function updateWorkers(req, res) {
   console.log('Actualizando trabajadores del usuario')
+  contadorDeUpdateWorkers++;
+  console.log('updateWorkers: ' + contadorDeUpdateWorkers);
   let item = []
   let previousWorkers = ''
 
@@ -355,9 +356,10 @@ async function updateWorkers(req, res) {
   console.log(resultado)
   return res.status(200).send('Todo ok')
 }
-
 async function updateArrayServices(req, res) {
   let item = []
+  contadorDeUpdateArrayServices++;
+  console.log('updateArrayServices: ' + contadorDeUpdateArrayServices);
 
   let previousService = ''
 
@@ -375,10 +377,10 @@ async function updateArrayServices(req, res) {
   console.log(resultado)
   return res.status(200).send('Todo Ok')
 }
-
 async function updateBusiness(req, res) {
   let businessId = req.body.idBusiness
-
+  contadorDeUpdateBusiness++;
+  console.log('updateBusiness: ' + contadorDeUpdateBusiness);
   const modificaciones = {
     businessName: req.body.businessName,
     category: req.body.category,
@@ -399,10 +401,10 @@ async function updateBusiness(req, res) {
     return res.status(200).json({ business: negocioUpdated })
   })
 }
-
 async function getFavBusiness(req, res) {
   const token = req.headers['x-access-token'] //Buscar en los headers que me tienes que mandar, se tiene que llamar asi para que la reciba aca
-
+  contadorDeGetFavBusiness++;
+  console.log('getFavBusiness: ' + contadorDeGetFavBusiness);
   if (!token) {
     return res.status(401).json({
       auth: false,
@@ -420,37 +422,50 @@ async function getFavBusiness(req, res) {
     return res.status(200).json(negocios)
   })
 }
-
-async function updateImage(req, res) {}
-
 async function updateBusinessSchedule(req, res) {
+  contadorDeUpdateBusinessSchedule++;
+  console.log('updateBusinessSchedule: ' + contadorDeUpdateBusinessSchedule);
   console.log('Actualizando horario del negocio')
   const modificaciones = { horario: JSON.stringify(req.body.horario) }
   //console.log('Si prro');
   let resultado = await business.findByIdAndUpdate(req.body.idBusiness, { $set: modificaciones })
   return res.status(200).send('Todo ok')
 }
-
 async function saveChangesFromBusiness(req, res) {
   //Update Services
+  contadorDeSaveChangesFromBusiness++;
+  console.log('saveChangesFromBusiness: ' + contadorDeSaveChangesFromBusiness);
   const busi = await business.findById(req.body.businessId)
   let previousService = busi._doc.servicios //Servicios existentes
   let listaServices = []
   listaServices = JSON.parse(JSON.stringify(previousService))
   let requestedServices = JSON.parse(req.body.requestedServices);
 
+  const nombresDeServiciosAntiguos = await listaServices.map(
+    async (service) => {
+      let servicio = await services.findById(service);
+      return servicio.nombreServicio;
+    });
+
   
-    const newServicesToInsert = requestedServices.map(
-      (service) =>
-        new services({
-          nombreServicio: service.nombreServicio,
-          businessCreatedBy: busi._doc._id,
-          precio: service.precio,
-          imgPath: service.imgPath,
-          descripcion: service.descripcion,
-          duracion: service.duracion,
-          time: service.time,
-        }),
+    const newServicesToInsert = await requestedServices.map(
+      (service) => {
+
+        if(!nombresDeServiciosAntiguos.includes(service.nombreServicio)){
+          let nuevo = new services({
+            nombreServicio: service.nombreServicio,
+            businessCreatedBy: busi._doc._id,
+            precio: service.precio,
+            imgPath: service.imgPath,
+            descripcion: service.descripcion,
+            duracion: service.duracion,
+            time: service.time,
+          });
+          return nuevo;
+        }
+       
+      }
+        
     )
     for(var serv of newServicesToInsert){
       listaServices.push(serv._id);
@@ -466,10 +481,21 @@ async function saveChangesFromBusiness(req, res) {
   let nuevoWorker = []
   let requestedWorkers = JSON.parse(req.body.requestedWorkers);
   let contador = 0;
+
+  const emailDeTrabajadoresAntiguos = listaWorkers.map(
+    async (worker)  =>  {
+      let trabajador = await workerModel.findById(worker);
+      return trabajador.email;
+    });
+
+
+
   for (let worker of requestedWorkers) {
     await usuario.findOne({ emailUser: worker.email }).then(async (docs) => {
       if (docs != null) {
-        let horasQueVaATrabajarElEsclavo = new Agenda()
+
+        if(!emailDeTrabajadoresAntiguos.includes(worker.email)){
+          let horasQueVaATrabajarElEsclavo = new Agenda()
    
         horasQueVaATrabajarElEsclavo.construirHorarioInicial(JSON.parse(worker.horario));
 
@@ -495,6 +521,10 @@ async function saveChangesFromBusiness(req, res) {
         contador++;
         //const idCool = newWorker._id.toString();
         listaWorkers.push(newWorker._id);
+        }
+
+
+        
       }
     })
   }

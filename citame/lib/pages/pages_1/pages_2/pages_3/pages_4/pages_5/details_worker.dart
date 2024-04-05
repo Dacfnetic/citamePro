@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 import 'package:citame/models/worker_moder.dart';
-import 'package:citame/pages/pages_1/pages_2/pages_3/pages_4/pages_5/details_date.dart';
 import 'package:citame/pages/pages_1/pages_2/pages_3/pages_4/pages_5/select_service.dart';
 import 'package:citame/pages/pages_1/pages_2/pages_3/reservation_page.dart';
 import 'package:citame/services/api_service.dart';
@@ -107,10 +106,9 @@ class DetailsWorker extends ConsumerWidget {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => DetailsDate(imagen: imagen, trabajador: trabajador)) // SelectService(trabajador: trabajador),
-                                            
-                                              
-                                        );
+                                        builder: (context) => SelectService(
+                                              trabajador: trabajador,
+                                            )));
                               },
                               child: Container(
                                 decoration: BoxDecoration(),

@@ -260,7 +260,7 @@ class _CajaDeServiciosState extends State<CajaDeServicios> {
             if (isChecked!) {
               widget.ref
                   .read(servicesProvider.notifier)
-                  .anadir(widget.servicio);
+                  .anadir(widget.servicio, context, WidgetRef);
             } else {
               widget.ref
                   .read(servicesProvider.notifier)

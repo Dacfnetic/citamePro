@@ -6,8 +6,15 @@ const citame = require('../../models/cita.model.js')
 const jwt = require('jsonwebtoken')
 var AWS = require('aws-sdk')
 const config = require('../../config/configjson.js')
+var contadorDeGetUser = 0;
+var contadorDePostUser = 0;
+var contadorDeGetAllUsers = 0;
+var contadorDeUpdateUser = 0;
+var contadorDeFavoriteBusiness = 0;
 //Función para obtener usuario
 async function getUser(req, res) {
+  contadorDeGetUser++;
+  console.log('getUsers: ' + contadorDeGetUser);
   try {
     const token = req.headers['x-access-token'] //Buscar en los headers que me tienes que mandar, se tiene que llamar asi para que la reciba aca
 
@@ -37,6 +44,8 @@ async function getUser(req, res) {
   }
 }
 async function getAllUser(req, res) {
+  contadorDeGetAllUsers++;
+  console.log('GetAllUsers: ' + contadorDeGetAllUsers);
   try {
     const allUsers = await usuario.find()
     const allActiveUsers = allUsers.filter((nUser) => nUser.googleId != req.get('googleId'))
@@ -47,6 +56,8 @@ async function getAllUser(req, res) {
 }
 //Función para crear usuario
 async function postUser(req, res) {
+  contadorDePostUser++;
+  console.log('PostUser: ' + contadorDePostUser);
   try {
     usuario.findOne({ emailUser: req.body.emailUser }).then(async (docs) => {
       if (docs == null) {
@@ -63,7 +74,6 @@ async function postUser(req, res) {
         await tolkien.findOne({ token: req.body.deviceToken }).then(async (docs) => {
           if (docs == null) {
           
-           
             tokenSave.save()
           }
         })
@@ -110,6 +120,8 @@ async function postUser(req, res) {
 }
 
 async function updateUser(req, res) {
+  contadorDeUpdateUser++;
+  console.log('UpdateUser: ' + contadorDeUpdateUser);
   let emailUsuario = req.body.emailUser
 
   const usuarioUpdate = {
@@ -126,6 +138,8 @@ async function updateUser(req, res) {
 }
 
 async function FavoriteBusiness(req, res) {
+  contadorDeFavoriteBusiness++;
+  console.log('FavoriteBusiness: ' + contadorDeFavoriteBusiness);
   const token = req.headers['x-access-token'] //Buscar en los headers que me tienes que mandar, se tiene que llamar asi para que la reciba aca
 
   if (!token) {

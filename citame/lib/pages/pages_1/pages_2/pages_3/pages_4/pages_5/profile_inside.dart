@@ -37,7 +37,7 @@ class ProfileInsidePage extends ConsumerWidget {
     print(TimeOfDay.now().format(context));
 
     return Scaffold(
-      appBar: AppBar(title: Text('Registro del trabajador', style: API.estiloJ16negro),),
+      appBar: AppBar(),
       body: SafeArea(
         child: Form(
           key: signUpKey,
@@ -299,7 +299,9 @@ class ProfileInsidePage extends ConsumerWidget {
                                         idWorker: "",
                                         puesto: workerJob.text,
                                         horarioDisponible: {},
-                                        celular: int.parse(workerCel.text)));
+                                        celular: int.parse(workerCel.text)),
+                                    context,
+                                    ref);
                                 //Escribir lo que pasa despues del post
                                 Navigator.pop(context);
                               }
@@ -317,7 +319,7 @@ class ProfileInsidePage extends ConsumerWidget {
     );
   }
 }
-//este es el contenedor de horario para el trabajador 
+
 class ContenedorDeHorario extends StatelessWidget {
   const ContenedorDeHorario({
     super.key,
@@ -350,13 +352,17 @@ class ContenedorDeHorario extends StatelessWidget {
     }
 
     void getSchedule(String dia) async {
-      TimeOfDay inicio = await API.timePicker(context, 'Horario de inicio');
+      try {
+        TimeOfDay inicio = await API.timePicker(context, 'Horario de inicio');
 
-      TimeOfDay fin = await API.timePicker(context, 'Horario de fin');
-      ref
-          .read(myBusinessStateProvider.notifier)
-          .setDiasWorker(dia, inicio, fin);
-      ref.read(reRenderProvider.notifier).reRender();
+        TimeOfDay fin = await API.timePicker(context, 'Horario de fin');
+        ref
+            .read(myBusinessStateProvider.notifier)
+            .setDiasWorker(dia, inicio, fin);
+        ref.read(reRenderProvider.notifier).reRender();
+      } catch (e) {
+        return;
+      }
     }
 
     return Container(
@@ -365,8 +371,8 @@ class ContenedorDeHorario extends StatelessWidget {
             BoxShadow(
               color: Colors.black.withOpacity(0.5), // Color de la sombra
               spreadRadius: 2, // Extensión de la sombra
-              blurRadius: 5, // Desenfoque de la sombra
-              offset: Offset(1, 2), // Desplazamiento de la sombra
+              blurRadius: 2, // Desenfoque de la sombra
+              offset: Offset(0, 1), // Desplazamiento de la sombra
             ),
           ],
           color: Color.fromARGB(255, 255, 255, 255),
@@ -378,24 +384,18 @@ class ContenedorDeHorario extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         children: [
           Container(
+            decoration: BoxDecoration(
+                color: Colors.grey.withOpacity(0.7),
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(12),
+                    topRight: Radius.circular(12))),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                     decoration: BoxDecoration(
-    border: Border(
-      bottom: BorderSide(
-        color: Colors.black.withOpacity(0.7),
-      ),
-    ),
-  ),
-                  
-                     child:Text(
+                Text(
                   day.toUpperCase(),
-                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16
-                  ),
-                ),)
-  
+                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
+                ),
               ],
             ),
           ),
@@ -404,53 +404,49 @@ class ContenedorDeHorario extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              IconButton(
+              ElevatedButton(
                 onPressed: () async {
                   getSchedule(day);
                 },
-                icon: Icon(
+                child: Icon(
                   Icons.add,
                   color: Colors.black,
-                  size: 30,
                 ),
               ),
-              IconButton(
+              ElevatedButton(
                 onPressed: () async {
                   ref
                       .read(myBusinessStateProvider.notifier)
                       .copiarHorariosWorker(day);
                   API.mensaje2(context, 'Horario copiado');
                 },
-                icon: Icon(
+                child: Icon(
                   Icons.copy,
                   color: Colors.black,
-                  size: 27,
                 ),
               ),
-              IconButton(
+              ElevatedButton(
                 onPressed: () async {
                   ref
                       .read(myBusinessStateProvider.notifier)
                       .pegarHorariosWorker(day);
                   ref.read(reRenderProvider.notifier).reRender();
                 },
-                icon: Icon(
+                child: Icon(
                   Icons.paste,
                   color: Colors.black,
-                  size: 28,
                 ),
               ),
-              IconButton(
+              ElevatedButton(
                 onPressed: () async {
                   ref
                       .read(myBusinessStateProvider.notifier)
                       .borrarDiaWorker(day);
                   ref.read(reRenderProvider.notifier).reRender();
                 },
-                icon: Icon(
+                child: Icon(
                   Icons.delete,
                   color: Colors.black,
-                  size: 28,
                 ),
               )
             ],
@@ -460,7 +456,7 @@ class ContenedorDeHorario extends StatelessWidget {
     );
   }
 }
-//contenedor para el horario general 
+
 class ContenedorDeHorario2 extends StatelessWidget {
   const ContenedorDeHorario2({
     super.key,
@@ -493,29 +489,30 @@ class ContenedorDeHorario2 extends StatelessWidget {
     }
 
     void getSchedule(String dia) async {
-      TimeOfDay inicio = await API.timePicker(context, 'Horario de inicio');
-
-      TimeOfDay fin = await API.timePicker(context, 'Horario de fin');
-      ref
-          .read(myBusinessStateProvider.notifier)
-          .setDiasGeneral(dia, inicio, fin);
-      ref.read(reRenderProvider.notifier).reRender();
+      try {
+        TimeOfDay inicio = await API.timePicker(context, 'Horario de inicio');
+        TimeOfDay fin = await API.timePicker(context, 'Horario de fin');
+        ref
+            .read(myBusinessStateProvider.notifier)
+            .setDiasGeneral(dia, inicio, fin);
+        ref.read(reRenderProvider.notifier).reRender();
+      } catch (e) {
+        return;
+      }
     }
 
     return Container(
-      padding: EdgeInsets.all(2.0),
       decoration: BoxDecoration(
-            boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 5,
-                  blurRadius: 5,
-                  offset: Offset(1,2), // cambios en la dirección de la sombra (eje x, eje y)
-                ),
-              ],
-          //border: Border.all(color: Colors.black),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.5), // Color de la sombra
+              spreadRadius: 2, // Extensión de la sombra
+              blurRadius: 2, // Desenfoque de la sombra
+              offset: Offset(0, 1), // Desplazamiento de la sombra
+            ),
+          ],
           color: Color.fromARGB(255, 255, 255, 255),
-          borderRadius: BorderRadius.circular(5)),
+          borderRadius: BorderRadius.circular(12)),
       width: double.infinity,
       margin: EdgeInsets.fromLTRB(5, 10, 15, 5),
       child: Column(
@@ -524,28 +521,17 @@ class ContenedorDeHorario2 extends StatelessWidget {
         children: [
           Container(
             decoration: BoxDecoration(
-                
+                color: Colors.grey.withOpacity(0.7),
                 borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(8),
-                    topRight: Radius.circular(8))),
+                    topLeft: Radius.circular(12),
+                    topRight: Radius.circular(12))),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                     decoration: BoxDecoration(
-    border: Border(
-      bottom: BorderSide(
-        color: Colors.black.withOpacity(0.7),
-      ),
-    ),
-  ),
-                  
-                     child:Text(
+                Text(
                   day.toUpperCase(),
-                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16
-                  ),
-                ),)
-                
+                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
+                ),
               ],
             ),
           ),
@@ -554,120 +540,58 @@ class ContenedorDeHorario2 extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-            
-            
-              IconButton(
-                icon: Icon(
-                  Icons.add,
-                  color: Colors.black,
-                  size: 30,
-                ),
-               /* 
-                style: ButtonStyle(side: MaterialStateProperty.resolveWith<BorderSide>(
-                (states){
-                  return BorderSide(color: Colors.black.withOpacity(0.7), width: 1.0);
-                },),
-                 backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                (states) {
-                  // Cambia el color de fondo según el estado
-                  if (states.contains(MaterialState.pressed)) {
-                    return Colors.white; // Color cuando se presiona el botón
-                  }
-                  return Colors.white; // Color por defecto
-                },
-              ),
-                ),
-                */  
+              ElevatedButton(
                 onPressed: () async {
                   getSchedule(day);
+                  ref
+                      .read(myBusinessStateProvider.notifier)
+                      .sePuedenGuardarCambiosGeneralesCambio();
                 },
-                
-              ),
-               IconButton(
-                icon: Icon(
-                  Icons.copy,
+                child: Icon(
+                  Icons.add,
                   color: Colors.black,
-                  size: 25,
                 ),
- 
-               /* style: ButtonStyle(side: MaterialStateProperty.resolveWith<BorderSide>(
-                (states){
-                  return BorderSide(color: Colors.black, width: 1.0);
-                },),
-                 backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                (states) {
-                  // Cambia el color de fondo según el estado
-                  if (states.contains(MaterialState.pressed)) {
-                    return Colors.white; // Color cuando se presiona el botón
-                  }
-                  return Colors.white; // Color por defecto
-                },
               ),
-                ),*/
-                
+              ElevatedButton(
                 onPressed: () async {
                   ref
                       .read(myBusinessStateProvider.notifier)
                       .copiarHorariosGeneral(day);
                   API.mensaje2(context, 'Horario copiado');
                 },
-                             ),
-              IconButton
-              (
-                /*
-                style: ButtonStyle(side: MaterialStateProperty.resolveWith<BorderSide>(
-                (states){
-                  return BorderSide(color: Colors.black, width: 1.0);
-                },),
-                 backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                (states) {
-                  // Cambia el color de fondo según el estado
-                  if (states.contains(MaterialState.pressed)) {
-                    return Colors.white; // Color cuando se presiona el botón
-                  }
-                  return Colors.white; // Color por defecto
-                },
+                child: Icon(
+                  Icons.copy,
+                  color: Colors.black,
+                ),
               ),
-                ),*/
-                
+              ElevatedButton(
                 onPressed: () async {
                   ref
                       .read(myBusinessStateProvider.notifier)
                       .pegarHorariosGeneral(day);
                   ref.read(reRenderProvider.notifier).reRender();
+                  ref
+                      .read(myBusinessStateProvider.notifier)
+                      .sePuedenGuardarCambiosGeneralesCambio();
                 },
-                icon: Icon(
+                child: Icon(
                   Icons.paste,
                   color: Colors.black,
-                  size: 27,
                 ),
               ),
-              IconButton(
-                /*style: ButtonStyle(side: MaterialStateProperty.resolveWith<BorderSide>(
-                (states){
-                  return BorderSide(color: Colors.black, width: 1.0);
-                },),
-                 backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                (states) {
-                  // Cambia el color de fondo según el estado
-                  if (states.contains(MaterialState.pressed)) {
-                    return Colors.white; // Color cuando se presiona el botón
-                  }
-                  return Colors.white; // Color por defecto
-                },
-              ),
-                ),*/
-                
+              ElevatedButton(
                 onPressed: () async {
                   ref
                       .read(myBusinessStateProvider.notifier)
                       .borrarDiaGeneral(day);
                   ref.read(reRenderProvider.notifier).reRender();
+                  ref
+                      .read(myBusinessStateProvider.notifier)
+                      .sePuedenGuardarCambiosGeneralesCambio();
                 },
-                icon: Icon(
+                child: Icon(
                   Icons.delete,
                   color: Colors.black,
-                  size: 25,
                 ),
               )
             ],
