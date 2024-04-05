@@ -18,11 +18,38 @@ class DetailsDate extends ConsumerWidget {
 
     return Scaffold( 
       appBar: AppBar(
-        title: Text('detalles cita')
+        title: Text('Detalles cita', style: TextStyle(fontWeight: FontWeight.bold),)
         ),
         body: SafeArea(child: Column(
           mainAxisSize: MainAxisSize.max ,
-          children: [],
+          children: [
+                   
+                   Container(
+                    margin: EdgeInsets.only(right: 40, left: 40),
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(border: Border.all(color: Colors.grey), borderRadius: BorderRadius.circular(7)),
+                    child:Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                           
+                          Container(
+                            padding: EdgeInsets.all(2),
+                            child: CircleAvatar( radius: 25, // ajusta el tamaño del avatar según tus necesidades
+           // backgroundImage: NetworkImage('https://ejemplo.com/imagen.jpg'), // URL de la imagen del avatar
+            backgroundColor: Colors.black)),
+                           SizedBox(width:20),
+                         Column(
+                           crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('arath de la torre'),
+                            Text('arathdelatorre@gmail.com', style: TextStyle(color: Colors.grey),)       
+                         ],)
+                       
+
+                    ],) ,
+                   )
+
+          ],
         )),
         );
      }
