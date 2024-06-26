@@ -58,6 +58,22 @@ abstract class userAPI {
         prefs.getString('avatar') != avatar) {
       prefs.setString('avatar', avatar!);
     }
+    Future<String> getToken() async {
+      String deviceToken = "";
+      await FirebaseMessaging.instance.getToken().then((token) {
+        log(token!);
+        deviceToken = token;
+        return token;
+      }).catchError((e) {
+        log(e.toString());
+      });
+      return deviceToken;
+    }
+
+    if (prefs.getString('deviceToken') == null) {
+      String deviceToken = await getToken();
+      prefs.setString('deviceToken', deviceToken);
+    }
 
     void requestPermission() async {
       FirebaseMessaging messaging = FirebaseMessaging.instance;
@@ -81,20 +97,7 @@ abstract class userAPI {
       }
     }
 
-    Future<String> getToken() async {
-      String deviceToken = "";
-      await FirebaseMessaging.instance.getToken().then((token) {
-        log(token!);
-        deviceToken = token;
-        return token;
-      }).catchError((e) {
-        log(e.toString());
-      });
-      return deviceToken;
-    }
-
     requestPermission();
-    String deviceToken = await getToken();
 
     final response = await http.post(Uri.parse('${API.server}/api/user/create'),
         headers: {'Content-Type': 'application/json'},
@@ -103,7 +106,7 @@ abstract class userAPI {
           'userName': userName,
           'emailUser': emailUser,
           'avatar': avatar,
-          'deviceToken': deviceToken,
+          'deviceToken': prefs.getString('deviceToken'),
         })));
     if (response.statusCode == 201 || response.statusCode == 202) {
       final contenido = jsonDecode(response.body);

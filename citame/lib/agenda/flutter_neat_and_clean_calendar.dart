@@ -546,7 +546,7 @@ class _CalendarState extends State<Calendar> {
 
   TextStyle? configureDateStyle(monthStarted, monthEnded) {
     TextStyle? dateStyles;
-    final TextStyle? body1Style = Theme.of(context).textTheme.bodyText2;
+    final TextStyle? body1Style = Theme.of(context).textTheme.bodySmall;
 
     if (isExpanded) {
       final TextStyle body1StyleDisabled = body1Style!.copyWith(
@@ -672,7 +672,7 @@ class _CalendarState extends State<Calendar> {
                                   Text(event.summary,
                                       style: Theme.of(context)
                                           .textTheme
-                                          .subtitle2),
+                                          .labelSmall),
                                   SizedBox(
                                     height: 10.0,
                                   ),
@@ -717,8 +717,8 @@ class _CalendarState extends State<Calendar> {
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(start, style: Theme.of(context).textTheme.bodyText1),
-        Text(end, style: Theme.of(context).textTheme.bodyText1),
+        Text(start, style: Theme.of(context).textTheme.labelSmall),
+        Text(end, style: Theme.of(context).textTheme.labelSmall),
       ],
     );
   }
@@ -735,7 +735,7 @@ class _CalendarState extends State<Calendar> {
         children: [
           Text(
             widget.allDayEventText,
-            style: Theme.of(context).textTheme.bodyText1,
+            style: Theme.of(context).textTheme.labelSmall,
           ),
         ],
       );
@@ -760,8 +760,8 @@ class _CalendarState extends State<Calendar> {
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(start, style: Theme.of(context).textTheme.bodyText1),
-        Text(end, style: Theme.of(context).textTheme.bodyText1),
+        Text(start, style: Theme.of(context).textTheme.labelSmall),
+        Text(end, style: Theme.of(context).textTheme.labelSmall),
       ],
     );
   }
