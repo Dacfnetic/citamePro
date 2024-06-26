@@ -3,7 +3,7 @@ const usuario = require('../../models/users.model.js')
 const tolkien = require('../../models/deviceToken.model.js')
 const business = require('../../models/business.model.js')
 const citame = require('../../models/cita.model.js')
-const jwt = require('jsonwebtoken')
+//const jwt = require('jsonwebtoken') Lo comento para probar cosas
 var AWS = require('aws-sdk')
 const config = require('../../config/configjson.js')
 var contadorDeGetUser = 0;
@@ -54,15 +54,21 @@ async function getAllUser(req, res) {
     return res.status(404).json('Errorsillo')
   }
 }
-//Función para crear usuario
-async function postUser(req, res) {
-  contadorDePostUser++;
-  console.log('PostUser: ' + contadorDePostUser);
-  try {
-    usuario.findOne({ emailUser: req.body.emailUser }).then(async (docs) => {
-      if (docs == null) {
-        console.log('Creando usuario')
 
+/* #region función para crear usuario */
+async function postUser(req, res) {
+  /* #region Borrar esto en producción */
+  contadorDePostUser++; //TODO: Borrar esto en producción
+  console.log('PostUser: ' + contadorDePostUser); //TODO: Borrar esto en producción
+ /* #endregion */
+  /* #region procedimientos */
+  try {
+    // Primero le preguntamos a la base de datos si el email del usuario existe
+    usuario.findOne({ emailUser: req.body.emailUser }).then(async (docs) => {
+      /* #region que pasa cuando no existe el email del usuario en la base de datos */
+      if (docs == null) {
+        console.log('Creando usuario') //TODO: Borrar esto en producción
+        /* #region crear usuario que entiende la base de datos utilizando los datos que vienen en el body del request que viene del front */
         const usuarioSave = await usuario({
           googleId: req.body.googleId,
           userName: req.body.userName,
@@ -70,54 +76,58 @@ async function postUser(req, res) {
           avatar: req.body.avatar,
           deviceTokens: [req.body.deviceToken],
         })
-
-        await tolkien.findOne({ token: req.body.deviceToken }).then(async (docs) => {
-          if (docs == null) {
-          
-            tokenSave.save()
-          }
-        })
-
-        usuarioSave.save()
-
-        const token = jwt.sign({ idUser: usuarioSave._id }, config.jwtSecret, {
+        
+        usuarioSave.save() // Guardar usuario en la base de datos
+       /* #endregion */
+        /* #region código de Anthony: sirve para generar el token */
+        /*const token = jwt.sign({ idUser: usuarioSave._id }, config.jwtSecret, {
           //Obtenemos y guardamos el id del usuario con su token
           algorithm: 'HS256',
           expiresIn: 60 * 60 * 24 * 7, //Expira en 1 dia
-        })
-
-        return res.status(201).json({ auth: true, token })
-      } else {
+        })*/
+        /* #endregion */
+        return res.status(201).json({ auth: true, 'mensaje':"mensaje" }) // 201: Enviar respuesta al front, se envia el token para autentificación.
+      } 
+      /* #endregion */
+      /* #region que pasa cuando el email del usuario existe en la base de datos */
+      else {
+        /* #region agregar dispositivos a email de usuario */
         const usuarioSave = await usuario.findOne({ emailUser: req.body.emailUser })
 
         if (!usuarioSave.deviceTokens.includes(req.body.deviceToken)) {
           usuarioSave.deviceTokens.push(req.body.deviceToken)
-          usuario.findByIdAndUpdate(usuarioSave._id, {
-            $set: { deviceTokens: usuarioSave.deviceTokens },
+          tokens = JSON.parse(JSON.stringify(usuarioSave.deviceTokens))
+          id = JSON.parse(JSON.stringify(usuarioSave._id))
+          await usuario.findByIdAndUpdate(id, {
+            $set: { deviceTokens: tokens },
           })
         }
 
-        await tolkien.findOne({ token: req.body.deviceToken }).then(async (docs) => {
-          if (docs == null) {
-          
-            
-            tokenSave.save()
-          }
-        })
-
-        const token = jwt.sign({ idUser: usuarioSave._id }, config.jwtSecret, {
+        /* #endregion */
+        /* #region crear token, esto debería ser una función porque lo usamos 2 veces */
+        /*const token = jwt.sign({ idUser: usuarioSave._id }, config.jwtSecret, {
           //Obtenemos y guardamos el id del usuario con su token
           algorithm: 'HS256',
           expiresIn: 60 * 60 * 24 * 7, //Expira en 1 dia
-        })
+        })*/
 
-        return res.status(201).json({ auth: true, token })
+        /* #endregion */
+        return res.status(201).json({ auth: true, 'mensaje':"mensaje"  }) // 201: Enviar respuesta al front, se envia el token para autentificación.
       }
+      /* #endregion */
     })
-  } catch (e) {
-    return res.status(404).json('Errosillo')
+  } 
+  /* #endregion */
+  /* #region que pasa en caso de error */
+  catch (e) {
+    return res.status(404).json('Errosillo') // 404: Se envía un error genérico.
   }
+/* #endregion */
 }
+/* #endregion */
+
+
+
 
 async function updateUser(req, res) {
   contadorDeUpdateUser++;

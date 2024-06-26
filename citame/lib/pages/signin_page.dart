@@ -17,6 +17,7 @@ class SignInPage extends ConsumerWidget {
       body: SafeArea(
         child: Column(
           children: [
+            // #region aquí va la imagen
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
@@ -31,6 +32,7 @@ class SignInPage extends ConsumerWidget {
                 ),
               ),
             ),
+            // #endregion
             Expanded(
               child: Column(
                 children: [

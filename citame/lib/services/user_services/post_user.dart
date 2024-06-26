@@ -11,8 +11,8 @@ abstract class PostUser {
   static Future<void> postUser(String googleId, String? userName,
       String? emailUser, String? avatar) async {
     // #region Declaración de funciones
-    // #region Obtiene el token especifico del dispositivo solicitandolo a google
     Future<String> getToken() async {
+      // Obtiene el token especifico del dispositivo solicitandolo a google
       String deviceToken = "";
       await FirebaseMessaging.instance.getToken().then((token) {
         log(token!); //TODO: Esto se borra en producción
@@ -22,10 +22,10 @@ abstract class PostUser {
         log(e.toString());
       });
       return deviceToken;
-    } // #endregion
+    }
 
-    // #region Solicita permisos de geolocalización, notificaciones, entre otros.
     void requestPermission() async {
+      // Solicita permisos de geolocalización, notificaciones, entre otros.
       FirebaseMessaging messaging = FirebaseMessaging.instance;
 
       NotificationSettings settings = await messaging.requestPermission(
@@ -45,7 +45,7 @@ abstract class PostUser {
       } else {
         log("User declined or has not accepted permission");
       }
-    } // #endregion
+    }
 
     // #endregion
     // #region Inicializar valores
@@ -76,7 +76,7 @@ abstract class PostUser {
 
     // #endregion
     // #region Recibir solicitud del server
-    if (response.statusCode == 201 || response.statusCode == 202) {
+    if (response.statusCode == 201) {
       final contenido = jsonDecode(response.body);
       prefs.setString('llaveDeUsuario', contenido['token']);
     }
