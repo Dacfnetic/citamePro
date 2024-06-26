@@ -5,6 +5,7 @@ import 'package:citame/models/worker_moder.dart';
 import 'package:citame/pages/pages_1/pages_2/pages_3/pages_4/pages_5/details_worker.dart';
 import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:citame/services/api_service.dart';
+import 'package:citame/services/images_services/pick_image_from_galery.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -63,7 +64,7 @@ class WorkerBox extends ConsumerWidget {
                     ),
                   ),
                   onPressed: () {
-                    API.pickImageFromGallery(ref);
+                    PickImageFromGalery.pickImageFromGallery(ref);
                   },
                 ),
               ),

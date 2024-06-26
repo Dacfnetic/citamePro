@@ -30,7 +30,7 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 String serverUrl = API.server;
 FirebaseAuth auth = FirebaseAuth.instance;
-String actualCat = '';
+String actualCat = 'Doctores y dentistas';
 
 String categoriaABuscar = '';
 IO.Socket socket = IO.io('http://win.citame.store/', <String, dynamic>{
@@ -446,13 +446,6 @@ abstract class API {
       return false;
     }
     throw Exception('Failed to get items');
-  }
-
-  static Future pickImageFromGallery(WidgetRef ref) async {
-    final returnedImage =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-    File imagen = File(returnedImage!.path);
-    ref.read(imgProvider.notifier).changeState(imagen);
   }
 
   static Future<Uint8List> downloadImage(String id) async {

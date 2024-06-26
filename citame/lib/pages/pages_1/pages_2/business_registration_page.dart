@@ -1,12 +1,10 @@
 import 'dart:io';
-
 import 'package:citame/Widgets/cuadro.dart';
 import 'package:citame/Widgets/photo_container.dart';
 import 'package:citame/pages/pages_1/pages_2/map_page.dart';
 import 'package:citame/pages/pages_1/pages_2/pages_3/pages_4/menu_page.dart';
 import 'package:citame/providers/img_provider.dart';
 import 'package:citame/providers/marker_provider.dart';
-import 'package:citame/providers/my_actual_business_provider.dart';
 import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +17,8 @@ class BusinessRegisterPage extends ConsumerWidget {
   BusinessRegisterPage({
     super.key,
   });
+
+  // #region declaración de controladores de texto
   final TextEditingController description = TextEditingController();
   final TextEditingController businessName = TextEditingController();
   final TextEditingController physicalDirection = TextEditingController();
@@ -28,6 +28,8 @@ class BusinessRegisterPage extends ConsumerWidget {
   final TextEditingController cel = TextEditingController();
   final TextEditingController password = TextEditingController();
   final GlobalKey<FormState> signUpKey = GlobalKey<FormState>();
+  // #endregion
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     Marker negocio = ref.watch(markerProvider);
@@ -52,13 +54,6 @@ class BusinessRegisterPage extends ConsumerWidget {
             padding: const EdgeInsets.all(8.0),
             child: ListView(
               children: [
-                /*FotoConTexto(mensaje: 'No recuerdo', estilo: letraBlanca),
-                SizedBox(height: 12),
-                FotoConTexto(mensaje: mensaje, estilo: letraBlancaSmall),
-               
-               
-                   */
-                //media query
                 Row(
                   children: [
                     Text(
