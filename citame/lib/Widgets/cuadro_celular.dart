@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:validators/validators.dart';
 
-class Cuadro extends StatefulWidget {
-  Cuadro({
+class CuadroCelular extends StatefulWidget {
+  CuadroCelular({
     super.key,
     required this.control,
     required this.texto,
@@ -11,18 +12,25 @@ class Cuadro extends StatefulWidget {
   final String texto;
 
   @override
-  State<Cuadro> createState() => _CuadroState();
+  State<CuadroCelular> createState() => _CuadroCelularState();
 }
 
-class _CuadroState extends State<Cuadro> {
+class _CuadroCelularState extends State<CuadroCelular> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       maxLines: 1,
       controller: widget.control,
+      keyboardType: TextInputType.phone,
       validator: (String? value) {
         if (value == null || value.isEmpty) {
           return 'No puedes dejar este campo vacío';
+        }
+        if (value.length != 8) {
+          return 'El celular debe tener 8 dígitos';
+        }
+        if (!isNumeric(value)) {
+          return 'No se admiten carácteres no númericos';
         }
         return null;
       },

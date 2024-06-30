@@ -6,6 +6,7 @@ import 'package:citame/models/service_model.dart';
 import 'package:citame/models/user_model.dart';
 import 'package:citame/models/worker_moder.dart';
 import 'package:citame/pages/home_page.dart';
+import 'package:citame/pages/signin_page.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -120,13 +121,21 @@ class MyBusinessStateNotifier extends StateNotifier<List<Business>> {
     return workerDaysAvailableEnviar;
   }
 
-  void setDatosUsuario() async {
+  void setDatosUsuario(BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    user = Usuario(
-        googleId: prefs.getString('googleId')!,
-        userName: prefs.getString('userName')!,
-        userEmail: prefs.getString('emailUser')!,
-        avatar: prefs.getString('avatar')!);
+    if (prefs.getString('googleId') == null) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SignInPage(),
+          ));
+    } else {
+      user = Usuario(
+          googleId: prefs.getString('googleId')!,
+          userName: prefs.getString('userName')!,
+          userEmail: prefs.getString('emailUser')!,
+          avatar: prefs.getString('avatar')!);
+    }
   }
 
   Usuario getDatosUsuario() {

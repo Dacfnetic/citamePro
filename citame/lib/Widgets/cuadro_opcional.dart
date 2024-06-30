@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
-class Cuadro extends StatefulWidget {
-  Cuadro({
+enum SampleItem { itemOne, itemTwo, itemThree }
+
+class CuadroOpcional extends StatefulWidget {
+  CuadroOpcional({
     super.key,
     required this.control,
     required this.texto,
@@ -11,19 +13,16 @@ class Cuadro extends StatefulWidget {
   final String texto;
 
   @override
-  State<Cuadro> createState() => _CuadroState();
+  State<CuadroOpcional> createState() => _CuadroOpcionalState();
 }
 
-class _CuadroState extends State<Cuadro> {
+class _CuadroOpcionalState extends State<CuadroOpcional> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       maxLines: 1,
       controller: widget.control,
       validator: (String? value) {
-        if (value == null || value.isEmpty) {
-          return 'No puedes dejar este campo vacío';
-        }
         return null;
       },
       decoration: InputDecoration(

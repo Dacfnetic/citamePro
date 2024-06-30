@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
+import 'package:citame/models/user_model.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
@@ -79,8 +80,10 @@ abstract class PostUser {
     if (response.statusCode == 201) {
       final contenido = jsonDecode(response.body);
       prefs.setString('llaveDeUsuario', contenido['token']);
+    } else {
+      throw Exception('Failed to add item');
     }
-    throw Exception('Failed to add item');
+
     // #endregion
   }
 }

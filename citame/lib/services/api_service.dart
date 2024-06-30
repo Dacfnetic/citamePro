@@ -5,6 +5,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:citame/providers/event_provider.dart';
 import 'package:citame/providers/own_business_provider.dart';
+import 'package:citame/services/images_services/post_image.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:citame/Widgets/cuadro.dart';
 import 'package:citame/firebase_options.dart';
@@ -12,7 +13,6 @@ import 'package:citame/models/business_model.dart';
 import 'package:citame/models/service_model.dart';
 import 'package:citame/models/worker_moder.dart';
 import 'package:citame/pages/pages_1/pages_2/business_registration_page.dart';
-import 'package:citame/providers/img_provider.dart';
 import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:citame/providers/re_render_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -23,7 +23,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
-import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 // ignore: library_prefixes
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -33,15 +32,18 @@ FirebaseAuth auth = FirebaseAuth.instance;
 String actualCat = 'Doctores y dentistas';
 
 String categoriaABuscar = '';
+/*
 IO.Socket socket = IO.io('http://win.citame.store/', <String, dynamic>{
   "transports": ["websocket"],
   "autoConnect": false,
-});
+});*/
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
 abstract class API {
-  static String server = 'https://win.citame.store';
+  static String server =
+      'http://ec2-18-226-172-244.us-east-2.compute.amazonaws.com:4000';
+  //static String server = 'https://win.citame.store';
 
   static Future<Map> guardarConfiguracionGeneral(
       BuildContext context,
@@ -164,7 +166,7 @@ abstract class API {
             })));
 
     if (response.statusCode == 200) {
-      emitir(businessId);
+      // emitir(businessId);
       return 'borrado';
     }
 
@@ -318,7 +320,7 @@ abstract class API {
 
     if (response.statusCode == 201) {
       var workerData = jsonDecode(response.body);
-      await API.postImagen(imgPath, workerData['_id'], 'worker');
+      await PostImage.postImage(imgPath, workerData['_id'], 'worker');
       if (context.mounted) {
         API.mensaje(context, 'Aviso', 'La solicitud fue enviada al trabajador');
         API.updateWorkersInBusiness(businessId, workerData['_id']);
@@ -341,23 +343,6 @@ abstract class API {
     }
 
     throw Exception('Failed to add item');
-  }
-
-  static Future<String> postImagen(
-      File imagen, String id, String destiny) async {
-    var request = http.MultipartRequest(
-        'POST', Uri.parse('$serverUrl/api/imagen/upload'));
-
-    request.files.add(await http.MultipartFile.fromPath('imagen', imagen.path));
-    request.fields['id'] = id;
-    request.fields['destiny'] = destiny;
-
-    var response = await request.send();
-
-    if (response.statusCode == 201) return 'Todo ok';
-    if (response.statusCode == 202) return 'Todo ok';
-
-    throw Exception('Failed to adddsds item');
   }
 
   static Future<String> postService(
@@ -418,7 +403,7 @@ abstract class API {
           'idBusiness': idBusiness,
         })));
     if (response.statusCode == 201) {
-      emitirCita(workerEmail);
+      // emitirCita(workerEmail);
       mensaje(context, 'Cita enviada',
           'Su cita fue enviada al trabajador, le enviaremos una notificación cuando este la acepte');
       return 'Todo ok';
@@ -539,6 +524,7 @@ abstract class API {
     throw Exception('Failed to get items');
   }
 
+/*
   static Future<void> connect(BuildContext context) async {
     socket.connect();
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -560,12 +546,12 @@ abstract class API {
     });
     socket.emit("UsuarioRegistrado", prefs.getString('emailUser'));
   }
-
+*/
   static void llamar(int numero) {
     launchUrl(Uri.parse('tel://$numero'));
   }
 
-  static Future<void> desconnect() async {
+/*  static Future<void> desconnect() async {
     socket.disconnect();
   }
 
@@ -575,7 +561,7 @@ abstract class API {
 
   static Future<void> emitirCita(String workerEmail) async {
     socket.emit("citaEmitida", workerEmail);
-  }
+  }*/
 
   static Future<List<Service>> getService(String idBusiness) async {
     final response = await http.get(
@@ -598,43 +584,6 @@ abstract class API {
 
   static reRender(WidgetRef ref) {
     ref.read(reRenderProvider.notifier).reRender();
-  }
-
-  static Future<String> postBusiness(
-    String businessName,
-    String? category,
-    String? email,
-    //String? createdBy,
-    List<String> workers,
-    String? contactNumber,
-    String? direction,
-    String? latitude,
-    String? longitude,
-    String? description,
-    File imgPath,
-  ) async {
-    final response =
-        await http.post(Uri.parse('$serverUrl/api/business/create'),
-            headers: {'Content-Type': 'application/json'},
-            body: utf8.encode(jsonEncode({
-              "businessName": businessName,
-              "category": category,
-              "email": email,
-              //"createdBy": createdBy,
-              "workers": workers,
-              "contactNumber": contactNumber,
-              "direction": direction,
-              "latitude": latitude,
-              "longitude": longitude,
-              "description": description,
-            })));
-    if (response.statusCode == 201) {
-      var businessList = jsonDecode(response.body);
-      await API.postImagen(imgPath, businessList['_id'], 'business');
-      return businessList['_id'];
-    }
-    if (response.statusCode == 202) return "El negocio ya existe";
-    throw Exception('Failed to add item');
   }
 
   static Future<UserCredential> signInWithGoogle() async {

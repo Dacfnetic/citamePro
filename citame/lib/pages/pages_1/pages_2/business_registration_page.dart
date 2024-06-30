@@ -1,16 +1,22 @@
 import 'dart:io';
 import 'package:citame/Widgets/cuadro.dart';
+import 'package:citame/Widgets/cuadro_celular.dart';
+import 'package:citame/Widgets/cuadro_dropdown.dart';
+import 'package:citame/Widgets/cuadro_opcional.dart';
 import 'package:citame/Widgets/photo_container.dart';
+import 'package:citame/Widgets/universal_variables.dart';
 import 'package:citame/pages/pages_1/pages_2/map_page.dart';
 import 'package:citame/pages/pages_1/pages_2/pages_3/pages_4/menu_page.dart';
 import 'package:citame/providers/img_provider.dart';
 import 'package:citame/providers/marker_provider.dart';
 import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:citame/services/api_service.dart';
+import 'package:citame/services/business_services/post_business.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BusinessRegisterPage extends ConsumerWidget {
@@ -33,6 +39,13 @@ class BusinessRegisterPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     Marker negocio = ref.watch(markerProvider);
+
+    CuadroDropdown categoria = CuadroDropdown(
+      control: category,
+      texto: GlobalVariables.categorias[0],
+      opciones: GlobalVariables.categorias,
+    );
+
     final indicaciones = GoogleFonts.plusJakartaSans(
       color: Color(0xff57636c),
       fontSize: 14,
@@ -73,11 +86,11 @@ class BusinessRegisterPage extends ConsumerWidget {
                 Cuadro(control: businessName, texto: 'Nombre del negocio'),
                 SizedBox(height: 12),
                 Text('Categoría del negocio', style: indicaciones),
-                Cuadro(control: category, texto: 'Categoría del negocio'),
+                categoria,
                 SizedBox(height: 12),
-                Cuadro(control: email, texto: 'Correo (opcional)'),
+                CuadroOpcional(control: email, texto: 'Correo (opcional)'),
                 SizedBox(height: 12),
-                Cuadro(control: cel, texto: 'Número de contacto'),
+                CuadroCelular(control: cel, texto: 'Número de contacto'),
                 SizedBox(height: 12),
                 Cuadro(control: physicalDirection, texto: 'Dirección'),
                 SizedBox(height: 12),
@@ -114,38 +127,41 @@ class BusinessRegisterPage extends ConsumerWidget {
 
                 ElevatedButton(
                   onPressed: () async {
-                    try {
-                      SharedPreferences prefs =
-                          await SharedPreferences.getInstance();
-                      if (signUpKey.currentState!.validate()) {
-                        var idNegocio = '';
-                        idNegocio = await API.postBusiness(
-                          businessName.text,
-                          API.getCat(),
-                          prefs.getString('emailUser')!,
-                          //auth.currentUser!.uid,
-                          [],
-                          cel.text,
-                          physicalDirection.text,
-                          negocio.position.latitude.toString(),
-                          negocio.position.longitude.toString(),
-                          description.text,
-                          ref.read(imgProvider),
-                        );
-                        if (context.mounted) {
-                          ref
-                              .read(myBusinessStateProvider.notifier)
-                              .setActualBusiness(idNegocio);
-                          Navigator.pop(context);
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => MenuPage(),
-                              ));
+                    if (ref.read(imgProvider).path != '') {
+                      try {
+                        SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+                        if (signUpKey.currentState!.validate()) {
+                          var idNegocio = '';
+                          idNegocio = await PostBusiness.postBusiness(
+                              businessName.text,
+                              categoria.texto,
+                              prefs.getString('emailUser')!,
+                              //auth.currentUser!.uid,
+                              cel.text,
+                              physicalDirection.text,
+                              negocio.position.latitude.toString(),
+                              negocio.position.longitude.toString(),
+                              description.text,
+                              ref.read(imgProvider),
+                              'business');
+                          if (context.mounted) {
+                            ref
+                                .read(myBusinessStateProvider.notifier)
+                                .setActualBusiness(idNegocio);
+                            Navigator.pop(context);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => MenuPage(),
+                                ));
+                          }
                         }
+                      } catch (e) {
+                        print(e.toString());
                       }
-                    } catch (e) {
-                      print(e.toString());
+                    } else {
+                      API.mensaje2(context, 'Tienes que subir una imagen');
                     }
                   },
                   child: Text('Registrar negocio'),

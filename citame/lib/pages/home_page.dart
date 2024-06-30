@@ -22,10 +22,10 @@ class HomePage extends ConsumerWidget {
     ref.watch(geoProvider.notifier).obtener();
     CategoristListNotifier categoriesController =
         ref.read(categoriesProvider.notifier);
-    controlador.setDatosUsuario();
+    controlador.setDatosUsuario(context);
     controlador.setPage(runtimeType);
     print(controlador.getPage());
-    API.connect(context);
+    // API.connect(context);
 
     return Scaffold(
       body: SafeArea(

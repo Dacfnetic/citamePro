@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class Cuadro extends StatefulWidget {
-  Cuadro({
+class CuadroDescription extends StatefulWidget {
+  CuadroDescription({
     super.key,
     required this.control,
     required this.texto,
@@ -11,14 +11,14 @@ class Cuadro extends StatefulWidget {
   final String texto;
 
   @override
-  State<Cuadro> createState() => _CuadroState();
+  State<CuadroDescription> createState() => _CuadroDescriptionState();
 }
 
-class _CuadroState extends State<Cuadro> {
+class _CuadroDescriptionState extends State<CuadroDescription> {
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      maxLines: 1,
+    return SizedBox(
+        child: TextFormField(
       controller: widget.control,
       validator: (String? value) {
         if (value == null || value.isEmpty) {
@@ -26,6 +26,8 @@ class _CuadroState extends State<Cuadro> {
         }
         return null;
       },
+      maxLines: 7,
+      minLines: 1,
       decoration: InputDecoration(
         contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 8),
         border: OutlineInputBorder(
@@ -33,6 +35,6 @@ class _CuadroState extends State<Cuadro> {
         ),
         label: Text(widget.texto),
       ),
-    );
+    ));
   }
 }
