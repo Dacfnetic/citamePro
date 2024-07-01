@@ -1,8 +1,6 @@
 import 'package:citame/pages/pages_1/pages_2/business_registration_page.dart';
-import 'package:citame/pages/pages_1/pages_2/pages_3/pages_4/pages_5/subscriptions.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 
 class CarouselPage extends StatefulWidget {
   @override

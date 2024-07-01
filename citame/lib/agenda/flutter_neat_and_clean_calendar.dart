@@ -2,9 +2,7 @@
 
 library flutter_neat_and_clean_calendar;
 
-import 'dart:math';
 import 'dart:developer' as dev;
-import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:citame/agenda/date_picker_config.dart';
 import 'package:citame/agenda/platform_widgets.dart';

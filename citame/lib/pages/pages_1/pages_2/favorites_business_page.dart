@@ -1,6 +1,5 @@
 import 'package:citame/Widgets/business_card.dart';
 import 'package:citame/Widgets/search_bar_citame.dart';
-import 'package:citame/providers/business_provider.dart';
 import 'package:citame/providers/my_favorites_provider.dart';
 import 'package:citame/providers/re_render_provider.dart';
 import 'package:flutter/material.dart';
@@ -8,8 +7,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class MyFavoritesPage extends ConsumerWidget {
   MyFavoritesPage({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
   final TextEditingController searchBarController = TextEditingController();
 
   @override

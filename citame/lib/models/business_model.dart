@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-import 'package:citame/utils/json.dart';
-
 class Business {
   final String businessName;
   final String idMongo;

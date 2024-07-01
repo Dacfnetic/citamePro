@@ -24,9 +24,6 @@ class WorkersNotifier extends StateNotifier<List<Worker>> {
         .read(myBusinessStateProvider.notifier)
         .sePuedenGuardarCambiosGeneralesCambio();
     state = [...state, entrada];
-    /*List<double> x = [];
-    x = lista.where((servicio) => servicio.nombreServicio != entrada.data);
-    servicios = List.from(x);*/
   }
 
   void remover(entrada) {
@@ -45,9 +42,4 @@ class WorkersNotifier extends StateNotifier<List<Worker>> {
   List<Worker> obtener() {
     return state;
   }
-
-  /*void eliminar(entrada) {
-    var index = state.where((element) => element.data)
-    state = state.removeAt(index);
-  }*/
 }

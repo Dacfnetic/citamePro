@@ -6,6 +6,7 @@ import 'dart:typed_data';
 import 'package:citame/providers/event_provider.dart';
 import 'package:citame/providers/own_business_provider.dart';
 import 'package:citame/services/images_services/post_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:citame/Widgets/cuadro.dart';
 import 'package:citame/firebase_options.dart';
@@ -671,6 +672,25 @@ abstract class API {
                     child: Text('Gracias')),
               ],
             ));
+  }
+
+  static void showDuracion(BuildContext context, Widget child) async {
+    await showCupertinoModalPopup<void>(
+      context: context,
+      builder: (BuildContext context) => Container(
+        height: 216,
+        padding: const EdgeInsets.only(top: 6.0),
+        margin: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        color: CupertinoColors.systemBackground.resolveFrom(context),
+        child: SafeArea(
+          top: false,
+          child: child,
+        ),
+      ),
+    );
+    //API.reRender(ref);
   }
 
   static mensaje2(BuildContext context, String titulo) {

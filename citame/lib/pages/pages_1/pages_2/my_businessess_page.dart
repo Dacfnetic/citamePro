@@ -1,6 +1,5 @@
 import 'package:citame/Widgets/business_card.dart';
 import 'package:citame/Widgets/search_bar_citame.dart';
-import 'package:citame/providers/business_provider.dart';
 import 'package:citame/providers/own_business_provider.dart';
 import 'package:citame/providers/re_render_provider.dart';
 import 'package:flutter/material.dart';
@@ -8,14 +7,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class MyBusinessesPage extends ConsumerWidget {
   MyBusinessesPage({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
   final TextEditingController searchBarController = TextEditingController();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     List<BusinessCard> negocios = ref.watch(ownBusinessProvider);
-    bool cambio = ref.watch(reRenderProvider);
     return PopScope(
         canPop: true,
         onPopInvoked: (didPop) {

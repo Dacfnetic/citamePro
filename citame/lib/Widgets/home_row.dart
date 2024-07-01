@@ -13,10 +13,10 @@ class HomeRow extends ConsumerWidget {
   final String imagen;
 
   const HomeRow({
-    Key? key,
+    super.key,
     required this.categoria,
     required this.imagen,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

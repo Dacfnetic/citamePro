@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
-
 import 'package:citame/models/business_model.dart';
 import 'package:citame/models/service_model.dart';
 import 'package:citame/models/user_model.dart';
@@ -142,18 +140,14 @@ class MyBusinessStateNotifier extends StateNotifier<List<Business>> {
     return user!;
   }
 
-  void cargar(myBusiness) {
-    state = myBusiness;
-  }
+  void cargar(myBusiness) => state = myBusiness;
 
   void establecerWorkers(id, ref) async {
     workers = await API.getWorkers(id);
     API.reRender(ref);
   }
 
-  List<Worker> obtenerWorkers() {
-    return workers;
-  }
+  List<Worker> obtenerWorkers() => workers;
 
   void setService(id, ref) async {
     services = await API.getService(id);
@@ -171,9 +165,7 @@ class MyBusinessStateNotifier extends StateNotifier<List<Business>> {
     services = servicios;
   }
 
-  List<Service> getService() {
-    return services;
-  }
+  List<Service> getService() => services;
 
   void setDias(dia, valor) {
     diasLaboralesGenerales[dia] = valor;
@@ -214,9 +206,8 @@ class MyBusinessStateNotifier extends StateNotifier<List<Business>> {
     workerDaysAvailable[dia][index] = {'inicio': inicio, 'fin': fin};
   }
 
-  void setDiasWorker2(Map entrada) {
-    workerDaysAvailable = Map.from(generalSchedule);
-  }
+  void setDiasWorker2(Map entrada) =>
+      workerDaysAvailable = Map.from(generalSchedule);
 
   void setDiasWorker(dia, TimeOfDay inicio, TimeOfDay fin) {
     workerDaysAvailable[dia].add({'inicio': inicio, 'fin': fin});
@@ -242,9 +233,7 @@ class MyBusinessStateNotifier extends StateNotifier<List<Business>> {
     generalSchedule[dia].add({'inicio': inicio, 'fin': fin});
   }
 
-  Map obtenerDiasGeneral() {
-    return generalSchedule;
-  }
+  Map obtenerDiasGeneral() => generalSchedule;
 
   void copiarHorariosGeneral(dia) {
     papelera = List.from(generalSchedule[dia]);
