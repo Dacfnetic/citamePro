@@ -8,7 +8,6 @@ import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:citame/providers/my_favorites_provider.dart';
 import 'package:citame/providers/own_business_provider.dart';
 import 'package:citame/providers/page_provider.dart';
-import 'package:citame/services/api_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,12 +21,12 @@ class ProfileRow extends ConsumerWidget {
   final Widget page;
   final int method;
   const ProfileRow({
-    Key? key,
+    super.key,
     required this.description,
     required this.icon,
     required this.page,
     required this.method,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -1,12 +1,9 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:citame/Widgets/cuadro.dart';
 import 'package:citame/models/worker_moder.dart';
 import 'package:citame/providers/img_provider.dart';
-import 'package:citame/providers/my_actual_business_provider.dart';
 import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:citame/providers/re_render_provider.dart';
-import 'package:citame/providers/services_provider.dart';
 import 'package:citame/providers/workers_provider.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:citame/services/images_services/pick_image_from_galery.dart';
@@ -15,6 +12,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileInsidePage extends ConsumerWidget {
+  // #region parámetros
   ProfileInsidePage({
     super.key,
   });
@@ -28,13 +26,13 @@ class ProfileInsidePage extends ConsumerWidget {
   final GlobalKey<FormState> signUpKey =
       GlobalKey<FormState>(); //llave global del form para validaciones
 
+  // #endregion
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     File ruta = ref.watch(imgProvider);
     Map horario =
         ref.watch(myBusinessStateProvider.notifier).obtenerDiasWorker();
     Schedule horas = Schedule(horario: horario);
-
     print(TimeOfDay.now().format(context));
 
     return Scaffold(

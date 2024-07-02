@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class RegistroDeTrabajadores extends StatelessWidget {
+  // #region parámetros
   const RegistroDeTrabajadores(
       {super.key,
       required this.workers,
@@ -16,11 +17,13 @@ class RegistroDeTrabajadores extends StatelessWidget {
   final List<Worker> workers;
   final List<WorkerBox> trabajadores;
   final WidgetRef ref;
+  // #endregion
 
   @override
   Widget build(BuildContext context) {
     return ListView(
       children: [
+        // #region para describir que hace la página
         Container(
           margin: EdgeInsets.only(top: 10),
           child: Column(
@@ -33,15 +36,19 @@ class RegistroDeTrabajadores extends StatelessWidget {
             ],
           ),
         ),
+        // #endregion
+        // #region mostrar trabajadores existentes
         workers.isNotEmpty
             ? Expanded(
                 child: ListView(shrinkWrap: true, children: trabajadores))
             : Container(),
+        // #endregion
+        // #region botón para agregar trabajadores
         ElevatedButton.icon(
           onPressed: () {
-            ref.read(myBusinessStateProvider.notifier).setDiasWorker2(ref
+            ref
                 .read(myBusinessStateProvider.notifier)
-                .obtenerDiasGeneral());
+                .setHorarioGeneralDeTrabajador();
             Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -52,6 +59,7 @@ class RegistroDeTrabajadores extends StatelessWidget {
           label: Text('Agregar más'),
         ),
         SizedBox(height: 24)
+        // #endregion
       ],
     );
   }

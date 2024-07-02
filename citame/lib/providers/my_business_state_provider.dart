@@ -19,105 +19,26 @@ class MyBusinessStateNotifier extends StateNotifier<List<Business>> {
   MyBusinessStateNotifier() : super([]);
 
   void setHorarioParaEnviar(Map entrada) {
-    var contador = 0;
     workerDaysAvailableEnviar.clear();
     List datos = [];
-    for (var horas in entrada['horario']['lunes']) {
-      TimeOfDay inicio = horas['inicio'];
-      TimeOfDay fin = horas['fin'];
-      Map disponible = {
-        'hora_inicial': inicio.hour,
-        'minuto_inicial': inicio.minute,
-        'hora_final': fin.hour,
-        'minuto_final': fin.minute,
-      };
-      datos.add(disponible);
+    for (var dia in dias) {
+      for (var horas in entrada['horario'][dia]) {
+        TimeOfDay inicio = horas['inicio'];
+        TimeOfDay fin = horas['fin'];
+        Map disponible = {
+          'hora_inicial': inicio.hour,
+          'minuto_inicial': inicio.minute,
+          'hora_final': fin.hour,
+          'minuto_final': fin.minute,
+        };
+        datos.add(disponible);
+      }
+      workerDaysAvailableEnviar[dia] = datos;
+      datos = [];
     }
-    workerDaysAvailableEnviar['lunes'] = datos;
-    datos = [];
-    for (var horas in entrada['horario']['martes']) {
-      TimeOfDay inicio = horas['inicio'];
-      TimeOfDay fin = horas['fin'];
-      Map disponible = {
-        'hora_inicial': inicio.hour,
-        'minuto_inicial': inicio.minute,
-        'hora_final': fin.hour,
-        'minuto_final': fin.minute,
-      };
-      datos.add(disponible);
-    }
-    workerDaysAvailableEnviar['martes'] = datos;
-    datos = [];
-    for (var horas in entrada['horario']['miercoles']) {
-      TimeOfDay inicio = horas['inicio'];
-      TimeOfDay fin = horas['fin'];
-      Map disponible = {
-        'hora_inicial': inicio.hour,
-        'minuto_inicial': inicio.minute,
-        'hora_final': fin.hour,
-        'minuto_final': fin.minute,
-      };
-      datos.add(disponible);
-    }
-    workerDaysAvailableEnviar['miercoles'] = datos;
-    datos = [];
-    for (var horas in entrada['horario']['jueves']) {
-      TimeOfDay inicio = horas['inicio'];
-      TimeOfDay fin = horas['fin'];
-      Map disponible = {
-        'hora_inicial': inicio.hour,
-        'minuto_inicial': inicio.minute,
-        'hora_final': fin.hour,
-        'minuto_final': fin.minute,
-      };
-      datos.add(disponible);
-    }
-    workerDaysAvailableEnviar['jueves'] = datos;
-    datos = [];
-    for (var horas in entrada['horario']['viernes']) {
-      TimeOfDay inicio = horas['inicio'];
-      TimeOfDay fin = horas['fin'];
-      Map disponible = {
-        'hora_inicial': inicio.hour,
-        'minuto_inicial': inicio.minute,
-        'hora_final': fin.hour,
-        'minuto_final': fin.minute,
-      };
-      datos.add(disponible);
-    }
-    workerDaysAvailableEnviar['viernes'] = datos;
-    datos = [];
-    for (var horas in entrada['horario']['sabado']) {
-      TimeOfDay inicio = horas['inicio'];
-      TimeOfDay fin = horas['fin'];
-      Map disponible = {
-        'hora_inicial': inicio.hour,
-        'minuto_inicial': inicio.minute,
-        'hora_final': fin.hour,
-        'minuto_final': fin.minute,
-      };
-      datos.add(disponible);
-    }
-    workerDaysAvailableEnviar['sabado'] = datos;
-    datos = [];
-    for (var horas in entrada['horario']['domingo']) {
-      TimeOfDay inicio = horas['inicio'];
-      TimeOfDay fin = horas['fin'];
-      Map disponible = {
-        'hora_inicial': inicio.hour,
-        'minuto_inicial': inicio.minute,
-        'hora_final': fin.hour,
-        'minuto_final': fin.minute,
-      };
-      datos.add(disponible);
-    }
-    workerDaysAvailableEnviar['domingo'] = datos;
-    datos = [];
   }
 
-  Map getHorarioParaEnviar() {
-    return workerDaysAvailableEnviar;
-  }
+  Map getHorarioParaEnviar() => workerDaysAvailableEnviar;
 
   void setDatosUsuario(BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -136,18 +57,18 @@ class MyBusinessStateNotifier extends StateNotifier<List<Business>> {
     }
   }
 
-  Usuario getDatosUsuario() {
-    return user!;
-  }
+  Usuario getDatosUsuario() => user!;
 
   void cargar(myBusiness) => state = myBusiness;
 
+  // #region TODO: Mover a proveedor de workers
   void establecerWorkers(id, ref) async {
     workers = await API.getWorkers(id);
     API.reRender(ref);
   }
 
   List<Worker> obtenerWorkers() => workers;
+  // #endregion
 
   void setService(id, ref) async {
     services = await API.getService(id);
@@ -206,7 +127,7 @@ class MyBusinessStateNotifier extends StateNotifier<List<Business>> {
     workerDaysAvailable[dia][index] = {'inicio': inicio, 'fin': fin};
   }
 
-  void setDiasWorker2(Map entrada) =>
+  void setHorarioGeneralDeTrabajador() =>
       workerDaysAvailable = Map.from(generalSchedule);
 
   void setDiasWorker(dia, TimeOfDay inicio, TimeOfDay fin) {
@@ -269,75 +190,18 @@ class MyBusinessStateNotifier extends StateNotifier<List<Business>> {
 
   void establecerDiasGeneral(Map entrada) {
     if (entrada.isNotEmpty) {
-      generalSchedule['lunes'] = [];
-      for (var periodo in entrada['lunes']) {
-        Map anadir = {
-          'inicio': TimeOfDay(
-              hour: periodo['hora_inicial'], minute: periodo['minuto_inicial']),
-          'fin': TimeOfDay(
-              hour: periodo['hora_final'], minute: periodo['minuto_final'])
-        };
-        generalSchedule['lunes'].add(anadir);
-      }
-      generalSchedule['martes'] = [];
-      for (var periodo in entrada['martes']) {
-        Map anadir = {
-          'inicio': TimeOfDay(
-              hour: periodo['hora_inicial'], minute: periodo['minuto_inicial']),
-          'fin': TimeOfDay(
-              hour: periodo['hora_final'], minute: periodo['minuto_final'])
-        };
-        generalSchedule['martes'].add(anadir);
-      }
-      generalSchedule['miercoles'] = [];
-      for (var periodo in entrada['miercoles']) {
-        Map anadir = {
-          'inicio': TimeOfDay(
-              hour: periodo['hora_inicial'], minute: periodo['minuto_inicial']),
-          'fin': TimeOfDay(
-              hour: periodo['hora_final'], minute: periodo['minuto_final'])
-        };
-        generalSchedule['miercoles'].add(anadir);
-      }
-      generalSchedule['jueves'] = [];
-      for (var periodo in entrada['jueves']) {
-        Map anadir = {
-          'inicio': TimeOfDay(
-              hour: periodo['hora_inicial'], minute: periodo['minuto_inicial']),
-          'fin': TimeOfDay(
-              hour: periodo['hora_final'], minute: periodo['minuto_final'])
-        };
-        generalSchedule['jueves'].add(anadir);
-      }
-      generalSchedule['viernes'] = [];
-      for (var periodo in entrada['viernes']) {
-        Map anadir = {
-          'inicio': TimeOfDay(
-              hour: periodo['hora_inicial'], minute: periodo['minuto_inicial']),
-          'fin': TimeOfDay(
-              hour: periodo['hora_final'], minute: periodo['minuto_final'])
-        };
-        generalSchedule['viernes'].add(anadir);
-      }
-      generalSchedule['sabado'] = [];
-      for (var periodo in entrada['sabado']) {
-        Map anadir = {
-          'inicio': TimeOfDay(
-              hour: periodo['hora_inicial'], minute: periodo['minuto_inicial']),
-          'fin': TimeOfDay(
-              hour: periodo['hora_final'], minute: periodo['minuto_final'])
-        };
-        generalSchedule['sabado'].add(anadir);
-      }
-      generalSchedule['domingo'] = [];
-      for (var periodo in entrada['domingo']) {
-        Map anadir = {
-          'inicio': TimeOfDay(
-              hour: periodo['hora_inicial'], minute: periodo['minuto_inicial']),
-          'fin': TimeOfDay(
-              hour: periodo['hora_final'], minute: periodo['minuto_final'])
-        };
-        generalSchedule['domingo'].add(anadir);
+      for (var dia in dias) {
+        generalSchedule[dia] = [];
+        for (var periodo in entrada[dia]) {
+          Map anadir = {
+            'inicio': TimeOfDay(
+                hour: periodo['hora_inicial'],
+                minute: periodo['minuto_inicial']),
+            'fin': TimeOfDay(
+                hour: periodo['hora_final'], minute: periodo['minuto_final'])
+          };
+          generalSchedule[dia].add(anadir);
+        }
       }
     }
   }
@@ -504,3 +368,13 @@ Usuario? user;
 Type pagina = HomePage().runtimeType;
 
 bool sePuedenGuardarCambiosGenerales = false;
+
+List<String> dias = [
+  'lunes',
+  'martes',
+  'miercoles',
+  'jueves',
+  'viernes',
+  'sabado',
+  'domingo'
+];

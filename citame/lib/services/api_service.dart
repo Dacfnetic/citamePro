@@ -42,9 +42,9 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
 abstract class API {
-  static String server =
-      'http://ec2-18-226-172-244.us-east-2.compute.amazonaws.com:4000';
-  //static String server = 'https://win.citame.store';
+  //static String server =
+  //    'http://ec2-18-226-172-244.us-east-2.compute.amazonaws.com:4000';
+  static String server = 'https://laptop.citame.store';
 
   static Future<Map> guardarConfiguracionGeneral(
       BuildContext context,
@@ -452,14 +452,20 @@ abstract class API {
     }
 
     var nombres = prefs.getStringList('ownerBusiness');
+    Map negocios = nombres!.asMap();
+    String negas = negocios.toString();
+    Uint8List negociosAEnviar = utf8.encode(negas);
+
     var email = prefs.getString('emailUser');
-    final response = await http.post(
-        Uri.parse('$serverUrl/api/business/verify/owner/business'),
-        headers: {'Content-Type': 'application/json'},
-        body: utf8.encode(jsonEncode({
-          "businessName": nombres,
-          "email": email,
-        })));
+
+    final response = await http.get(
+      Uri.parse('$serverUrl/api/business/verify/owner/business'),
+      headers: {
+        'businessName': negas,
+        'email': email!,
+      },
+    );
+
     if (response.statusCode == 201) {
       //No son iguales o no hay negocios
       prefs.setString('ownerBusinessStatus', '0');
