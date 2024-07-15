@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 import 'package:citame/models/worker_moder.dart';
-import 'package:citame/pages/pages_1/pages_2/pages_3/pages_4/pages_5/select_service.dart';
+import 'package:citame/pages/AUN%20NO%20S%C3%89/select_service.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

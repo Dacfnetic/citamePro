@@ -1,6 +1,6 @@
 import 'package:citame/models/service_model.dart';
 import 'package:citame/models/worker_moder.dart';
-import 'package:citame/pages/pages_1/pages_2/pages_3/reservation_page.dart';
+import 'package:citame/pages/Home/Busqueda%20de%20negocios/Negocio/reservation_page.dart';
 import 'package:citame/providers/event_provider.dart';
 import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:citame/providers/services_provider.dart';
@@ -201,13 +201,13 @@ class ContenedorServicio extends StatelessWidget {
 
 class CajaDeServicios extends StatefulWidget {
   const CajaDeServicios({
-    Key? key,
+    super.key,
     required this.nombre,
     required this.idServicio,
     required this.servicio,
     required this.ref,
     required this.estadoInicial,
-  }) : super(key: key);
+  });
 
   final String nombre;
   final String idServicio;

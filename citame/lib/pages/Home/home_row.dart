@@ -1,4 +1,4 @@
-import 'package:citame/pages/pages_1/business_search_page.dart';
+import 'package:citame/pages/Home/Busqueda%20de%20negocios/business_search_page.dart';
 import 'package:citame/providers/business_provider.dart';
 import 'package:citame/providers/categories_provider.dart';
 import 'package:citame/providers/my_business_state_provider.dart';

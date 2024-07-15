@@ -1,10 +1,10 @@
 import 'package:citame/Widgets/worker.dart';
 import 'package:citame/models/worker_moder.dart';
-import 'package:citame/pages/pages_1/pages_2/pages_3/pages_4/boton_para_guardar_configuracion_del_negocio.dart';
-import 'package:citame/pages/pages_1/pages_2/pages_3/pages_4/caja_de_servicios.dart';
-import 'package:citame/pages/pages_1/pages_2/pages_3/pages_4/configuracion_de_horario_general_del_negocio.dart';
-import 'package:citame/pages/pages_1/pages_2/pages_3/pages_4/configuracion_de_servicios_generales_del_negocio.dart';
-import 'package:citame/pages/pages_1/pages_2/pages_3/pages_4/registro_de_trabajadores.dart';
+import 'package:citame/pages/Perfil/Configuraci%C3%B3n%20de%20negocio/boton_para_guardar_configuracion_del_negocio.dart';
+import 'package:citame/pages/Perfil/Configuraci%C3%B3n%20de%20negocio/caja_de_servicios.dart';
+import 'package:citame/pages/Perfil/Configuraci%C3%B3n%20de%20negocio/configuracion_de_horario_general_del_negocio.dart';
+import 'package:citame/pages/Perfil/Configuraci%C3%B3n%20de%20negocio/configuracion_de_servicios_generales_del_negocio.dart';
+import 'package:citame/pages/Perfil/Configuraci%C3%B3n%20de%20negocio/registro_de_trabajadores.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

@@ -21,7 +21,7 @@ abstract class PostBusiness {
         'POST', Uri.parse('$serverUrl/api/business/create'));
     // #region Enviar solicitud al server
     request.files
-        .add(await http.MultipartFile.fromPath('imagen', imgPath.path));
+        .add(await http.MultipartFile.fromPath('myfile', imgPath.path));
     request.fields['businessName'] = businessName;
     request.fields['category'] = category;
     request.fields['email'] = email;

@@ -1,8 +1,6 @@
 import 'dart:io';
-
-import 'package:citame/pages/pages_1/pages_2/favorites_business_page.dart';
-import 'package:citame/pages/pages_1/pages_2/my_businessess_page.dart';
-import 'package:citame/pages/paypal_payment.dart';
+import 'package:citame/pages/Perfil/Negocios%20favoritos/favorites_business_page.dart';
+import 'package:citame/pages/Perfil/Negocios%20propios/my_businessess_page.dart';
 import 'package:citame/providers/img_provider.dart';
 import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:citame/providers/my_favorites_provider.dart';
@@ -33,6 +31,7 @@ class ProfileRow extends ConsumerWidget {
     return TextButton(
       onPressed: () async {
         SharedPreferences prefs = await SharedPreferences.getInstance();
+        //Cerrar sesión
         if (method == 0) {
           try {
             await prefs.clear().then((value) {
@@ -55,6 +54,8 @@ class ProfileRow extends ConsumerWidget {
             print(e.toString());
           }
         }
+
+        //Mis negocios
         if (method == 1) {
           //try {
           ref.read(pageProvider.notifier).actualizar(MyBusinessesPage());
@@ -67,6 +68,8 @@ class ProfileRow extends ConsumerWidget {
             ref.read(ownBusinessProvider.notifier).cargar(context, ref);
           }
         }
+
+        //Registrar nuevo negocio
         if (method == 2) {
           if (context.mounted) {
             Navigator.push(
@@ -78,25 +81,19 @@ class ProfileRow extends ConsumerWidget {
             });
           }
         }
+
+        //Mis favoritos
         if (method == 3) {
-          //try {
           ref.read(pageProvider.notifier).actualizar(MyFavoritesPage());
+
           if (context.mounted) {
             Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => MyFavoritesPage(),
                 ));
+
             ref.read(myFavoritesProvider.notifier).cargar(context, ref);
-          }
-        }
-        if (method == 8) {
-          if (context.mounted) {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => PaymentPage(),
-                ));
           }
         }
       },

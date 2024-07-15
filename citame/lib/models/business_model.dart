@@ -12,7 +12,7 @@ class Business {
   final String latitude;
   final String longitude;
   final String description;
-  final List imgPath;
+  final String imgPath;
   final Map horario;
   Map toJson() => {
         'businessName': businessName,

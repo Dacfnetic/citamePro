@@ -1,26 +1,26 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
-import 'package:citame/models/user_model.dart';
+import 'package:citame/pages/Home/home_page.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-// ignore: camel_case_types
 abstract class PostUser {
-  static Future<void> postUser(String googleId, String? userName,
-      String? emailUser, String? avatar) async {
+  static Future<void> postUser(BuildContext context, String googleId,
+      String? userName, String? emailUser, String? avatar) async {
     // #region Declaración de funciones
     Future<String> getToken() async {
       // Obtiene el token especifico del dispositivo solicitandolo a google
       String deviceToken = "";
       await FirebaseMessaging.instance.getToken().then((token) {
-        log(token!); //TODO: Esto se borra en producción
-        deviceToken = token;
+        deviceToken = token!;
         return token;
       }).catchError((e) {
         log(e.toString());
+        return 'No hay token';
       });
       return deviceToken;
     }
@@ -77,13 +77,20 @@ abstract class PostUser {
 
     // #endregion
     // #region Recibir solicitud del server
-    if (response.statusCode == 201) {
+    if (response.statusCode == 201 || response.statusCode == 200) {
       final contenido = jsonDecode(response.body);
       prefs.setString('llaveDeUsuario', contenido['token']);
+      prefs.setString('datos', contenido['usuario']);
+      if (context.mounted) {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => HomePage(),
+            ));
+      }
     } else {
       throw Exception('Failed to add item');
     }
-
     // #endregion
   }
 }

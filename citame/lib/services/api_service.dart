@@ -2,18 +2,15 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:citame/providers/event_provider.dart';
 import 'package:citame/providers/own_business_provider.dart';
-import 'package:citame/services/images_services/post_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:citame/Widgets/cuadro.dart';
 import 'package:citame/firebase_options.dart';
-import 'package:citame/models/business_model.dart';
 import 'package:citame/models/service_model.dart';
 import 'package:citame/models/worker_moder.dart';
-import 'package:citame/pages/pages_1/pages_2/business_registration_page.dart';
+import 'package:citame/pages/Perfil/Crear%20negocio/business_registration_page.dart';
 import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:citame/providers/re_render_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -24,7 +21,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 // ignore: library_prefixes
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
@@ -44,7 +40,7 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 abstract class API {
   //static String server =
   //    'http://ec2-18-226-172-244.us-east-2.compute.amazonaws.com:4000';
-  static String server = 'https://laptop.citame.store';
+  static String server = 'https://laptopcris.citame.store';
 
   static Future<Map> guardarConfiguracionGeneral(
       BuildContext context,
@@ -174,25 +170,6 @@ abstract class API {
     throw Exception('Failed to add item');
   }
 
-  static Future<String> pruebaLambda(String businessId) async {
-    final response = await http.post(
-        Uri.parse(
-            'https://laceiiqrie.execute-api.us-east-1.amazonaws.com/desplegada/prueba'),
-        headers: {'Content-Type': 'application/json'},
-        body: utf8.encode(jsonEncode({
-          'businessId': 'hola',
-        })));
-
-    if (response.statusCode == 200) {
-      //emitir(businessId);
-      log(response.body);
-
-      return 'borrado';
-    }
-
-    throw Exception('Failed to add item');
-  }
-
   static Future<String> deleteWorkerInBusiness(
       String idBusiness, String id, String idWorker) async {
     final response =
@@ -286,66 +263,6 @@ abstract class API {
     throw Exception('Failed to add item');
   }
 
-  static Future<String> postImagen2(
-      String name,
-      String workerEmail,
-      File imgPath,
-      double salary,
-      Map horario,
-      String businessName,
-      String businessId,
-      String email,
-      BuildContext context,
-      String puesto,
-      String horarioLibre,
-      String celular) async {
-    /* String imgConv = await API.convertTo64(imgPath);
-    Uint8List casi = API.decode64(imgConv);
-    List<int> imagen = casi.toList();*/
-
-    final response = await http.post(Uri.parse('$serverUrl/api/workers/create'),
-        headers: {'Content-Type': 'application/json'},
-        body: utf8.encode(jsonEncode({
-          'name': name,
-          'email': workerEmail,
-          'businessName': businessName,
-          'id': businessId,
-          'businessEmail': email,
-          'salary': salary,
-          'horario': horario,
-          'horarioLibre': horarioLibre,
-          'status': false,
-          'puesto': puesto,
-          'celular': celular,
-        })));
-
-    if (response.statusCode == 201) {
-      var workerData = jsonDecode(response.body);
-      await PostImage.postImage(imgPath, workerData['_id'], 'worker');
-      if (context.mounted) {
-        API.mensaje(context, 'Aviso', 'La solicitud fue enviada al trabajador');
-        API.updateWorkersInBusiness(businessId, workerData['_id']);
-        return 'Todo ok';
-      }
-    }
-    if (response.statusCode == 202) {
-      if (context.mounted) {
-        API.mensaje(
-            context, 'Aviso', 'El correo no está registrado en la aplicación');
-        return 'Todo ok';
-      }
-    }
-    if (response.statusCode == 203) {
-      if (context.mounted) {
-        API.mensaje(
-            context, 'Aviso', 'El correo ya está asignado a este negocio');
-        return 'Todo ok';
-      }
-    }
-
-    throw Exception('Failed to add item');
-  }
-
   static Future<String> postService(
       BuildContext context,
       String idBusiness,
@@ -419,97 +336,6 @@ abstract class API {
     throw Exception('Failed to add item');
   }
 
-  static Future<bool> verifyTokenUser() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    final response = await http.get(Uri.parse('$serverUrl/api/verifyTokenUser'),
-        headers: {'x-access-token': prefs.getString('llaveDeUsuario')!});
-
-    if (response.statusCode == 200) {
-      return true;
-    }
-    if (response.statusCode == 401) {
-      return false;
-    }
-    throw Exception('Failed to get items');
-  }
-
-  static Future<Uint8List> downloadImage(String id) async {
-    final response = await http
-        .get(Uri.parse('$serverUrl/api/imagen/download'), headers: {'id': id});
-    if (response.statusCode == 200) {
-      var imagen = response.bodyBytes;
-
-      return imagen;
-    }
-    throw Exception('Failed to get items');
-  }
-
-  static Future<void> verifyOwnerBusiness() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (prefs.getStringList('ownerBusiness') == null) {
-      prefs.setStringList('ownerBusiness', []);
-    }
-
-    var nombres = prefs.getStringList('ownerBusiness');
-    Map negocios = nombres!.asMap();
-    String negas = negocios.toString();
-    Uint8List negociosAEnviar = utf8.encode(negas);
-
-    var email = prefs.getString('emailUser');
-
-    final response = await http.get(
-      Uri.parse('$serverUrl/api/business/verify/owner/business'),
-      headers: {
-        'businessName': negas,
-        'email': email!,
-      },
-    );
-
-    if (response.statusCode == 201) {
-      //No son iguales o no hay negocios
-      prefs.setString('ownerBusinessStatus', '0');
-      //prefs.setStringList('ownerBusiness', []);
-      return;
-    }
-    if (response.statusCode == 200) {
-      prefs.setString('ownerBusinessStatus', '1');
-
-      return;
-    }
-    throw Exception('Failed to get items');
-  }
-
-  static Future<List<Business>> getAllBusiness(BuildContext context) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var email = prefs.getString('emailUser');
-
-    final response = await http.get(
-      Uri.parse('$serverUrl/api/business/get/all'),
-      headers: {
-        'email': email!,
-        'category': categoriaABuscar,
-      },
-    );
-
-    if (response.statusCode == 200) {
-      final List<dynamic> businessList = jsonDecode(response.body);
-      final List<Business> businesses = businessList.map((business) {
-        Business negocio = Business.fromJson(business);
-        return negocio;
-      }).toList();
-      if (context.mounted) {
-        if (businesses.isEmpty) {
-          API.noHay(context);
-        }
-      }
-
-      return businesses;
-    }
-
-    throw Exception('Failed to get items');
-  }
-
   static Future<List<Worker>> getWorkers(String businessId) async {
     final response = await http.get(Uri.parse('$serverUrl/api/workers/get'),
         headers: {'businessId': businessId});
@@ -521,7 +347,7 @@ abstract class API {
         return negocio;
       }).toList();
       for (var element in trabajadores) {
-        element.imgPath[0] = await API.downloadImage(element.imgPath[0]);
+        // element.imgPath[0] = await API.downloadImage(element.imgPath[0]);
       }
       return trabajadores;
     }
@@ -609,19 +435,6 @@ abstract class API {
     );
 
     return await FirebaseAuth.instance.signInWithCredential(credential);
-  }
-
-  static Future<String> convertTo64(String imagepath) async {
-    File imagefile = File(imagepath); //convert Path to File
-    Uint8List imagebytes = await imagefile.readAsBytes(); //convert to bytes
-    String base64string =
-        base64.encode(imagebytes); //convert bytes to base64 string
-    return base64string;
-  }
-
-  static Uint8List decode64(String base64string) {
-    Uint8List decodedbytes = base64.decode(base64string);
-    return decodedbytes;
   }
 
   static cat(String cat) {

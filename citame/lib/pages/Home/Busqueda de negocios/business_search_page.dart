@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:citame/Widgets/bottom_bar.dart';
 import 'package:citame/Widgets/business_card.dart';
 import 'package:citame/providers/business_provider.dart';
@@ -13,9 +12,9 @@ class BusinessSearchPage extends ConsumerWidget {
   final String categoria;
 
   BusinessSearchPage({
-    Key? key,
+    super.key,
     required this.categoria,
-  }) : super(key: key);
+  });
 
   final TextEditingController searchBarController = TextEditingController();
   @override

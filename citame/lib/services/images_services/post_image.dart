@@ -10,7 +10,7 @@ abstract class PostImage {
     var request = http.MultipartRequest(
         'POST', Uri.parse('$serverUrl/api/imagen/upload'));
 
-    request.files.add(await http.MultipartFile.fromPath('imagen', imagen.path));
+    request.files.add(await http.MultipartFile.fromPath('myfile', imagen.path));
     request.fields['id'] = id;
     request.fields['destiny'] = destiny;
 

@@ -1,9 +1,6 @@
 import 'dart:developer';
-
 import 'package:citame/Widgets/bottom_bar.dart';
-import 'package:citame/Widgets/bottom_bar_business.dart';
 import 'package:citame/providers/event_provider.dart';
-import 'package:citame/providers/services_provider.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:citame/agenda/flutter_neat_and_clean_calendar.dart';

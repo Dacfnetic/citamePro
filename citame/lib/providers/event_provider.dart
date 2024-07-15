@@ -1,8 +1,4 @@
-import 'dart:developer';
-import 'dart:ffi';
-
 import 'package:citame/agenda/neat_and_clean_calendar_event.dart';
-import 'package:citame/models/service_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

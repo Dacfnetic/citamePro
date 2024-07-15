@@ -1,5 +1,5 @@
 import 'package:citame/Widgets/bottom_bar.dart';
-import 'package:citame/Widgets/home_row.dart';
+import 'package:citame/pages/Home/home_row.dart';
 import 'package:citame/providers/categories_provider.dart';
 import 'package:citame/providers/geolocator_provider.dart';
 import 'package:citame/providers/my_business_state_provider.dart';

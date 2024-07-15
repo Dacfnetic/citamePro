@@ -1,7 +1,8 @@
 import 'dart:developer';
-import 'package:citame/pages/home_page.dart';
+import 'package:citame/pages/Home/home_page.dart';
 import 'package:citame/pages/signin_page.dart';
 import 'package:citame/services/api_service.dart';
+import 'package:citame/services/user_services/estoy_logueado.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -30,6 +31,7 @@ void backgroundFetchHeadlessTask(HeadlessTask task) async {
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  bool estoyLogueado = await EstoyLogueado.estoyLogueado();
   await API.initNotification();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
@@ -38,11 +40,18 @@ Future<void> main() async {
   );
   BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
   runApp(ProviderScope(
-    child: MyApp(),
+    child: MyApp(estadoInicial: estoyLogueado),
   ));
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({
+    super.key,
+    required this.estadoInicial,
+  });
+
+  final bool estadoInicial;
+
   @override
   MyAppState createState() => MyAppState();
 }
@@ -97,7 +106,7 @@ class MyAppState extends State<MyApp> {
       home: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
+          if (snapshot.hasData & widget.estadoInicial) {
             return HomePage();
           }
 

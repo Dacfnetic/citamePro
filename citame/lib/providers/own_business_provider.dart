@@ -1,9 +1,7 @@
 import 'dart:convert';
-
 import 'package:citame/Widgets/business_card.dart';
 import 'package:citame/models/business_model.dart';
-import 'package:citame/services/api_service.dart';
-import 'package:citame/services/api_user_service.dart';
+import 'package:citame/services/user_services/show_own_business.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -49,10 +47,9 @@ class BusinessListNotifier extends StateNotifier<List<BusinessCard>> {
   void cargar(BuildContext context, WidgetRef ref) async {
     List<Business> ownBusiness;
     List<BusinessCard> negocios = [];
-    ownBusiness = await userAPI.getOwnerBusiness(context, ref);
+    ownBusiness = await ShowOwnBusiness.showOwnBusiness(context, ref);
     if (ownBusiness.isNotEmpty) {
       for (var element in ownBusiness) {
-        element.imgPath[0] = await API.downloadImage(element.imgPath[0]);
         negocios.add(BusinessCard(
           nombre: element.businessName,
           id: element.idMongo,
@@ -60,7 +57,7 @@ class BusinessListNotifier extends StateNotifier<List<BusinessCard>> {
           latitud: double.parse(element.latitude),
           longitud: double.parse(element.longitude),
           rating: 5.0,
-          imagen: element.imgPath[0],
+          imagen: element.imgPath,
           description: element.description,
           email: element.email,
           horario: element.horario,

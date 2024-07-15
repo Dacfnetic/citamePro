@@ -1,7 +1,6 @@
-import 'package:citame/Widgets/profile_row.dart';
+import 'package:citame/pages/Perfil/profile_row.dart';
 import 'package:citame/models/user_model.dart';
-import 'package:citame/pages/pages_1/pages_2/business_registration_page.dart';
-import 'package:citame/pages/pages_1/carousel_page.dart';
+import 'package:citame/pages/Perfil/Crear%20negocio/carousel_page.dart';
 import 'package:citame/pages/signin_page.dart';
 import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:citame/services/api_service.dart';
@@ -86,18 +85,21 @@ class ProfilePage extends ConsumerWidget {
                   ),
                 ),
               ),
+              //Mis favoritos
               ProfileRow(
-                description: 'Favoritos ',
+                description: 'Favoritos',
                 icon: Icons.favorite,
                 page: Placeholder(),
                 method: 3,
               ),
+              //Mis negocios
               ProfileRow(
                 description: 'Ver mis negocios',
                 icon: Icons.store,
                 page: Placeholder(),
                 method: 1,
               ),
+//Beneficios
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 16, 0, 0),
                 child: Text(
@@ -110,12 +112,14 @@ class ProfilePage extends ConsumerWidget {
                   ),
                 ),
               ),
+              //Pagos
               ProfileRow(
                 description: 'Pagos',
                 icon: Icons.payment,
                 page: Placeholder(),
                 method: 2,
               ),
+              //Actividad
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 16, 0, 0),
                 child: Text(
@@ -128,12 +132,14 @@ class ProfilePage extends ConsumerWidget {
                   ),
                 ),
               ),
+              //Código de referencia
               ProfileRow(
                 description: 'Código de referencia',
                 icon: Icons.card_giftcard,
                 page: Placeholder(),
                 method: 8,
               ),
+//Configuración
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 16, 0, 0),
                 child: Text(
@@ -146,18 +152,21 @@ class ProfilePage extends ConsumerWidget {
                   ),
                 ),
               ),
+              //Registrar mi negocio
               ProfileRow(
                 description: 'Registrar mi negocio',
                 icon: Icons.store,
                 page: CarouselPage(),
                 method: 2,
               ),
+              //Cerrar sesión en otros dispositivos
               ProfileRow(
                 description: 'Cerrar sesión en otros dispositivos',
                 icon: Icons.logout,
                 page: SignInPage(),
                 method: 0,
               ),
+              //Cerrar sesión
               ProfileRow(
                 description: 'Cerrar sesión',
                 icon: Icons.logout,

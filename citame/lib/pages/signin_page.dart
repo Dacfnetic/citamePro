@@ -1,5 +1,4 @@
 import 'package:citame/services/api_service.dart';
-import 'package:citame/pages/home_page.dart';
 import 'package:citame/services/user_services/post_user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -50,19 +49,17 @@ class SignInPage extends ConsumerWidget {
                         try {
                           final UserCredential userCredential =
                               await API.signInWithGoogle();
-                          await PostUser.postUser(
-                            userCredential.user!.uid,
-                            userCredential.user!.displayName,
-                            userCredential.user!.email,
-                            userCredential.user!.photoURL,
-                          );
+
                           if (context.mounted) {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => HomePage(),
-                                ));
+                            await PostUser.postUser(
+                              context,
+                              userCredential.user!.uid,
+                              userCredential.user!.displayName,
+                              userCredential.user!.email,
+                              userCredential.user!.photoURL,
+                            );
                           }
+
                           //ref.read(ownBusinessProvider.notifier).cargar();
                         } catch (e) {
                           print(e.toString());

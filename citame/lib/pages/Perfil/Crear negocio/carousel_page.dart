@@ -1,4 +1,4 @@
-import 'package:citame/pages/pages_1/pages_2/business_registration_page.dart';
+import 'package:citame/pages/Perfil/Crear%20negocio/business_registration_page.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
 

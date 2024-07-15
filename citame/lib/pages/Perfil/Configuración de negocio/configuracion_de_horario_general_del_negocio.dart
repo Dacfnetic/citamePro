@@ -1,4 +1,4 @@
-import 'package:citame/pages/pages_1/pages_2/pages_3/pages_4/pages_5/profile_inside.dart';
+import 'package:citame/pages/AUN%20NO%20S%C3%89/profile_inside.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

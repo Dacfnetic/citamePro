@@ -1,10 +1,6 @@
-// ignore_for_file: use_build_context_synchronously
-
-import 'package:citame/pages/pages_1/pages_2/business_inside_page.dart';
-import 'package:citame/pages/pages_1/pages_2/my_businessess_page.dart';
-import 'package:citame/pages/pages_1/pages_2/pages_3/pages_4/menu_page.dart';
-import 'package:citame/pages/pages_1/pages_2/pages_3/pages_4/pages_5/profile_inside.dart';
-import 'package:citame/pages/pages_1/pages_2/pages_3/preview_business_page.dart';
+import 'package:citame/pages/Home/Busqueda%20de%20negocios/Negocio/business_inside_page.dart';
+import 'package:citame/pages/Perfil/Configuraci%C3%B3n%20de%20negocio/menu_page.dart';
+import 'package:citame/pages/Perfil/Negocios%20propios/my_businessess_page.dart';
 import 'package:citame/providers/geolocator_provider.dart';
 import 'package:citame/providers/my_actual_business_provider.dart';
 import 'package:citame/providers/my_business_state_provider.dart';
@@ -13,8 +9,6 @@ import 'package:citame/providers/page_provider.dart';
 import 'package:citame/providers/re_render_provider.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -28,11 +22,11 @@ class BusinessCard extends ConsumerWidget {
   final double longitud;
   final double rating;
   final Map horario;
-  final Uint8List imagen;
+  final String imagen;
   final String email;
   final bool isDueno;
   const BusinessCard(
-      {Key? key,
+      {super.key,
       required this.nombre,
       required this.id,
       required this.categoria,
@@ -43,8 +37,7 @@ class BusinessCard extends ConsumerWidget {
       required this.description,
       required this.email,
       required this.isDueno,
-      required this.horario})
-      : super(key: key);
+      required this.horario});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -73,6 +66,7 @@ class BusinessCard extends ConsumerWidget {
     }
 
     List<double> coordenadas = ref.watch(geoProvider);
+
     double distancia = ref.read(geoProvider.notifier).distanciaEnMillas(
         latitudA: latitud,
         longitudA: longitud,
@@ -131,7 +125,7 @@ class BusinessCard extends ConsumerWidget {
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(16),
-                        child: Image.memory(
+                        child: Image.network(
                           imagen,
                           width: double.infinity,
                           height: 230,
@@ -227,7 +221,7 @@ class BusinessCard extends ConsumerWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => PreviewBusinessPage(),
+                    builder: (context) => Placeholder(),
                   ),
                 );
               } else {
@@ -261,7 +255,7 @@ class BusinessCard extends ConsumerWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(16),
-                child: Image.memory(
+                child: Image.network(
                   imagen,
                   width: double.infinity,
                   height: 100,
