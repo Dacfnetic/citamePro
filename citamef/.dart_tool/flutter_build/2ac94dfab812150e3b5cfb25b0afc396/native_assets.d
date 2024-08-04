@@ -1,0 +1,1 @@
+ C:\\Users\\Diego\\Desktop\\citamePro\\citame\\.dart_tool\\flutter_build\\2ac94dfab812150e3b5cfb25b0afc396\\native_assets.yaml: 
