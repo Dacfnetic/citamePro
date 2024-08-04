@@ -10,13 +10,11 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Citame"
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         tools:targetApi="31">
+
         <activity
-            android:name=".activities.IMCActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity"
+            android:name="com.dac.citame.schedule.ui.home.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,14 +22,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activities.Placeholder"
-            android:exported="false" />
-        <activity
-            android:name=".activities.SignInActivity"
-            android:exported="true"
-            android:label="@string/title_activity_sign_in"
-            android:theme="@style/Theme.Citame"></activity>
     </application>
 
 </manifest>

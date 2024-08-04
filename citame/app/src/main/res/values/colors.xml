@@ -14,4 +14,13 @@
     <color name="background_button">#D6CA6E</color>
     <color name="title_text">#F0F0E7</color>
 
+    <color name="primary">#1F1F1F</color>
+    <color name="primaryDark">#181818</color>
+    <color name="secondary">#EE9361</color>
+    <color name="accent">#FFFFFF</color>
+    <color name="gold">#FFE78F</color>
+    <color name="black_alpha">#98000000</color>
+
+    <color name="red">#FF0000</color>
+
 </resources>

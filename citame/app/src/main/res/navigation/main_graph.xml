@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_graph"
+    app:startDestination="@id/horosFragment">
+
+    <fragment
+        android:id="@+id/palmistryFragment"
+        android:name="com.dac.citame.horos.ui.palmistry.PalmistryFragment"
+        android:label="fragment_palmistry"
+        tools:layout="@layout/fragment_palmistry" />
+    <fragment
+        android:id="@+id/luckFragment"
+        android:name="com.dac.citame.horos.ui.luck.LuckFragment"
+        android:label="fragment_luck"
+        tools:layout="@layout/fragment_luck" />
+    <fragment
+        android:id="@+id/horosFragment"
+        android:name="com.dac.citame.horos.ui.horos.HorosFragment"
+        android:label="fragment_horos"
+        tools:layout="@layout/fragment_horos" />
+</navigation>

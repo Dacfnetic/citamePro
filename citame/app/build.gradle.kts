@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.citame.citame"
+    namespace = "com.dac.citame"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.citame.citame"
+        applicationId = "com.dac.citame"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -39,6 +39,7 @@ android {
         jvmTarget = "1.8"
     }
     buildFeatures {
+        viewBinding = true
         compose = true
     }
     composeOptions {
@@ -52,6 +53,13 @@ android {
 }
 
 dependencies {
+
+    val navVersion = "2.7.7"
+
+    //NavComponent
+    implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
+    implementation("androidx.navigation:navigation-ui-ktx:$navVersion")
+
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

@@ -3,5 +3,20 @@
     <string name="title_activity_sign_in">SignInActivity</string>
     <string name="male">Hombre</string>
     <string name="female">Mujer</string>
+    <string name="height">Altura</string>
     <string name="your_web_client_id">AIzaSyAfX6QMBIjeMTyDZA1PIQf1FFTd6X6RzRU</string>
+    <string name="title_activity_main_activitynn">MainActivitynn</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!--    BottomBar -->
+    <string name="horos">Horos</string>
+    <string name="palmistry">Palmistry</string>
+    <string name="luck">Luck</string>
+
+    <!--    CitameBottomBar -->
+    <string name="search">Buscar</string>
+    <string name="schedule">Agenda</string>
+    <string name="profile">Perfil</string>
+
 </resources>
