@@ -12,9 +12,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         tools:targetApi="31">
-
         <activity
-            android:name="com.dac.citame.schedule.ui.home.MainActivity"
+            android:name=".schedule.ui.schedule.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

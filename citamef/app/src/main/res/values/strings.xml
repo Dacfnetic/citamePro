@@ -1,7 +1,0 @@
-<resources>
-    <string name="app_name">Citame</string>
-    <string name="title_activity_sign_in">SignInActivity</string>
-    <string name="male">Hombre</string>
-    <string name="female">Mujer</string>
-    <string name="your_web_client_id">AIzaSyAfX6QMBIjeMTyDZA1PIQf1FFTd6X6RzRU</string>
-</resources>

@@ -23,7 +23,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="<-"
+            android:text="-"
             android:textColor="@color/secondary"
             android:background="@null"
             android:textStyle="bold"
@@ -41,7 +41,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="->"
+            android:text="+"
             android:textColor="@color/secondary"
             android:background="@null"
             android:textStyle="bold"
@@ -49,6 +49,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/days"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -116,5 +117,11 @@
 
     </LinearLayout>
 
-    
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/calendarRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/days"/>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
