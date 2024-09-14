@@ -40,7 +40,7 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 abstract class API {
   //static String server =
   //    'http://ec2-18-226-172-244.us-east-2.compute.amazonaws.com:4000';
-  static String server = 'https://laptopcris.citame.store';
+  static String server = 'https://win.citame.store';
 
   static Future<Map> guardarConfiguracionGeneral(
       BuildContext context,
