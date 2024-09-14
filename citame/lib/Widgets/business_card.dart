@@ -41,7 +41,7 @@ class BusinessCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    void _settingAccess() async {
+    void settingAccess() async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString('negocioActual', id);
       Map hora = ref.watch(ownBusinessProvider.notifier).obtenerHorario(id);
@@ -114,7 +114,7 @@ class BusinessCard extends ConsumerWidget {
                       color: Colors.red,
                     ),
                     IconButton(
-                        onPressed: () => _settingAccess(),
+                        onPressed: () => settingAccess(),
                         icon: Icon(Icons.settings))
                   ],
                 ),

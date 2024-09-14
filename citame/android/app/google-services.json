@@ -7,12 +7,25 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:937464381586:android:6ac0da4e026d2dc77a664b",
+        "mobilesdk_app_id": "1:937464381586:android:ab3e5108032441417a664b",
         "android_client_info": {
-          "package_name": "com.example.citame"
+          "package_name": "com.citame.citame"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "937464381586-h3dduffskgvfps9ehpul28bmjjlds7d3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.citame.citame",
+            "certificate_hash": "da475c0eb743d641ed11c9154b62b19b26310ec5"
+          }
+        },
+        {
+          "client_id": "937464381586-egeituakk575pb55silm1fguc9i5mk9e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAfX6QMBIjeMTyDZA1PIQf1FFTd6X6RzRU"
@@ -20,7 +33,63 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "937464381586-egeituakk575pb55silm1fguc9i5mk9e.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "937464381586-4i2had9vd3durcfk4l41mhn6ckock10i.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.citame"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:937464381586:android:6ac0da4e026d2dc77a664b",
+        "android_client_info": {
+          "package_name": "com.example.citame"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "937464381586-l69n41uspj87474dbk9mrle0lpk0ohsf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.citame",
+            "certificate_hash": "da475c0eb743d641ed11c9154b62b19b26310ec5"
+          }
+        },
+        {
+          "client_id": "937464381586-egeituakk575pb55silm1fguc9i5mk9e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAfX6QMBIjeMTyDZA1PIQf1FFTd6X6RzRU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "937464381586-egeituakk575pb55silm1fguc9i5mk9e.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "937464381586-4i2had9vd3durcfk4l41mhn6ckock10i.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.citame"
+              }
+            }
+          ]
         }
       }
     }

@@ -15,7 +15,7 @@ class SimpleGestureDetector extends StatefulWidget {
   final VoidCallback? onSwipeRight;
 
   const SimpleGestureDetector({
-    Key? key,
+    super.key,
     required this.child,
     this.swipeConfig = const SimpleSwipeConfig(),
     this.behavior,
@@ -23,7 +23,7 @@ class SimpleGestureDetector extends StatefulWidget {
     this.onSwipeDown,
     this.onSwipeLeft,
     this.onSwipeRight,
-  }) : super(key: key);
+  });
 
   @override
   // ignore: library_private_types_in_public_api

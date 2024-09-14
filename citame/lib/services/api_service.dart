@@ -599,7 +599,6 @@ abstract class API {
       errorInvalidText: "Eso no es un tiempo válido",
       cancelText: "Cancelame esta mierda",
     );
-    if (selectedTime == null) return null;
 
     return selectedTime;
   }

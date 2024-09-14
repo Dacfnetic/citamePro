@@ -106,7 +106,7 @@ class MyAppState extends State<MyApp> {
       home: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
-          if (snapshot.hasData & widget.estadoInicial) {
+          if (snapshot.hasData) {
             return HomePage();
           }
 
