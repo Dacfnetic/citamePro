@@ -1,10 +1,13 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:citame/Widgets/business_card.dart';
 import 'package:citame/models/business_model.dart';
-import 'package:citame/services/user_services/show_own_business.dart';
+import 'package:citame/services/business_services/get_business.dart';
+import 'package:citame/services/user_services/show_own_or_favorites_business.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final ownBusinessProvider =
     StateNotifierProvider<BusinessListNotifier, List<BusinessCard>>((ref) {
@@ -44,10 +47,18 @@ class BusinessListNotifier extends StateNotifier<List<BusinessCard>> {
     state = [];
   }
 
-  void cargar(BuildContext context, WidgetRef ref) async {
+  void cargar(BuildContext context, WidgetRef ref, String ownsOrFav) async {
     List<Business> ownBusiness;
     List<BusinessCard> negocios = [];
-    ownBusiness = await ShowOwnBusiness.showOwnBusiness(context, ref);
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var datos = prefs.getString('data');
+    final Map data = jsonDecode(datos!);
+    var ids = data["ownerBusinessIds"];
+
+    ownBusiness = await GetBusiness.getBusiness(context, '', 'propios');
+
     if (ownBusiness.isNotEmpty) {
       for (var element in ownBusiness) {
         negocios.add(BusinessCard(

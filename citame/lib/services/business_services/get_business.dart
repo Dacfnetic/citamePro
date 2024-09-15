@@ -8,33 +8,58 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class GetBusiness {
-  static Future<List<Business>> getBusiness(BuildContext context) async {
+  static Future<List<Business>> getBusiness(BuildContext context,
+      String categoria, String categoriaFavoritosOPropios) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var email = prefs.getString('emailUser');
 
-    final response = await http.get(
-      Uri.parse('$serverUrl/api/business/get/all'),
-      headers: {
-        'email': email!,
-        'category': categoriaABuscar,
-        HttpHeaders.authorizationHeader: prefs.getString('llaveDeUsuario')!
-      },
-    );
+    var datos = prefs.getString('data');
+    final Map data = jsonDecode(datos!);
+    var favoritos = data['favoriteBusinessIds'];
+    var propios = data['ownerBusinessIds'];
+
+    var request = http.MultipartRequest(
+        'GET',
+        Uri.parse(
+            '$serverUrl/api/business/get/all?category=$categoria&favoritos=$favoritos&propios=$propios&categoriaFavoritosOPropios=$categoriaFavoritosOPropios'));
+
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: prefs.getString('llaveDeUsuario')!
+    };
+
+    request.headers.addAll(headers);
+
+    var response = await request.send();
 
     if (response.statusCode == 200) {
-      final List<dynamic> businessList = jsonDecode(response
+      var respuesta = await http.Response.fromStream(response);
+      final List<dynamic> businessList = jsonDecode(respuesta
           .body); //Guardar lo que recibo del back en una lista de objetos
-      final List<Business> businesses = businessList.map((business) {
-        Business negocio = Business.fromJson(business);
-        return negocio;
-      }).toList();
+      if (businessList.isEmpty) {
+        if (context.mounted) {
+          API.noHay(context);
+        }
+        return [];
+      }
+      List<Business> businesses = [];
+      for (var i = 0; i < businessList.length; i++) {
+        if (businessList[i] != null) {
+          Business negocio = Business.fromJson(businessList[i]);
+          businesses.add(negocio);
+        }
+      }
+
       if (context.mounted) {
         if (businesses.isEmpty) {
           API.noHay(context);
         }
       }
-
+      prefs.setString('datosDeNegocios', jsonEncode(businesses));
       return businesses;
+    }
+    if (response.statusCode == 201) {
+      if (context.mounted) {
+        API.noHay(context);
+      }
     }
 
     throw Exception('Failed to get items');

@@ -1,7 +1,8 @@
 import 'dart:developer';
+import 'package:citame/Widgets/universal_variables.dart';
 import 'package:citame/pages/Home/home_page.dart';
 import 'package:citame/pages/Home/Busqueda%20de%20negocios/business_search_page.dart';
-import 'package:citame/pages/AUN%20NO%20S%C3%89/user_agenda_page.dart';
+import 'package:citame/pages/Agendas/user_agenda_page.dart';
 import 'package:citame/pages/Perfil/profile_page.dart';
 import 'package:citame/providers/business_provider.dart';
 import 'package:citame/providers/categories_provider.dart';
@@ -52,7 +53,9 @@ class BarraInferior extends ConsumerWidget {
                   controlador.setPage(padre.widget.runtimeType);
                   log(controlador.getPage().toString());
                   if (padre.widget.runtimeType == BusinessSearchPage) {
-                    ref.read(businessProvider.notifier).cargar(context);
+                    ref
+                        .read(businessProvider.notifier)
+                        .cargar(context, GlobalVariables.categoriaActual);
                   }
                   ref.read(pageProvider.notifier).actualizar(HomePage());
                 });

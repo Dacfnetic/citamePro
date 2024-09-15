@@ -46,8 +46,8 @@ class MenuPage extends ConsumerWidget {
         .map((e) => WorkerBox(
               worker: e,
               ref: ref,
-              imagen: Uint8List(0),
-              imagenParaDueno: e.imgPath[0],
+              imagen: e.imgPath,
+              imagenParaDueno: e.imgPath,
               isDueno: true,
             ))
         .toList();

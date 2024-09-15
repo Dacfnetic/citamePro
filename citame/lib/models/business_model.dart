@@ -7,6 +7,7 @@ class Business {
   final String email;
   //final String createdBy;
   final List<dynamic> workers;
+  final List<dynamic> servicios;
   final String contactNumber;
   final String direction;
   final String latitude;
@@ -20,6 +21,7 @@ class Business {
         'category': category,
         'email': email,
         'workers': workers,
+        'servicios': servicios,
         'contactNumber': contactNumber,
         'direction': direction,
         'latitude': latitude,
@@ -35,6 +37,7 @@ class Business {
     required this.email,
     //required this.createdBy,
     required this.workers,
+    required this.servicios,
     required this.contactNumber,
     required this.direction,
     required this.latitude,
@@ -52,6 +55,7 @@ class Business {
       email: json['email'],
       //createdBy: json['createdBy'],
       workers: json['workers'],
+      servicios: json['servicios'],
       contactNumber: json['contactNumber'],
       direction: json['direction'],
       latitude: json['latitude'],
@@ -69,6 +73,7 @@ class Business {
       email: json['email'],
       //createdBy: json['createdBy'],
       workers: json['workers'],
+      servicios: json['servicios'],
       contactNumber: json['contactNumber'],
       direction: json['direction'],
       latitude: json['latitude'],

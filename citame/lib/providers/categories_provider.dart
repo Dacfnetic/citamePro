@@ -34,7 +34,7 @@ List<HomeRow> categorias = [
     imagen: 'lib/assets/Abogados.jpeg',
   ),
   HomeRow(
-    categoria: 'Barberias',
+    categoria: 'Barberías',
     imagen: 'lib/assets/Barberias.jpeg',
   ),
   HomeRow(
@@ -50,7 +50,7 @@ List<HomeRow> categorias = [
     imagen: 'lib/assets/Entretenimiento.jpeg',
   ),
   HomeRow(
-    categoria: 'Mecanicos',
+    categoria: 'Mecánicos',
     imagen: 'lib/assets/Transportes.jpeg',
   ),
 ];

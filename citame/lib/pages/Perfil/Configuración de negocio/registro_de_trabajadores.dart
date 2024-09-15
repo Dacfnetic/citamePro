@@ -1,6 +1,6 @@
 import 'package:citame/Widgets/worker.dart';
 import 'package:citame/models/worker_moder.dart';
-import 'package:citame/pages/AUN%20NO%20S%C3%89/profile_inside.dart';
+import 'package:citame/pages/Perfil/Configuraci%C3%B3n%20de%20negocio/profile_inside.dart';
 import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';

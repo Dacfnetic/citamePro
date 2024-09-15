@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:citame/Widgets/business_card.dart';
 import 'package:citame/models/business_model.dart';
-import 'package:citame/services/user_services/show_favorites_business.dart';
+import 'package:citame/services/business_services/get_business.dart';
+import 'package:citame/services/user_services/show_own_or_favorites_business.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final myFavoritesProvider =
     StateNotifierProvider<BusinessListNotifier, List<BusinessCard>>((ref) {
@@ -42,31 +46,39 @@ class BusinessListNotifier extends StateNotifier<List<BusinessCard>> {
     state = [];
   }
 
-  void cargar(BuildContext context, WidgetRef ref) async {
+  void cargar(BuildContext context, WidgetRef ref, String ownsOrFavs) async {
     List<Business> favoriteBusiness;
     List<BusinessCard> negocios = [];
 
-    favoriteBusiness =
-        await ShowFavoritesBusiness.showFavoriteBusiness(context, ref);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    if (favoriteBusiness.isNotEmpty) {
-      for (var element in favoriteBusiness) {
-        negocios.add(BusinessCard(
-          nombre: element.businessName,
-          id: element.idMongo,
-          categoria: element.category,
-          latitud: double.parse(element.latitude),
-          longitud: double.parse(element.longitude),
-          rating: 5.0,
-          imagen: element.imgPath,
-          description: element.description,
-          email: element.email,
-          horario: element.horario,
-          isDueno: false,
-        ));
+    var datos = prefs.getString('data');
+    final Map data = jsonDecode(datos!);
+    var ids = data['favoriteBusinessIds'];
+
+    if (context.mounted) {
+      favoriteBusiness =
+          await GetBusiness.getBusiness(context, '', 'favoritos');
+
+      if (favoriteBusiness.isNotEmpty) {
+        for (var element in favoriteBusiness) {
+          negocios.add(BusinessCard(
+            nombre: element.businessName,
+            id: element.idMongo,
+            categoria: element.category,
+            latitud: double.parse(element.latitude),
+            longitud: double.parse(element.longitude),
+            rating: 5.0,
+            imagen: element.imgPath,
+            description: element.description,
+            email: element.email,
+            horario: element.horario,
+            isDueno: false,
+          ));
+        }
       }
+      state = negocios;
     }
-    state = negocios;
   }
 }
 

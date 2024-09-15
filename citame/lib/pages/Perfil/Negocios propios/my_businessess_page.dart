@@ -1,5 +1,5 @@
 import 'package:citame/Widgets/business_card.dart';
-import 'package:citame/Widgets/search_bar_citame.dart';
+import 'package:citame/pages/Home/Busqueda%20de%20negocios/search_bar_citame.dart';
 import 'package:citame/providers/own_business_provider.dart';
 import 'package:citame/providers/re_render_provider.dart';
 import 'package:flutter/material.dart';

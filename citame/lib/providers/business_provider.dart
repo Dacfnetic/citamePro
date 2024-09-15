@@ -53,12 +53,12 @@ class BusinessListNotifier extends StateNotifier<List<BusinessCard>> {
     state = [];
   }
 
-  void cargar(BuildContext context) async {
+  void cargar(BuildContext context, String categoria) async {
     List<Business> allBusiness;
     List<BusinessCard> negocios = [];
 
     allBusiness = await GetBusiness.getBusiness(
-        context); //Esperar a obtener negocios del back
+        context, categoria, 'categoría'); //Esperar a obtener negocios del back
 
     if (allBusiness.isNotEmpty) {
       for (var element in allBusiness) {

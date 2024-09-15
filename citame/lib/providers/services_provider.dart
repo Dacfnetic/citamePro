@@ -17,12 +17,13 @@ class ServicesNotifier extends StateNotifier<List<Service>> {
       nombres.add(servicio.nombreServicio);
     }
     if (nombres.contains(entrada.nombreServicio)) {
-      await API.mensaje2(context, "Ese servicio ya está registrado");
+      await API.toast(context, "Ese servicio ya está registrado");
       return;
     }
     ref
         .read(myBusinessStateProvider.notifier)
         .sePuedenGuardarCambiosGeneralesCambio();
+
     state = [...state, entrada];
     /*List<double> x = [];
     x = lista.where((servicio) => servicio.nombreServicio != entrada.data);

@@ -1,4 +1,4 @@
-import 'package:citame/services/api_service.dart';
+import 'package:citame/Widgets/universal_variables.dart';
 import 'package:flutter/material.dart';
 
 enum SampleItem { itemOne, itemTwo, itemThree }
@@ -38,7 +38,7 @@ class _CuadroDropdownState extends State<CuadroDropdown> {
           setState(() {
             dropdownValue = value!;
             widget.texto = value;
-            API.cat(dropdownValue);
+            GlobalVariables.categoriaActual = dropdownValue;
           });
         },
       ),

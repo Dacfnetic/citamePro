@@ -12,7 +12,7 @@ class Schedule {
 class Worker {
   final String name;
   final String email;
-  final List imgPath;
+  final String imgPath;
   final double salary;
   final Map horario;
   final bool status;
@@ -55,7 +55,7 @@ class Worker {
         salary: json['salary'].toDouble(),
         horario: {},
         status: json['status'],
-        id: json['id'],
+        id: json['idDeUsuario'],
         idWorker: json['_id'],
         puesto: json['puesto'],
         horarioDisponible: json['horarioDisponible'],

@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:citame/Widgets/cuadro.dart';
+import 'package:citame/pages/Perfil/Crear%20negocio/Widgets/cuadro.dart';
 import 'package:citame/models/worker_moder.dart';
 import 'package:citame/providers/img_provider.dart';
 import 'package:citame/providers/my_business_state_provider.dart';
@@ -268,42 +268,30 @@ class ProfileInsidePage extends ConsumerWidget {
                             Map enviar = ref
                                 .read(myBusinessStateProvider.notifier)
                                 .getHorarioParaEnviar();
-                            if (signUpKey.currentState!.validate()) {
-                              if (context.mounted) {
-                                /*API.postImagen2(
-                                  workerName.text,
-                                  workerEmail.text,
-                                  ref.read(imgProvider),
-                                  double.parse(workerSalary.text),
-                                  enviar,
-                                  ref.read(actualBusinessProvider),
-                                  ref
-                                      .read(myBusinessStateProvider.notifier)
-                                      .getActualBusiness(),
-                                  prefs.getString('emailUser')!,
-                                  context,
-                                  workerJob.text,
-                                  horarioLibre,
-                                  workerCel.text,
-                                );*/
-                                ref.read(workersProvider.notifier).anadir(
-                                    Worker(
-                                        name: workerName.text,
-                                        email: workerEmail.text,
-                                        imgPath: [ref.read(imgProvider)],
-                                        salary: double.parse(workerSalary.text),
-                                        horario: enviar,
-                                        status: false,
-                                        id: "",
-                                        idWorker: "",
-                                        puesto: workerJob.text,
-                                        horarioDisponible: {},
-                                        celular: int.parse(workerCel.text)),
-                                    context,
-                                    ref);
-                                //Escribir lo que pasa despues del post
-                                Navigator.pop(context);
+
+                            if (context.mounted) {
+                              if (workerSalary.text == "") {
+                                workerSalary.text = "0";
                               }
+                              if (workerCel.text == "") {
+                                workerCel.text = "0";
+                              }
+                              ref.read(workersProvider.notifier).anadir(
+                                  Worker(
+                                      name: workerName.text,
+                                      email: workerEmail.text,
+                                      imgPath: "",
+                                      salary: double.parse(workerSalary.text),
+                                      horario: enviar,
+                                      status: false,
+                                      id: "",
+                                      idWorker: "",
+                                      puesto: workerJob.text,
+                                      horarioDisponible: {},
+                                      celular: int.parse(workerCel.text)),
+                                  context,
+                                  ref);
+                              //Escribir lo que pasa despues del post
                             }
                           },
                           child: Text('Agregar trabajador')),
@@ -417,7 +405,7 @@ class ContenedorDeHorario extends StatelessWidget {
                   ref
                       .read(myBusinessStateProvider.notifier)
                       .copiarHorariosWorker(day);
-                  API.mensaje2(context, 'Horario copiado');
+                  API.toast(context, 'Horario copiado');
                 },
                 child: Icon(
                   Icons.copy,
@@ -556,7 +544,7 @@ class ContenedorDeHorario2 extends StatelessWidget {
                   ref
                       .read(myBusinessStateProvider.notifier)
                       .copiarHorariosGeneral(day);
-                  API.mensaje2(context, 'Horario copiado');
+                  API.toast(context, 'Horario copiado');
                 },
                 child: Icon(
                   Icons.copy,

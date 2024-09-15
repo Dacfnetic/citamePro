@@ -1,9 +1,9 @@
 import 'dart:io';
-import 'package:citame/Widgets/cuadro.dart';
-import 'package:citame/Widgets/cuadro_celular.dart';
-import 'package:citame/Widgets/cuadro_dropdown.dart';
-import 'package:citame/Widgets/cuadro_opcional.dart';
-import 'package:citame/Widgets/photo_container.dart';
+import 'package:citame/pages/Perfil/Crear%20negocio/Widgets/cuadro.dart';
+import 'package:citame/pages/Perfil/Crear%20negocio/Widgets/cuadro_celular.dart';
+import 'package:citame/pages/Perfil/Crear%20negocio/Widgets/cuadro_dropdown.dart';
+import 'package:citame/pages/Perfil/Crear%20negocio/Widgets/cuadro_opcional.dart';
+import 'package:citame/pages/Perfil/Crear%20negocio/Widgets/photo_container.dart';
 import 'package:citame/Widgets/universal_variables.dart';
 import 'package:citame/pages/Perfil/Crear%20negocio/map_page.dart';
 import 'package:citame/pages/Perfil/Configuraci%C3%B3n%20de%20negocio/menu_page.dart';
@@ -134,7 +134,6 @@ class BusinessRegisterPage extends ConsumerWidget {
                           var idNegocio = '';
                           idNegocio = await PostBusiness.postBusiness(
                               businessName.text,
-                              categoria.texto,
                               prefs.getString('emailUser')!,
                               //auth.currentUser!.uid,
                               cel.text,
@@ -160,7 +159,7 @@ class BusinessRegisterPage extends ConsumerWidget {
                         print(e.toString());
                       }
                     } else {
-                      API.mensaje2(context, 'Tienes que subir una imagen');
+                      API.toast(context, 'Tienes que subir una imagen');
                     }
                   },
                   child: Text('Registrar negocio'),

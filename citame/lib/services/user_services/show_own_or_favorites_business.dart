@@ -8,13 +8,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-abstract class ShowFavoritesBusiness {
-  static Future<List<Business>> showFavoriteBusiness(
-      BuildContext context, WidgetRef ref) async {
+abstract class ShowOwnOrFavoritesBusiness {
+  static Future<List<Business>> showOwnOrFavoriteBusiness(
+      BuildContext context, WidgetRef ref, String ownOrFavs) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     try {
-      final List<dynamic> businessList = jsonDecode(prefs.getString('datos')!);
+      var datos = prefs.getString('data');
+      final Map data = jsonDecode(datos!);
+      final List<dynamic> businessList = data[ownOrFavs];
       final List<Business> businesses = businessList.map((business) {
         Business negocio = Business.fromJson(business);
         return negocio;

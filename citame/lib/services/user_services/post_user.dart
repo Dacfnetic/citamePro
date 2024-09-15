@@ -80,7 +80,7 @@ abstract class PostUser {
     if (response.statusCode == 201 || response.statusCode == 200) {
       final contenido = jsonDecode(response.body);
       prefs.setString('llaveDeUsuario', contenido['token']);
-      prefs.setString('datos', contenido['usuario']);
+      prefs.setString('data', jsonEncode(contenido['user']));
       if (context.mounted) {
         Navigator.push(
             context,

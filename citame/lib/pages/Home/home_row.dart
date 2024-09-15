@@ -1,3 +1,4 @@
+import 'package:citame/Widgets/universal_variables.dart';
 import 'package:citame/pages/Home/Busqueda%20de%20negocios/business_search_page.dart';
 import 'package:citame/providers/business_provider.dart';
 import 'package:citame/providers/categories_provider.dart';
@@ -42,9 +43,9 @@ class HomeRow extends ConsumerWidget {
       ),
       child: TextButton(
         onPressed: () /*async*/ {
+          GlobalVariables.categoriaActual = categoria;
           ref.read(businessProvider.notifier).inicializar();
           ref.read(categoriesProvider.notifier).inicializar();
-          API.setCat(categoria);
           ref.read(businessProvider.notifier).limpiar();
           ref
               .read(pageProvider.notifier)
@@ -59,7 +60,9 @@ class HomeRow extends ConsumerWidget {
                   categoria: categoria,
                 ),
               ));
-          ref.read(businessProvider.notifier).cargar(context);
+          ref
+              .read(businessProvider.notifier)
+              .cargar(context, GlobalVariables.categoriaActual);
 
           // }
           /*} catch (e) {

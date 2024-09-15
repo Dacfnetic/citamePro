@@ -21,7 +21,8 @@ class PlatformIconButton extends StatelessWidget {
       this.iconSize,
       this.padding,
       required this.onPressed,
-      super.key});
+      Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

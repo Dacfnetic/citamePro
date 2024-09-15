@@ -4,9 +4,11 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:citame/providers/event_provider.dart';
 import 'package:citame/providers/own_business_provider.dart';
+import 'package:citame/services/business_services/delete_business.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:citame/Widgets/cuadro.dart';
+import 'package:citame/pages/Perfil/Crear%20negocio/Widgets/cuadro.dart';
 import 'package:citame/firebase_options.dart';
 import 'package:citame/models/service_model.dart';
 import 'package:citame/models/worker_moder.dart';
@@ -26,7 +28,6 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 String serverUrl = API.server;
 FirebaseAuth auth = FirebaseAuth.instance;
-String actualCat = 'Doctores y dentistas';
 
 String categoriaABuscar = '';
 /*
@@ -41,134 +42,6 @@ abstract class API {
   //static String server =
   //    'http://ec2-18-226-172-244.us-east-2.compute.amazonaws.com:4000';
   static String server = 'https://win.citame.store';
-
-  static Future<Map> guardarConfiguracionGeneral(
-      BuildContext context,
-      String businessId,
-      Map horario,
-      List<Service> servicios,
-      List<Worker> trabajadores,
-      WidgetRef ref) async {
-    List paraEnviar = [];
-    String horarioParaEnviar = jsonEncode(horario);
-    for (var trabajador in trabajadores) {
-      Map agregarALaLista = trabajador.toJson();
-      agregarALaLista['horario'] = jsonEncode(trabajador.horario);
-      agregarALaLista['imgPath'] = trabajador.imgPath[0].path;
-      paraEnviar.add(jsonEncode(agregarALaLista));
-    }
-    String enviar = paraEnviar.toString();
-
-    List paraEnviar2 = [];
-    for (var serv in servicios) {
-      Map agregarALaLista = serv.toJson();
-      paraEnviar2.add(jsonEncode(agregarALaLista));
-    }
-    String enviar2 = paraEnviar2.toString();
-
-    var request = http.MultipartRequest(
-        'POST', Uri.parse('$serverUrl/api/business/saveChangesFromBusiness'));
-
-    for (var trabajador in trabajadores) {
-      request.files.add(await http.MultipartFile.fromPath(
-          'imagen', trabajador.imgPath[0].path));
-    }
-
-    request.fields['businessId'] = businessId;
-    request.fields['requestedServices'] = enviar2;
-    request.fields['horario'] = horarioParaEnviar;
-    request.fields['requestedWorkers'] = enviar;
-
-    http.Response response =
-        await http.Response.fromStream(await request.send());
-
-    if (response.statusCode == 200) {
-      log("Result: ${response.statusCode}");
-      Map contenido = jsonDecode(response.body);
-      ref
-          .read(ownBusinessProvider.notifier)
-          .actualizarUnNegocio(contenido, context, ref);
-      log(contenido.toString());
-      return contenido;
-    }
-
-    throw Exception('Failed to add item');
-  }
-
-  static Future<String> postWorker(
-      String name,
-      String workerEmail,
-      File imgPath,
-      double salary,
-      Map horario,
-      String businessName,
-      String businessId,
-      String email,
-      BuildContext context,
-      String puesto,
-      String horarioLibre,
-      String celular,
-      String destiny) async {
-    var request = http.MultipartRequest(
-        'POST', Uri.parse('$serverUrl/api/workers/create'));
-
-    request.files
-        .add(await http.MultipartFile.fromPath('imagen', imgPath.path));
-
-    request.fields['destiny'] = destiny;
-    request.fields['name'] = name;
-    request.fields['email'] = workerEmail;
-    request.fields['businessName'] = businessName;
-    request.fields['id'] = businessId;
-    request.fields['businessEmail'] = email;
-    request.fields['salary'] = salary.toString();
-    request.fields['horario'] = horario.toString();
-    request.fields['horarioLibre'] = horarioLibre;
-    request.fields['status'] = false.toString();
-    request.fields['puesto'] = puesto;
-    request.fields['celular'] = celular;
-
-    var response = await request.send();
-
-    if (response.statusCode == 201) {
-      if (context.mounted) {
-        API.mensaje(context, 'Aviso', 'La solicitud fue enviada al trabajador');
-        return 'Todo ok';
-      }
-    }
-    if (response.statusCode == 202) {
-      if (context.mounted) {
-        API.mensaje(
-            context, 'Aviso', 'El correo no está registrado en la aplicación');
-        return 'Todo ok';
-      }
-    }
-    if (response.statusCode == 203) {
-      if (context.mounted) {
-        API.mensaje(
-            context, 'Aviso', 'El correo ya está asignado a este negocio');
-        return 'Todo ok';
-      }
-    }
-
-    throw Exception('Failed to add item');
-  }
-
-  static Future<String> deleteBusiness(String businessId) async {
-    final response =
-        await http.delete(Uri.parse('$serverUrl/api/business/delete'),
-            headers: {'Content-Type': 'application/json'},
-            body: utf8.encode(jsonEncode({
-              'businessId': businessId,
-            })));
-
-    if (response.statusCode == 200) {
-      // emitir(businessId);
-      return 'borrado';
-    }
-
-    throw Exception('Failed to add item');
-  }
 
   static Future<String> deleteWorkerInBusiness(
       String idBusiness, String id, String idWorker) async {
@@ -222,85 +95,6 @@ abstract class API {
     throw Exception('Failed to add item');
   }
 
-  static Future<String> updateWorkersInBusiness(
-      String businessId, String workerId) async {
-    final response = await http.put(Uri.parse('$serverUrl/api/business/update'),
-        headers: {'Content-Type': 'application/json'},
-        body: utf8.encode(jsonEncode({
-          'workerId': workerId,
-          'businessId': businessId,
-        })));
-
-    if (response.statusCode == 200) return 'Todo ok';
-    throw Exception('Failed to add item');
-  }
-
-  static Future<String> updateBusinessSchedule(
-      String businessId, Map horario) async {
-    final response = await http.put(
-        Uri.parse('$serverUrl/api/business/updateBusinessSchedule'),
-        headers: {'Content-Type': 'application/json'},
-        body: utf8.encode(jsonEncode({
-          'horario': horario,
-          'idBusiness': businessId,
-        })));
-
-    if (response.statusCode == 200) return 'Todo ok';
-    throw Exception('Failed to add item');
-  }
-
-  static Future<String> updateServiceInBusiness(
-      String idBusiness, String idService) async {
-    final response =
-        await http.put(Uri.parse('$serverUrl/api/business/serviceupdate'),
-            headers: {'Content-Type': 'application/json'},
-            body: utf8.encode(jsonEncode({
-              'idService': idService,
-              'idBusiness': idBusiness,
-            })));
-
-    if (response.statusCode == 200) return 'Todo ok';
-    throw Exception('Failed to add item');
-  }
-
-  static Future<String> postService(
-      BuildContext context,
-      String idBusiness,
-      WidgetRef ref,
-      String nombreServicio,
-      double precio,
-      String duracion,
-      String descripcion,
-      double time) async {
-    final response =
-        await http.post(Uri.parse('$serverUrl/api/services/post/service'),
-            headers: {'Content-Type': 'application/json'},
-            body: utf8.encode(jsonEncode({
-              'idBusiness': idBusiness,
-              'nombreServicio': nombreServicio,
-              'precio': precio,
-              'imgPath': [],
-              'duracion': duracion,
-              'descripcion': descripcion,
-              'time': time
-            })));
-    if (response.statusCode == 200) {
-      //await API.postImagen(imgPath, serviceData['_id'], 'worker');
-      //await API.mensaje(context, 'Aviso', 'El servicio fue creado');
-      ref.read(myBusinessStateProvider.notifier).setService2(response);
-
-      return 'Todo ok';
-    }
-    if (response.statusCode == 202) {
-      if (context.mounted) {
-        API.mensaje(context, 'Aviso', 'El servicio se repite');
-        return 'Todo ok';
-      }
-    }
-
-    throw Exception('Failed to add item');
-  }
-
   static Future<String> postCita(
     BuildContext context,
     WidgetRef ref,
@@ -310,10 +104,11 @@ abstract class API {
     String idBusiness,
     String workerEmail,
   ) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     final response = await http.post(Uri.parse('$serverUrl/api/cita/create'),
         headers: {
           'Content-Type': 'application/json',
-          'x-access-token': idUsuario
+          HttpHeaders.authorizationHeader: prefs.getString('llaveDeUsuario')!,
         },
         body: utf8.encode(jsonEncode({
           'cita': cita,
@@ -437,14 +232,6 @@ abstract class API {
     return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
-  static cat(String cat) {
-    actualCat = cat;
-  }
-
-  static setCat(String cat) {
-    categoriaABuscar = cat;
-  }
-
   static noHay(BuildContext context) {
     showDialog(
         barrierDismissible: false,
@@ -512,7 +299,7 @@ abstract class API {
     //API.reRender(ref);
   }
 
-  static mensaje2(BuildContext context, String titulo) {
+  static toast(BuildContext context, String titulo) {
     FToast fToast = FToast();
 
     fToast.init(context);
@@ -599,6 +386,7 @@ abstract class API {
       errorInvalidText: "Eso no es un tiempo válido",
       cancelText: "Cancelame esta mierda",
     );
+    if (selectedTime == null) return null;
 
     return selectedTime;
   }
@@ -661,7 +449,7 @@ abstract class API {
                       Navigator.pop(context);
                       Navigator.pop(context);
                       Navigator.pop(context);
-                      API.deleteBusiness(businessId);
+                      DeleteBusiness.deleteBusiness(businessId);
                     },
                     child: Text('Si')),
                 TextButton(
@@ -671,10 +459,6 @@ abstract class API {
                     child: Text('No'))
               ],
             ));
-  }
-
-  static String getCat() {
-    return actualCat;
   }
 
   static Future<void> initNotification() async {

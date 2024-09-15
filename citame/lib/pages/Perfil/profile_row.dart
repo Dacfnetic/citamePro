@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:citame/Widgets/universal_variables.dart';
 import 'package:citame/pages/Perfil/Negocios%20favoritos/favorites_business_page.dart';
 import 'package:citame/pages/Perfil/Negocios%20propios/my_businessess_page.dart';
 import 'package:citame/providers/img_provider.dart';
@@ -65,12 +66,15 @@ class ProfileRow extends ConsumerWidget {
                 MaterialPageRoute(
                   builder: (context) => MyBusinessesPage(),
                 ));
-            ref.read(ownBusinessProvider.notifier).cargar(context, ref);
+            ref
+                .read(ownBusinessProvider.notifier)
+                .cargar(context, ref, 'ownerBusiness');
           }
         }
 
         //Registrar nuevo negocio
         if (method == 2) {
+          GlobalVariables.categoriaActual = GlobalVariables.categorias[0];
           if (context.mounted) {
             Navigator.push(
                 context,
@@ -93,7 +97,9 @@ class ProfileRow extends ConsumerWidget {
                   builder: (context) => MyFavoritesPage(),
                 ));
 
-            ref.read(myFavoritesProvider.notifier).cargar(context, ref);
+            ref
+                .read(myFavoritesProvider.notifier)
+                .cargar(context, ref, 'favoriteBusiness');
           }
         }
       },

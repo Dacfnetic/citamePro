@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:citame/models/worker_moder.dart';
 import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:citame/services/api_service.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final workersProvider =
     StateNotifierProvider<WorkersNotifier, List<Worker>>((ref) {
@@ -12,18 +16,33 @@ class WorkersNotifier extends StateNotifier<List<Worker>> {
   WorkersNotifier() : super([]);
 
   void anadir(entrada, context, ref) async {
-    List<String> correos = [];
-    for (var correo in state) {
-      correos.add(correo.email);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    List negocios = jsonDecode(prefs.getString('datosDeNegocios')!);
+
+    Map negocio = {};
+    List correos = [];
+    if (negocios.isNotEmpty) {
+      for (var neg in negocios) {
+        if (neg["idMongo"] == prefs.getString('negocioActual')) {
+          negocio = neg;
+        }
+      }
+      List trabajadores = negocio["workers"];
+
+      correos = trabajadores.map((trabajador) => trabajador.email).toList();
     }
+
     if (correos.contains(entrada.email)) {
-      await API.mensaje2(context, "Ese correo ya está registrado");
+      await API.toast(context, "Ese correo ya está registrado");
       return;
     }
+
     ref
         .read(myBusinessStateProvider.notifier)
         .sePuedenGuardarCambiosGeneralesCambio();
     state = [...state, entrada];
+    Navigator.pop(context);
   }
 
   void remover(entrada) {

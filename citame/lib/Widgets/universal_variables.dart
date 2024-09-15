@@ -7,4 +7,5 @@ abstract class GlobalVariables {
     'Entretenimiento',
     'Mecánicos'
   ];
+  static var categoriaActual = '';
 }

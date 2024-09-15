@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:citame/models/worker_moder.dart';
-import 'package:citame/pages/AUN%20NO%20S%C3%89/details_worker.dart';
+import 'package:citame/pages/Home/Busqueda%20de%20negocios/Negocio/details_worker.dart';
 import 'package:citame/providers/my_business_state_provider.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:citame/services/images_services/pick_image_from_galery.dart';
@@ -21,8 +21,8 @@ class WorkerBox extends ConsumerWidget {
 
   final bool isDueno;
   final Worker worker;
-  final Uint8List imagen;
-  final File imagenParaDueno;
+  final String imagen;
+  final String imagenParaDueno;
   final WidgetRef ref;
 
   @override
@@ -56,7 +56,7 @@ class WorkerBox extends ConsumerWidget {
                 child: TextButton(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(16),
-                    child: Image.file(
+                    child: Image.network(
                       imagenParaDueno,
                       width: double.infinity,
                       height: 230,
@@ -146,7 +146,7 @@ class WorkerBox extends ConsumerWidget {
                   child: TextButton(
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(13),
-                      child: Image.memory(
+                      child: Image.network(
                         imagen,
                         width: double.infinity,
                         height: 200,

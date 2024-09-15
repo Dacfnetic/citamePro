@@ -47,8 +47,8 @@ class BusinessInsidePage extends ConsumerWidget {
         .map((e) => WorkerBox(
               worker: e,
               ref: ref,
-              imagen: Uint8List.fromList(e.imgPath[0]),
-              imagenParaDueno: File(""),
+              imagen: e.imgPath,
+              imagenParaDueno: e.imgPath,
               isDueno: false,
             ))
         .toList();

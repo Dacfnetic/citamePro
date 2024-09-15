@@ -1,4 +1,4 @@
-import 'package:citame/Widgets/cuadro.dart';
+import 'package:citame/pages/Perfil/Crear%20negocio/Widgets/cuadro.dart';
 import 'package:citame/models/service_model.dart';
 import 'package:citame/pages/Perfil/Configuraci%C3%B3n%20de%20negocio/caja_de_servicios.dart';
 import 'package:citame/providers/duracion_provider.dart';
