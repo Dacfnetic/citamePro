@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+
 class Schedule {
   final Map horario;
   Schedule({
@@ -16,6 +20,7 @@ class Worker {
   final double salary;
   final Map horario;
   final bool status;
+  var imagen;
   final String id;
   final String idWorker;
   final String puesto;
@@ -31,6 +36,7 @@ class Worker {
         'status': status,
         'id': id,
         'idWorker': idWorker,
+        'imagen': imagen,
         'puesto': puesto,
         'celular': celular,
       };
@@ -43,6 +49,7 @@ class Worker {
       required this.status,
       required this.id,
       required this.idWorker,
+      required this.imagen,
       required this.puesto,
       required this.horarioDisponible,
       required this.celular});
@@ -56,6 +63,7 @@ class Worker {
         horario: {},
         status: json['status'],
         id: json['idDeUsuario'],
+        imagen: json['imagen'],
         idWorker: json['_id'],
         puesto: json['puesto'],
         horarioDisponible: json['horarioDisponible'],

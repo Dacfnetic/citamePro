@@ -384,9 +384,8 @@ abstract class API {
       context: context,
       helpText: titulo,
       errorInvalidText: "Eso no es un tiempo válido",
-      cancelText: "Cancelame esta mierda",
+      cancelText: "Cancelar",
     );
-    if (selectedTime == null) return null;
 
     return selectedTime;
   }

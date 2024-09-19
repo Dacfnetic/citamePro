@@ -285,6 +285,7 @@ class ProfileInsidePage extends ConsumerWidget {
                                       horario: enviar,
                                       status: false,
                                       id: "",
+                                      imagen: ruta,
                                       idWorker: "",
                                       puesto: workerJob.text,
                                       horarioDisponible: {},

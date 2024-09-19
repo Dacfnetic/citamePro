@@ -5,6 +5,8 @@ import 'package:citame/models/user_model.dart';
 import 'package:citame/models/worker_moder.dart';
 import 'package:citame/pages/Home/home_page.dart';
 import 'package:citame/pages/signin_page.dart';
+import 'package:citame/providers/services_provider.dart';
+import 'package:citame/providers/workers_provider.dart';
 import 'package:citame/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -64,6 +66,7 @@ class MyBusinessStateNotifier extends StateNotifier<List<Business>> {
   // #region TODO: Mover a proveedor de workers
   void establecerWorkers(id, ref) async {
     workers = await API.getWorkers(id);
+    await ref.read(workersProvider.notifier).actualizar(workers);
     API.reRender(ref);
   }
 
@@ -72,6 +75,7 @@ class MyBusinessStateNotifier extends StateNotifier<List<Business>> {
 
   void setService(id, ref) async {
     services = await API.getService(id);
+    await ref.read(servicesProvider.notifier).actualizar(services);
     API.reRender(ref);
   }
 

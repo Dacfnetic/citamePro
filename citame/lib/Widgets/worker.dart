@@ -1,6 +1,3 @@
-import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:citame/models/worker_moder.dart';
 import 'package:citame/pages/Home/Busqueda%20de%20negocios/Negocio/details_worker.dart';
 import 'package:citame/providers/my_business_state_provider.dart';

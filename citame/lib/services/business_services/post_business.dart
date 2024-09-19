@@ -32,6 +32,7 @@ abstract class PostBusiness {
 
     request.files
         .add(await http.MultipartFile.fromPath('myfile', imgPath.path));
+
     request.fields['businessName'] = businessName;
     request.fields['category'] = GlobalVariables.categoriaActual;
     request.fields['email'] = email;

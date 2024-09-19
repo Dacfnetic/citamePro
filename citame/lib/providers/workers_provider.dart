@@ -28,7 +28,8 @@ class WorkersNotifier extends StateNotifier<List<Worker>> {
           negocio = neg;
         }
       }
-      List trabajadores = negocio["workers"];
+      List trabajadores =
+          await API.getWorkers(prefs.getString('negocioActual')!);
 
       correos = trabajadores.map((trabajador) => trabajador.email).toList();
     }

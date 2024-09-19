@@ -22,6 +22,6 @@ Future<void> showNot() async {
   const NotificationDetails notificationDetails =
       NotificationDetails(android: androidNotificationDetails);
 
-  await flutterLocalNotificationsPlugin.show(1, 'Prro te aviso que...',
+  await flutterLocalNotificationsPlugin.show(1, 'Este es un aviso...',
       'Alguien te agregó a un negocio como trabajador', notificationDetails);
 }

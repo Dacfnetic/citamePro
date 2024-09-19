@@ -23,10 +23,12 @@ abstract class SaveBusinessConfiguration {
       WidgetRef ref) async {
     List paraEnviar = [];
     String horarioParaEnviar = jsonEncode(horario);
+
     for (var trabajador in trabajadores) {
       Map agregarALaLista = trabajador.toJson();
       agregarALaLista['horario'] = jsonEncode(trabajador.horario);
       agregarALaLista['imgPath'] = trabajador.imgPath;
+      agregarALaLista['imagen'] = 'File(' ')';
       paraEnviar.add(jsonEncode(agregarALaLista));
     }
     String enviar = paraEnviar.toString();
@@ -47,11 +49,11 @@ abstract class SaveBusinessConfiguration {
     };
 
     request.headers.addAll(headers);
-/*
+
     for (var trabajador in trabajadores) {
-      request.files
-          .add(await http.MultipartFile.fromPath('imagen', trabajador.imgPath));
-    }*/
+      request.files.add(
+          await http.MultipartFile.fromPath('imagen', trabajador.imagen.path));
+    }
 
     request.fields['businessId'] = businessId;
     request.fields['requestedServices'] = enviar2;

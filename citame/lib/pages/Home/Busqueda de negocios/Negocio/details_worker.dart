@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 import 'package:citame/models/worker_moder.dart';
 import 'package:citame/pages/Home/Busqueda%20de%20negocios/Negocio/select_service.dart';
 import 'package:citame/services/api_service.dart';

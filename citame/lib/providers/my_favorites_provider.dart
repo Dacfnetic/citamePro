@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:citame/Widgets/business_card.dart';
 import 'package:citame/models/business_model.dart';
 import 'package:citame/services/business_services/get_business.dart';
-import 'package:citame/services/user_services/show_own_or_favorites_business.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';

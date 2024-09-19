@@ -17,7 +17,7 @@ class WorkerDataVizPage extends StatelessWidget {
         endTime: DateTime(DateTime.now().year, DateTime.now().month,
             DateTime.now().day, 17, 0),
         color: Colors.red,
-        description: 'Cortarle el pelo al prro',
+        description: 'Cortarle el pelo al perro',
       ),
     ];
     return Scaffold(
@@ -27,7 +27,7 @@ class WorkerDataVizPage extends StatelessWidget {
           weekDays: ['Lu', 'Ma', 'Mi', 'JU', 'Vi', 'Sa', 'Do'],
           eventsList: eventList,
           onEventSelected: (value) {
-            log('Puego hacaer qu e pasen cosas');
+            log('Puedo hacer que pasen cosas');
           },
           isExpandable: true,
           eventDoneColor: Colors.green,
